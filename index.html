@@ -13,9 +13,9 @@
   const toApp = () => { if (/^#(gesprek=|afspraken)/.test(location.hash)) location.replace('https://app.botlu.ai/' + location.hash); };
   toApp(); addEventListener('hashchange', toApp);
   document.documentElement.classList.add('js');
-  // Beeld in de hero: de stembol (standaard), of het lint (?hero=lint) of de slinger (?hero=slinger)
+  // Beeld in de hero: de stemring (standaard), of het lint (?hero=lint) of de slinger (?hero=slinger)
   const heroQ = new URLSearchParams(location.search).get('hero');
-  document.documentElement.dataset.hero = heroQ === 'lint' || heroQ === 'slinger' ? heroQ : 'orb';
+  document.documentElement.dataset.hero = heroQ === 'lint' || heroQ === 'slinger' ? heroQ : 'ring';
 </script>
 <style>
   :root {
@@ -34,7 +34,7 @@
   /* Echte squircles waar de browser het kent (Chrome 139+); elders gewoon afgerond */
   @supports (corner-shape: squircle) {
     :root { --r-sm: 16px; --r-md: 22px; --r-lg: 28px; --r-xl: 36px; --r-2xl: 52px; }
-    .btn, .orb-play, .card, .chip, .phone, .bubble, .mini, .voice, .play, .tab, .tabs, .code, .faq details, .step-num, .slot, .kpi, .win, .notif, .tool, .cta-box, .lang { corner-shape: squircle; }
+    .btn, .ring-play, .card, .chip, .phone, .bubble, .mini, .voice, .play, .tab, .tabs, .code, .faq details, .step-num, .slot, .kpi, .win, .notif, .tool, .cta-box, .lang { corner-shape: squircle; }
   }
 
   * { box-sizing: border-box; }
@@ -81,28 +81,31 @@
   .hero { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: min(100vh, 880px); padding-top: 68px; overflow-x: clip; }
   .hero-main { flex: 1; display: flex; align-items: center; padding: 40px 0 64px; }
   .hero-copy { max-width: 700px; }
-  /* De stembol rechts in de hero */
+  /* De stemring rechts in de hero, met de knop in het midden */
   .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); align-items: center; gap: 32px; }
-  html:not([data-hero="orb"]) .hero-grid { grid-template-columns: minmax(0, 700px); }
-  .orb-stage { position: relative; justify-self: center; width: min(100%, 500px); aspect-ratio: 1; }
-  .orb-canvas { position: absolute; left: -16%; top: -16%; width: 132%; height: 132%; display: block; pointer-events: none; }
-  .orb-stage.no-gl::before { content: ""; position: absolute; inset: 14%; border-radius: 50%;
-    background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.9) 0 5%, transparent 24%), conic-gradient(from 200deg, #b2dcd8, #a9cbe6, #5f86d6, #7d8fe0, #a9a7e8, #cbbfee, #b2dcd8);
-    box-shadow: 0 40px 80px -30px rgba(95,134,214,.5); }
-  .orb-play { position: absolute; left: 50%; bottom: -7%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 22px 0 8px;
-    border: 1px solid rgba(255,255,255,.75); border-radius: 99px; background: rgba(255,255,255,.62); color: var(--ink);
+  html:not([data-hero="ring"]) .hero-grid { grid-template-columns: minmax(0, 700px); }
+  .ring-stage { position: relative; justify-self: center; width: min(100%, 500px); aspect-ratio: 1; }
+  .ring-canvas { position: absolute; left: -16%; top: -16%; width: 132%; height: 132%; display: block; pointer-events: none; }
+  .ring-stage.no-gl::before { content: ""; position: absolute; inset: 12%; border-radius: 50%;
+    background: conic-gradient(from 210deg, #56bac8, #62a2e6, #6880ea, #8868f0, #9c6ee8, #7084e2, #56bac8);
+    -webkit-mask: radial-gradient(closest-side, transparent 84%, #000 86%, #000 97%, transparent 100%);
+    mask: radial-gradient(closest-side, transparent 84%, #000 86%, #000 97%, transparent 100%);
+    filter: drop-shadow(0 0 18px rgba(120,100,220,.45)); }
+  .ring-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 22px 0 8px;
+    border: 1px solid rgba(255,255,255,.8); border-radius: 99px; background: rgba(255,255,255,.72); color: var(--ink);
     backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5);
-    box-shadow: 0 12px 32px -14px rgba(40,50,110,.4), 0 0 0 1px rgba(16,16,24,.04); text-align: left; white-space: nowrap; cursor: pointer;
+    box-shadow: 0 12px 32px -14px rgba(60,50,140,.35), 0 0 0 1px rgba(16,16,24,.04); text-align: left; white-space: nowrap; cursor: pointer;
     transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
-  .orb-play:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 18px 40px -16px rgba(40,50,110,.5), 0 0 0 1px rgba(16,16,24,.05); }
-  .orb-play:active { transform: translateX(-50%) scale(.97); }
-  .orb-play .ic { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; }
-  .orb-play .ic svg { width: 14px; height: 14px; }
-  .orb-play .ps, .orb-play.playing .pl { display: none; }
-  .orb-play.playing .ps { display: block; }
-  .orb-play b { display: block; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
-  .orb-play small { display: block; color: var(--ink-3); font-size: 12.5px; }
-  html:not([data-hero="orb"]) .orb-stage, [data-hero="orb"] .hero-bg, [data-hero="orb"] .cta-box > .visual { display: none; }
+  .ring-play:hover { transform: translate(-50%, -50%) translateY(-2px); box-shadow: 0 18px 40px -16px rgba(60,50,140,.45), 0 0 0 1px rgba(16,16,24,.05); }
+  .ring-play:active { transform: translate(-50%, -50%) scale(.97); }
+  .ring-play .ic { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; }
+  .ring-play .ic svg { width: 14px; height: 14px; }
+  .ring-play .ps, .ring-play.playing .pl { display: none; }
+  .ring-play.playing .ps { display: block; }
+  .ring-play b { display: block; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .ring-play small { display: block; color: var(--ink-3); font-size: 12.5px; }
+  .ring-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--ink); }
+  html:not([data-hero="ring"]) .ring-stage, [data-hero="ring"] .hero-bg, [data-hero="ring"] .cta-box > .visual { display: none; }
   /* Het lint ligt boven de tekst en vermenigvuldigt: op wit zie je gewoon de
      kleuren, tekst eronder kleurt mee (zoals op stripe.com) */
   .hero-bg { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; mix-blend-mode: multiply; }
@@ -116,7 +119,7 @@
                 radial-gradient(36% 40% at 34% 92%, rgba(221,211,235,.55), transparent 70%);
     animation: glow 22s ease-in-out infinite alternate; }
   @keyframes glow { to { transform: translate3d(4%, -3%, 0) rotate(6deg) scale(1.06); } }
-  .no-gl { background: radial-gradient(28% 45% at 66% 10%, rgba(178,220,216,.8), transparent 70%), radial-gradient(30% 50% at 84% 30%, rgba(95,134,214,.55), transparent 70%), radial-gradient(26% 45% at 92% 78%, rgba(184,176,236,.7), transparent 70%); }
+  .hero-bg.no-gl, .cta-box.no-gl { background: radial-gradient(28% 45% at 66% 10%, rgba(178,220,216,.8), transparent 70%), radial-gradient(30% 50% at 84% 30%, rgba(95,134,214,.55), transparent 70%), radial-gradient(26% 45% at 92% 78%, rgba(184,176,236,.7), transparent 70%); }
   /* Dunne hulplijnen langs de rand van de inhoud, zoals op stripe.com */
   .hero::after { content: ""; position: absolute; z-index: -2; inset: 0; pointer-events: none;
     background: linear-gradient(var(--line), var(--line)) left max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
@@ -357,7 +360,7 @@
   .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 96px 56px; border-radius: var(--r-2xl); background: var(--soft); }
   .cta-box .visual { z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
   .cta-copy { position: relative; max-width: 600px; }
-  .cta-box .orb-stage { position: absolute; right: 7%; top: 50%; width: 300px; transform: translateY(-50%); }
+  .cta-box .ring-stage { position: absolute; right: 7%; top: 50%; width: 300px; transform: translateY(-50%); }
   .cta-box p { max-width: 480px; margin: 18px 0 32px; color: var(--ink-3); font-size: 19px; }
   .cta-box .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
@@ -381,10 +384,12 @@
     .hero { min-height: 0; }
     .hero-main { padding: 270px 0 56px; }
     .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
-    [data-hero="orb"] .hero-main { padding: 8px 0 56px; }
-    .orb-stage { order: -1; width: min(78%, 340px); margin-bottom: 64px; }
-    .hero .orb-play { bottom: -15%; }
-    .cta-box .orb-stage { position: relative; right: auto; top: auto; transform: none; width: 240px; margin: -20px auto 6px; }
+    [data-hero="ring"] .hero-main { padding: 8px 0 56px; }
+    .ring-stage { order: -1; width: min(78%, 340px); margin-bottom: 24px; }
+    .ring-play { height: 48px; padding: 0 16px 0 6px; gap: 10px; }
+    .ring-play .ic { width: 36px; height: 36px; }
+    .ring-play small { display: none; }
+    .cta-box .ring-stage { position: relative; right: auto; top: auto; transform: none; width: 240px; margin: -20px auto 6px; }
     .hero-bg { bottom: auto; height: 380px; -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent); }
     .demo-grid { grid-template-columns: 1fr; gap: 48px; justify-items: center; }
     .nav-links { display: none; }
@@ -410,7 +415,7 @@
     .phone { width: min(100%, 330px); }
     .screen { height: 600px; }
     .cta-box { padding: 56px 24px 300px; }
-    [data-hero="orb"] .cta-box { padding-bottom: 56px; }
+    [data-hero="ring"] .cta-box { padding-bottom: 56px; }
     .cta-box .visual { top: auto; height: 320px; -webkit-mask-image: linear-gradient(transparent, #000 35%); mask-image: linear-gradient(transparent, #000 35%); }
     footer nav { margin-left: 0; }
   }
@@ -456,9 +461,9 @@
           </div>
           <p class="fine rv" style="--d:.24s">Je eerste assistent staat direct klaar. Je houdt gewoon je eigen nummer.</p>
         </div>
-        <div class="orb-stage rv" style="--d:.1s">
-          <canvas class="orb-canvas" aria-hidden="true"></canvas>
-          <button class="orb-play" type="button"><span class="ic"><svg class="pl" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg><svg class="ps" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3" width="3" height="10" rx="1"/><rect x="9.5" y="3" width="3" height="10" rx="1"/></svg></span><span><b>Hoor Emma</b><small>Vrouw · kalm en helder</small></span></button>
+        <div class="ring-stage rv" style="--d:.1s">
+          <canvas class="ring-canvas" aria-hidden="true"></canvas>
+          <button class="ring-play" type="button"><span class="ic"><svg class="pl" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg><svg class="ps" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3" width="3" height="10" rx="1"/><rect x="9.5" y="3" width="3" height="10" rx="1"/></svg></span><span><b>Hoor Emma</b><small>Vrouw · kalm en helder</small></span></button>
         </div>
       </div>
     </div>
@@ -749,7 +754,7 @@
     <div class="wrap">
       <div class="cta-box rv">
         <canvas class="visual" data-place="cta" aria-hidden="true"></canvas>
-        <div class="orb-stage" aria-hidden="true"><canvas class="orb-canvas"></canvas></div>
+        <div class="ring-stage" aria-hidden="true"><canvas class="ring-canvas"></canvas><svg class="ring-logo" viewBox="0 0 257 324" width="34" height="43" fill="currentColor"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg></div>
         <div class="cta-copy">
           <h2>Mis nooit meer een klant aan de telefoon.</h2>
           <p>Maak een account en laat je eerste assistent vandaag nog opnemen.</p>
@@ -1087,13 +1092,16 @@ function slinger(canvas) {
   raf = requestAnimationFrame(frame);
 }
 
-// ---------- De stembol ----------
-// Een glanzende bol met de kleuren van het lint die er binnenin stromen. Hij
-// ademt en zweeft; druk je op de knop, dan spreekt een van de stemmen van Botlu
-// en golft de bol mee met het volume (gemeten met een AnalyserNode).
-const ORB_FS = `precision highp float;
+// ---------- De stemring ----------
+// Een lichtgevende ring als een glazen buis: kleuren die langzaam rondlopen
+// (turquoise, blauw, violet), een glanslijn bovenop en een zachte gloed binnen
+// en buiten. Druk je op de knop in het midden, dan spreekt een van de stemmen
+// van Botlu; de ring zwelt mee met het volume en zendt zachte echo's uit.
+// Vloeiend: het volume gaat door een omhullende en een gedempte veer, en de
+// tempo's tellen per frame op (nooit tijd × volume, dan verspringt alles).
+const RING_FS = `precision highp float;
 uniform vec2 res;
-uniform float time, level;
+uniform float time, level, wobT, flowT, ripT;
 // 3D-simplexruis van Ian McEwan en Stefan Gustavson (MIT)
 vec3 m289(vec3 x) { return x - floor(x * (1. / 289.)) * 289.; }
 vec4 m289(vec4 x) { return x - floor(x * (1. / 289.)) * 289.; }
@@ -1118,92 +1126,88 @@ float snoise(vec3 v) {
   return 42. * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
 vec3 c(float r, float g, float b) { return vec3(r, g, b) / 255.; }
-// Rondlopende kleuren: mint > hemelsblauw > korenbloemblauw > periwinkle > lavendel > lila > mint
-vec3 pal(float k) {
+// Kleuren rond de ring: turquoise > hemelsblauw > blauw > violet > paars > blauwpaars > turquoise
+vec3 ringCol(float k) {
   k = fract(k);
-  vec3 col = c(178., 220., 216.);
-  col = mix(col, c(160., 200., 232.), smoothstep(0., .17, k));
-  col = mix(col, c(95., 134., 214.), smoothstep(.17, .36, k));
-  col = mix(col, c(122., 140., 226.), smoothstep(.36, .5, k));
-  col = mix(col, c(169., 160., 234.), smoothstep(.5, .66, k));
-  col = mix(col, c(214., 196., 240.), smoothstep(.66, .83, k));
-  return mix(col, c(178., 220., 216.), smoothstep(.83, 1., k));
+  vec3 col = c(86., 186., 200.);
+  col = mix(col, c(98., 162., 230.), smoothstep(0., .18, k));
+  col = mix(col, c(104., 128., 234.), smoothstep(.18, .36, k));
+  col = mix(col, c(136., 104., 240.), smoothstep(.36, .54, k));
+  col = mix(col, c(156., 110., 232.), smoothstep(.54, .7, k));
+  col = mix(col, c(112., 132., 226.), smoothstep(.7, .86, k));
+  return mix(col, c(86., 186., 200.), smoothstep(.86, 1., k));
 }
 void main() {
-  float m = min(res.x, res.y), T = time, lv = level, bob = .025 * sin(T * .8);
+  float m = min(res.x, res.y), T = time, lv = level;
   vec2 p = (gl_FragCoord.xy - .5 * res) / (.5 * m);
-  vec2 q0 = p - vec2(0., bob);                                        // de bol zweeft
-  float d = length(q0), ang = atan(q0.y, q0.x);
-  // Omtrek: ademen, en golven als hij praat
-  float R = .6 * (1. + .012 * sin(T * 1.1) + .045 * lv);
-  float wob = snoise(vec3(cos(ang) * 1.2, sin(ang) * 1.2, T * (.3 + .8 * lv))) * (.008 + .042 * lv)
-            + snoise(vec3(cos(ang) * 2.2, sin(ang) * 2.2, T * 1.1 + 7.)) * .011 * lv;
-  float r = R * (1. + wob), px = 2. / m;
-  // Zachte schaduw op de grond, lichter als de bol hoger zweeft
-  vec2 sp = vec2(p.x / (R * .95), (p.y + R + .17) / .07);
-  float sha = exp(-dot(sp, sp)) * (.12 - .03 * sin(T * .8));
-  vec4 col = vec4(c(60., 70., 140.) * sha, sha);
-  // Gloed rondom
-  float halo = exp(-pow(max(d - r, 0.) / (.16 + .1 * lv), 1.5)) * (.3 + .3 * lv) * step(r - px, d) * smoothstep(1., .82, length(p));
-  col = vec4(pal(.42 + .08 * sin(ang + T * .4)) * halo, halo) + col * (1. - halo);
-  if (d < r + px) {
-    vec2 q = q0 / r;
-    float z = sqrt(max(0., 1. - dot(q, q)));
-    vec3 n = vec3(q, z);
-    // Grote, zachte kleurvelden die binnenin stromen: mint, korenbloemblauw en
-    // lavendel, naar linksboven lichter. Langzaam draaien en een beetje vervormen.
-    float a = T * .1;
-    vec3 s = vec3(n.x * cos(a) - n.z * sin(a), n.y, n.x * sin(a) + n.z * cos(a));
-    vec3 w = s + .35 * vec3(snoise(s * .8 + vec3(0., T * .07, 0.)), snoise(s * .8 + vec3(4.1, -T * .06, 2.)), 0.);
-    float f1 = snoise(w * .75 + vec3(0., 0., T * (.05 + .2 * lv)));
-    float f2 = snoise(w * .9 + vec3(3.3, 1.7, -T * .045));
-    vec3 o = mix(c(170., 222., 214.), c(92., 128., 214.), smoothstep(-.55, .55, f1));
-    o = mix(o, c(176., 160., 236.), smoothstep(-.3, .75, f2) * .85);
-    o = mix(o, c(206., 226., 246.), smoothstep(.1, 1., n.y - .3 * n.x) * .35);
-    // Licht: zacht van linksboven, terugkaatsing van onderen, lichte rand,
-    // een klein scherp glanspunt en een brede zachte glans
-    vec3 L = normalize(vec3(-.5, .62, .6));
-    o *= .82 + .22 * max(dot(n, L), 0.);
-    o += c(178., 220., 216.) * pow(max(-n.y, 0.), 2.) * .1;
-    o = mix(o, c(242., 244., 255.), pow(1. - z, 3.) * .55);
-    vec3 H = normalize(L + vec3(0., 0., 1.));
-    float nh = max(dot(n, H), 0.);
-    o += pow(nh, 260.) * .55 + pow(nh, 18.) * .05;
-    o += .15 * smoothstep(.42, 0., length((q - vec2(-.3, .5)) * vec2(1., 2.2)));  // reflectie van een lichtbak
-    o += .1 * pow(max(dot(n, normalize(vec3(.6, -.5, .25))), 0.), 6.);   // tegenlicht rechtsonder
-    o += c(176., 160., 236.) * lv * .14;                                  // gloed van binnen als hij praat
-    float aIn = smoothstep(r + px, r - px, d);
-    col = vec4(o, 1.) * aIn + col * (1. - aIn);
+  p.y -= .012 * sin(T * .8);                                         // zweven
+  float d = length(p), ang = atan(p.y, p.x);
+  // Straal: ademen, en zacht golven als hij praat
+  float R = .6 * (1. + .008 * sin(T * 1.1) + .035 * lv);
+  float r = R * (1. + snoise(vec3(cos(ang) * 1.1, sin(ang) * 1.1, wobT)) * (.004 + .016 * lv));
+  float wid = .05 + .018 * lv;                                       // halve dikte van de buis
+  float x = d - r;                                                   // buiten de buis positief
+  // Kleur rond de ring, draait langzaam; turquoise linksonder, violet rechts
+  vec3 rc = ringCol(ang / 6.2831853 + .375 + flowT);
+  // Gloed: buiten zacht paarsig, binnen een lichte kleur naar het witte midden
+  float og = exp(-pow(max(x, 0.) / (.1 + .05 * lv), 1.2)) * step(0., x) * smoothstep(1., .8, d);
+  float ig = exp(-pow(max(-x, 0.) / (.11 + .04 * lv), 1.3)) * step(x, 0.);
+  float ga = og * (.38 + .25 * lv) * (.8 + .2 * cos(ang + .8)) + ig * (.22 + .15 * lv);
+  vec4 col = vec4(mix(mix(rc, c(96., 84., 188.), .5), rc, step(x, 0.)) * ga, ga);
+  // Echo's: zachte ringen die naar buiten gaan als hij praat
+  for (int i = 0; i < 2; i++) {
+    float ph = fract(ripT + float(i) * .5);
+    float e = exp(-pow((d - r * (1. + .32 * ph)) / (.012 + .02 * ph), 2.)) * (1. - ph) * lv * .35;
+    col = vec4(rc * e, e) + col * (1. - e);
   }
+  // De buis: strak afgelijnd, binnenkant lichter, buitenkant voller, met een lichte kern
+  float core = smoothstep(wid, wid * .55, abs(x));
+  vec3 tc = rc * mix(1.12, .88, smoothstep(-wid, wid, x)) * (1. + .12 * exp(-pow(x / (.35 * wid), 2.)));
+  // Glanslijn bovenop, zoals licht op een glazen buis
+  float top = pow(max(sin(ang + .2), 0.), 6.);
+  float hl = exp(-pow((x - .25 * wid) / (.2 * wid), 2.)) * top;
+  tc = mix(tc, vec3(1.), clamp(hl * (1. + .5 * lv), 0., 1.));
+  tc += c(200., 220., 255.) * exp(-pow((x - .1 * wid) / (.6 * wid), 2.)) * top * .15;
+  float ca = core;
+  col = vec4(tc, 1.) * ca + col * (1. - ca);
   col.rgb += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - .5) / 255. * col.a;
   gl_FragColor = col;
 }`;
 // Bij elke klik spreekt de volgende stem
-const ORB_VOICES = [['emma', 'Emma', 'Vrouw · kalm en helder'], ['thomas', 'Thomas', 'Man · zakelijk'], ['roos', 'Roos', 'Vrouw · vriendelijk'], ['eric', 'Eric', 'Man · natuurlijk']];
+const RING_VOICES = [['emma', 'Emma', 'Vrouw · kalm en helder'], ['thomas', 'Thomas', 'Man · zakelijk'], ['roos', 'Roos', 'Vrouw · vriendelijk'], ['eric', 'Eric', 'Man · natuurlijk']];
 
-function orb(stage) {
-  const canvas = stage.querySelector('canvas');
+// WebGL voor de ring opzetten; null als de browser het niet kan
+function ringGL(canvas) {
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: 'low-power' });
-  if (!gl) return stage.classList.add('no-gl');
+  if (!gl) return null;
   const compile = (type, src) => { const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; };
   const prog = gl.createProgram();
   gl.attachShader(prog, compile(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, ORB_FS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, RING_FS));
   gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return stage.classList.add('no-gl');
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
   gl.useProgram(prog);
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0);
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  const uRes = gl.getUniformLocation(prog, 'res'), uTime = gl.getUniformLocation(prog, 'time'), uLevel = gl.getUniformLocation(prog, 'level');
+  const u = n => gl.getUniformLocation(prog, n);
+  return { gl, uRes: u('res'), uTime: u('time'), uLevel: u('level'), uWob: u('wobT'), uFlow: u('flowT'), uRip: u('ripT') };
+}
+
+function ring(stage) {
+  const canvas = stage.querySelector('canvas');
+  // Zonder WebGL tekent CSS een stilstaande ring; de knop werkt dan gewoon
+  const G = ringGL(canvas);
+  if (!G) stage.classList.add('no-gl');
 
   // Een stem afspelen en het volume meten
-  const btn = stage.querySelector('.orb-play');
-  let audio = null, actx = null, analyser = null, buf = null, vi = 0, playing = false, level = 0;
+  const btn = stage.querySelector('.ring-play');
+  let audio = null, actx = null, analyser = null, buf = null, vi = 0, playing = false;
+  let kick = () => {};                                               // start de tekenlus (met WebGL)
   const label = () => {
     if (!btn) return;
-    const [, name, sub] = ORB_VOICES[vi];
+    const [, name, sub] = RING_VOICES[vi];
     btn.querySelector('b').textContent = playing ? `${name} spreekt…` : `Hoor ${name}`;
     btn.querySelector('small').textContent = sub;
     btn.classList.toggle('playing', playing);
@@ -1214,46 +1218,61 @@ function orb(stage) {
     if (playing) { audio.pause(); return stop(); }
     if (!audio) {
       audio = new Audio();
-      audio.addEventListener('ended', () => { stop(); vi = (vi + 1) % ORB_VOICES.length; label(); });
+      audio.addEventListener('ended', () => { stop(); vi = (vi + 1) % RING_VOICES.length; label(); });
       try {
-        actx = new AudioContext(); analyser = actx.createAnalyser(); analyser.fftSize = 512; buf = new Uint8Array(512);
+        actx = new AudioContext(); analyser = actx.createAnalyser(); analyser.fftSize = 1024; buf = new Uint8Array(1024);
         actx.createMediaElementSource(audio).connect(analyser); analyser.connect(actx.destination);
       } catch { analyser = null; }
     }
     actx?.resume();
     document.dispatchEvent(new CustomEvent('botlu:play', { detail: audio }));
-    audio.src = `voices/${ORB_VOICES[vi][0]}.mp3`;
+    audio.src = `voices/${RING_VOICES[vi][0]}.mp3`;
     audio.play().then(() => { playing = true; label(); kick(); }).catch(stop);
   });
-  // Speelt er elders een stem, dan zwijgt de bol
+  // Speelt er elders een stem, dan zwijgt de ring
   document.addEventListener('botlu:play', e => { if (playing && e.detail !== audio) { audio.pause(); stop(); } });
   label();
 
+  if (!G) return;
+  const { gl, uRes, uTime, uLevel, uWob, uFlow, uRip } = G;
   const size = () => {
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
     if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); gl.uniform2f(uRes, w, h); }
   };
   const start = performance.now() - 3000 * Math.random();
-  let visible = true, raf = 0;
+  let visible = true, raf = 0, last = 0, env = 0, lvl = 0, vel = 0, wobT = 0, flowT = 0, ripT = 0;
   const frame = now => {
     size();
+    const dt = last ? Math.min(.05, (now - last) / 1000) : 0;
+    last = now;
     let target = 0;
     if (playing && analyser) {
       analyser.getByteTimeDomainData(buf);
       let sum = 0; for (const x of buf) sum += ((x - 128) / 128) ** 2;
-      target = Math.min(1, Math.sqrt(sum / buf.length) * 5);
+      target = Math.min(1, Math.sqrt(sum / buf.length) * 4.5);
     }
-    level += (target - level) * (target > level ? .4 : .07);         // snel omhoog, rustig terug
+    // Omhullende (snel omhoog, rustig terug) en daarachter een kritisch gedempte veer
+    env += (target - env) * (1 - Math.exp(-dt / (target > env ? .07 : .32)));
+    vel += (64 * (env - lvl) - 16 * vel) * dt;
+    lvl = Math.max(0, lvl + vel * dt);
+    // Tempo's tellen op, zodat er nooit iets verspringt
+    wobT += dt * (.25 + .8 * lvl);
+    flowT += dt * (.02 + .1 * lvl);
+    ripT += dt * .55 * lvl;
     gl.uniform1f(uTime, (now - start) / 1000);
-    gl.uniform1f(uLevel, level);
+    gl.uniform1f(uLevel, lvl);
+    gl.uniform1f(uWob, wobT);
+    gl.uniform1f(uFlow, flowT);
+    gl.uniform1f(uRip, ripT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-    raf = visible && !document.hidden && (!reduced || playing || level > .005) ? requestAnimationFrame(frame) : 0;
+    raf = visible && !document.hidden && (!reduced || playing || lvl > .003) ? requestAnimationFrame(frame) : 0;
+    if (!raf) last = 0;
   };
-  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) kick(); }).observe(canvas);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && visible) kick(); });
-  addEventListener('resize', kick);
+  addEventListener('resize', () => kick());
   kick();
 }
 
@@ -1421,9 +1440,10 @@ function initReveal() {
 }
 
 $('#year').textContent = new Date().getFullYear();
-// De stembol is standaard; het lint (tag lint-v2) en de slinger blijven te zien met ?hero=lint en ?hero=slinger
+// De stemring is standaard; het lint (tag lint-v2) en de slinger blijven te zien met
+// ?hero=lint en ?hero=slinger. De glanzende bol staat in git als tag bol-v1.
 const heroMode = document.documentElement.dataset.hero;
-if (heroMode === 'orb') document.querySelectorAll('.orb-stage').forEach(orb);
+if (heroMode === 'ring') document.querySelectorAll('.ring-stage').forEach(ring);
 else document.querySelectorAll('[data-place]').forEach(heroMode === 'lint' ? ribbon : slinger);
 initNav();
 initCall();
