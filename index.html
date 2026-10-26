@@ -56,13 +56,9 @@
   .btn.dark:hover { background: #26262d; }
   .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
   .btn.brand:hover { background: var(--brand-2); }
-  .btn.glass { background: rgba(255,255,255,.55); border-color: rgba(255,255,255,.6); color: var(--ink); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
-  .btn.glass:hover { background: rgba(255,255,255,.8); }
   .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
   .btn.line:hover { border-color: var(--ink-4); }
   .btn.sm { height: 38px; padding: 0 16px; font-size: 14.5px; }
-  .btn.white { background: #fff; color: var(--ink); }
-  .btn.white:hover { background: #f1f1f4; }
 
   /* ---------- Navigatie ---------- */
   .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s; color: var(--ink); }
@@ -78,25 +74,28 @@
   .nav.solid .nav-links a:hover { background: var(--soft); }
   .nav.solid .btn.sm { background: var(--ink); color: #fff; }
 
-  /* ---------- Hero met bewegend kleurverloop ---------- */
-  .hero { position: relative; min-height: min(100vh, 900px); display: flex; align-items: center; padding: 140px 0 110px; isolation: isolate; }
-  .hero-bg { position: absolute; z-index: -1; inset: 0; overflow: hidden; }
+  /* ---------- Hero met het lint ---------- */
+  .hero { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: min(100vh, 880px); padding-top: 68px; }
+  .hero-main { flex: 1; display: flex; align-items: center; padding: 40px 0 64px; }
+  .hero-copy { max-width: 700px; }
+  /* Het lint ligt boven de tekst en vermenigvuldigt: op wit zie je gewoon de
+     kleuren, tekst eronder kleurt mee (zoals op stripe.com) */
+  .hero-bg { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; mix-blend-mode: multiply; }
   .ribbon { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .no-gl { background: radial-gradient(28% 45% at 70% 10%, rgba(170,184,255,.7), transparent 70%), radial-gradient(30% 50% at 84% 32%, rgba(255,160,60,.6), transparent 70%), radial-gradient(26% 45% at 92% 78%, rgba(255,110,196,.55), transparent 70%); }
   /* Dunne hulplijnen langs de rand van de inhoud, zoals op stripe.com */
   .hero::after { content: ""; position: absolute; z-index: -2; inset: 0; pointer-events: none;
     background: linear-gradient(var(--line), var(--line)) left max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
                 linear-gradient(var(--line), var(--line)) right max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
+                linear-gradient(var(--line), var(--line)) left 0 top 68px / 100% 1px no-repeat,
                 linear-gradient(var(--line), var(--line)) left 0 bottom 0 / 100% 1px no-repeat; }
-  .grad { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-    background: radial-gradient(60% 80% at 20% 30%, #ff5fa2 0, transparent 60%), radial-gradient(60% 80% at 75% 20%, #38bdf8 0, transparent 60%), radial-gradient(50% 70% at 60% 80%, #ffb547 0, transparent 60%), #6d5cff; }
-  .hero .wrap { display: grid; grid-template-columns: minmax(0, 700px); }
-  .eyebrow { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px 0 6px; margin-bottom: 26px; border-radius: 99px;
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px 0 6px; margin-bottom: 22px; border-radius: 99px;
     background: rgba(244,244,246,.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink); font-size: 14px; font-weight: 500; text-decoration: none; }
   .eyebrow b { padding: 2px 9px; border-radius: 99px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; }
-  h1 { margin: 0; font-size: clamp(46px, 7.2vw, 92px); line-height: .98; font-weight: 700; letter-spacing: -.055em; }
+  h1 { margin: 0; font-size: clamp(42px, 5.6vw, 76px); line-height: 1.02; font-weight: 700; letter-spacing: -.048em; }
   .hero h1 { color: #110e22; }
   .hero h1 .soft { color: #5b6b8c; }
-  .hero .lead { max-width: 520px; margin: 26px 0 34px; color: var(--ink-2); font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; font-weight: 450; }
+  .hero .lead { max-width: 540px; margin: 22px 0 30px; color: var(--ink-2); font-size: clamp(17px, 1.4vw, 19px); line-height: 1.55; }
   .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
   .hero .fine { margin-top: 18px; color: var(--ink-3); font-size: 14px; }
 
@@ -158,14 +157,19 @@
   h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.2; font-weight: 650; letter-spacing: -.025em; }
 
   /* Werkt met */
-  .works { padding: 34px 0 10px; }
-  .works .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 26px; color: var(--ink-3); font-size: 15px; }
-  .works .label { color: var(--ink-4); font-weight: 500; }
-  .works .name { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); font-weight: 600; letter-spacing: -.01em; }
+  .works { position: relative; border-top: 1px solid var(--line); }
+  .works .wrap { display: flex; align-items: center; gap: 28px; min-height: 72px; color: var(--ink-3); font-size: 15px; }
+  .works .label { flex: none; color: var(--ink-4); font-weight: 500; white-space: nowrap; }
+  /* De namen schuiven langzaam door, net als de logo's op stripe.com */
+  .marquee { flex: 1; min-width: 0; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 96px, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(90deg, transparent, #000 96px, #000 calc(100% - 64px), transparent); }
+  .track { display: flex; gap: 52px; width: max-content; animation: marquee 46s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  @keyframes marquee { to { transform: translateX(calc(-50% - 26px)); } }
+  .works .name { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
   .works .name svg { width: 18px; height: 18px; }
 
   /* Bento met functies */
-  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+  .bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
   .card { position: relative; overflow: hidden; padding: 30px; border-radius: var(--r-2xl); background: var(--soft); border: 1px solid transparent; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
   .card p { margin: 0; color: var(--ink-3); font-size: 16px; }
   .card .vis { margin-top: 26px; }
@@ -222,7 +226,7 @@
   .lang em { font-style: normal; font-size: 18px; }
 
   /* ---------- Stemmen ---------- */
-  .voices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .voices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
   .voice { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 14px; border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); text-align: left; cursor: pointer;
     transition: border-color .25s, box-shadow .3s var(--ease), transform .3s var(--ease); }
   .voice:hover { border-color: var(--line-2); box-shadow: 0 10px 26px -14px rgba(16,16,24,.25); transform: translateY(-2px); }
@@ -316,12 +320,11 @@
 
   /* ---------- Afsluiter ---------- */
   .cta-sec { padding: 0 0 100px; }
-  .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 90px 40px; border-radius: var(--r-2xl); text-align: center; color: #fff; background: var(--night); }
-  .cta-box .grad { z-index: -1; opacity: .95; }
-  .cta-box::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(70% 90% at 50% 50%, rgba(11,11,20,.15), rgba(11,11,20,.55)); }
-  .cta-box h2 { max-width: 760px; margin: 0 auto; }
-  .cta-box p { max-width: 520px; margin: 18px auto 32px; color: rgba(255,255,255,.85); font-size: 19px; }
-  .cta-box .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 96px 56px; border-radius: var(--r-2xl); background: var(--soft); }
+  .cta-box .ribbon { z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
+  .cta-copy { position: relative; max-width: 600px; }
+  .cta-box p { max-width: 480px; margin: 18px 0 32px; color: var(--ink-3); font-size: 19px; }
+  .cta-box .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
   footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
   footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
@@ -335,16 +338,15 @@
 
   /* ---------- Kleinere schermen ---------- */
   @media (max-width: 1060px) {
-    .voices { grid-template-columns: repeat(3, 1fr); }
+    .voices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .c-4, .c-3, .c-2 { grid-column: span 3; }
     .devs-grid { grid-template-columns: 1fr; gap: 40px; }
   }
   @media (max-width: 900px) {
-    .hero { padding: 120px 0 90px; }
     .hero { min-height: 0; }
+    .hero-main { padding: 270px 0 56px; }
+    .hero-bg { bottom: auto; height: 380px; -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent); }
     .demo-grid { grid-template-columns: 1fr; gap: 48px; justify-items: center; }
-    .hero { padding-top: 330px; }
-    .hero-bg { bottom: auto; height: 400px; -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
     .nav-links { display: none; }
     .nav .wrap { gap: 12px; }
     .nav .login { padding: 8px 6px; }
@@ -358,16 +360,17 @@
   }
   @media (max-width: 700px) {
     .sec { padding: 84px 0; }
-    .bento { grid-template-columns: 1fr; }
+    .bento { grid-template-columns: minmax(0, 1fr); }
     .c-4, .c-3, .c-2 { grid-column: auto; }
     .card { padding: 24px; }
     .cal { grid-template-columns: 1fr; }
     .cal .days { display: flex; gap: 6px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
     .cal .days div { flex: none; gap: 8px; }
-    .voices { grid-template-columns: 1fr; }
+    .voices { grid-template-columns: minmax(0, 1fr); }
     .phone { width: min(100%, 330px); }
     .screen { height: 600px; }
-    .cta-box { padding: 64px 22px; }
+    .cta-box { padding: 56px 24px 300px; }
+    .cta-box .ribbon { top: auto; height: 320px; -webkit-mask-image: linear-gradient(transparent, #000 35%); mask-image: linear-gradient(transparent, #000 35%); }
     footer nav { margin-left: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -398,40 +401,50 @@
 <main>
   <!-- ========== Hero ========== -->
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true"><canvas class="ribbon" data-ribbon></canvas></div>
-    <div class="wrap">
-      <div>
-        <a class="eyebrow rv" href="#stemmen"><b>Nieuw</b> 12 Nederlandse stemmen</a>
-        <h1 class="rv" style="--d:.05s">Je telefoon, <span class="soft">altijd opgenomen.</span></h1>
-        <p class="lead rv" style="--d:.12s">Botlu is de AI-assistent die de telefoon opneemt voor je bedrijf. Hij beantwoordt vragen, plant afspraken in je agenda en stuurt je na elk gesprek een samenvatting. Dag en nacht, in een stem die klinkt als een collega.</p>
-        <div class="cta rv" style="--d:.18s">
-          <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          <a class="btn line" href="#stemmen"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg> Luister naar de stemmen</a>
+    <div class="hero-bg" aria-hidden="true"><canvas class="ribbon" data-ribbon="hero"></canvas></div>
+    <div class="hero-main">
+      <div class="wrap">
+        <div class="hero-copy">
+          <a class="eyebrow rv" href="#stemmen"><b>Nieuw</b> 12 Nederlandse stemmen</a>
+          <h1 class="rv" style="--d:.05s">Je telefoon, <span class="soft">altijd opgenomen.</span></h1>
+          <p class="lead rv" style="--d:.12s">Botlu is de AI-assistent die opneemt voor je bedrijf. Hij beantwoordt vragen, plant afspraken in en stuurt je na elk gesprek een samenvatting. Dag en nacht, in een stem die klinkt als een collega.</p>
+          <div class="cta rv" style="--d:.18s">
+            <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            <a class="btn line" href="#stemmen"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg> Luister naar de stemmen</a>
+          </div>
+          <p class="fine rv" style="--d:.24s">Je eerste assistent staat direct klaar. Je houdt gewoon je eigen nummer.</p>
         </div>
-        <p class="fine rv" style="--d:.24s">Je eerste assistent staat direct klaar. Je houdt gewoon je eigen nummer.</p>
       </div>
-
     </div>
-  </section>
-
-  <!-- ========== Werkt met ========== -->
-  <section class="works" aria-label="Koppelingen">
-    <div class="wrap">
-      <span class="label">Werkt met</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Outlook</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Apple Agenda</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Slack</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Microsoft Teams</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Discord</span>
-      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>Webhooks &amp; API</span>
+    <div class="works" aria-label="Koppelingen">
+      <div class="wrap">
+        <span class="label">Werkt met</span>
+        <div class="marquee">
+          <div class="track">
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Outlook</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Apple Agenda</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Slack</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Microsoft Teams</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Discord</span>
+            <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>Webhooks &amp; API</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Outlook</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Apple Agenda</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Slack</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Microsoft Teams</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Discord</span>
+            <span class="name" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>Webhooks &amp; API</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ========== Zo klinkt een gesprek ========== -->
   <section class="sec demo" id="demo">
     <div class="wrap demo-grid">
-  <div class="phone rv" aria-label="Voorbeeld van een gesprek met Botlu">
+      <div class="phone rv" aria-label="Voorbeeld van een gesprek met Botlu">
           <div class="screen">
             <div class="island"></div>
             <div class="call-head">
@@ -689,12 +702,14 @@
   <section class="cta-sec">
     <div class="wrap">
       <div class="cta-box rv">
-        <canvas class="grad" data-grad aria-hidden="true"></canvas>
-        <h2>Mis nooit meer een klant aan de telefoon.</h2>
-        <p>Maak een account en laat je eerste assistent vandaag nog opnemen.</p>
-        <div class="cta">
-          <a class="btn white" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          <a class="btn glass" href="https://app.botlu.ai/login" style="color:#fff;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)">Inloggen</a>
+        <canvas class="ribbon" data-ribbon="cta" aria-hidden="true"></canvas>
+        <div class="cta-copy">
+          <h2>Mis nooit meer een klant aan de telefoon.</h2>
+          <p>Maak een account en laat je eerste assistent vandaag nog opnemen.</p>
+          <div class="cta">
+            <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            <a class="btn line" href="https://app.botlu.ai/login">Inloggen</a>
+          </div>
         </div>
       </div>
     </div>
@@ -715,148 +730,188 @@
 const $ = s => document.querySelector(s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ---------- Bewegend kleurverloop (WebGL) ----------
-// Vier kleuren die door elkaar vloeien via vervormde simplexruis. We tekenen
-// op halve resolutie: het verloop is zacht, dus dat zie je niet en het scheelt veel.
-const FRAG = `precision highp float;
-uniform vec2 r; uniform float t; uniform vec3 c0, c1, c2, c3;
-// 3D-simplexruis van Ian McEwan en Stefan Gustavson (MIT)
-vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}
-vec4 m289(vec4 x){return x-floor(x*(1./289.))*289.;}
-vec4 perm(vec4 x){return m289(((x*34.)+1.)*x);}
-float snoise(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.); const vec4 D=vec4(0.,.5,1.,2.);
-  vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
-  i=m289(i);
-  vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  vec3 ns=.142857142857*D.wyz-D.xzx;
-  vec4 j=p-49.*floor(p*ns.z*ns.z); vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.*x_);
-  vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.+1.; vec4 s1=floor(b1)*2.+1.; vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
-  vec4 nr=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-  p0*=nr.x; p1*=nr.y; p2*=nr.z; p3*=nr.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.); m=m*m;
-  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+// ---------- Het lint (in de stijl van stripe.com) ----------
+// Twee banen van fijne draden, als zijde: een brede waaier die van boven
+// binnenkomt en rechtsonder samenkomt, en daarachter een smallere baan met een
+// paarse kern. Elke baan is een raster van driehoekjes tussen drie bézierkrommen
+// (linkerrand, midden, rechterrand); kleuren, draden en glans komen uit de
+// fragment-shader. De krommen bewegen langzaam, zodat het lint blijft golven.
+const RIBBON_VS = `attribute vec2 a;
+uniform vec2 res;
+uniform vec2 P[12];
+varying vec2 uv;
+vec2 bez(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
+  float u = 1. - t;
+  return u * u * u * p0 + 3. * u * u * t * p1 + 3. * u * t * t * p2 + t * t * t * p3;
 }
-void main(){
-  vec2 uv=gl_FragCoord.xy/r;
-  vec2 q=vec2(uv.x*r.x/r.y,uv.y)*vec2(.5,1.);
-  float T=t*.045;
-  q+=.38*vec2(snoise(vec3(q*.8,T)),snoise(vec3(q*.8+7.3,T*1.13)));
-  vec3 col=c0;
-  col=mix(col,c1,smoothstep(-.55,.45,snoise(vec3(q*vec2(1.,1.7)+vec2(T*1.6,0.),T*.8+1.))));
-  col=mix(col,c2,smoothstep(-.3,.5,snoise(vec3(q*vec2(1.25,2.)+vec2(-T,3.),T*.9+4.))));
-  col=mix(col,c3,smoothstep(-.05,.65,snoise(vec3(q*vec2(.85,1.4)+vec2(5.,-T*1.3),T+9.))));
-  col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;
-  gl_FragColor=vec4(col,1.);
+void main() {
+  vec2 l = bez(P[0], P[1], P[2], P[3], a.x);
+  vec2 m = bez(P[4], P[5], P[6], P[7], a.x);
+  vec2 r = bez(P[8], P[9], P[10], P[11], a.x);
+  float s = a.y, u = 1. - s;
+  vec2 p = u * u * l + 2. * u * s * m + s * s * r;
+  uv = a;
+  gl_Position = vec4(p.x / res.x * 2. - 1., 1. - p.y / res.y * 2., 0., 1.);
 }`;
-const COLORS = ['#6d5cff', '#38bdf8', '#ff5fa2', '#ffb547'].map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255));
-
-function gradient(canvas) {
-  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' });
-  if (!gl) return;   // dan blijft de CSS-achtergrond van .grad staan
-  const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
-  const prog = gl.createProgram();
-  gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FRAG));
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-  gl.useProgram(prog);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(0);
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  const u = n => gl.getUniformLocation(prog, n);
-  COLORS.forEach((c, i) => gl.uniform3fv(u('c' + i), c));
-  const uR = u('r'), uT = u('t');
-  const size = () => {
-    const w = Math.max(1, Math.round(canvas.clientWidth * .5)), h = Math.max(1, Math.round(canvas.clientHeight * .5));
-    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); gl.uniform2f(uR, w, h); }
-  };
-  const start = performance.now() - 40000 * Math.random();
-  let visible = true, raf = 0;
-  const frame = now => {
-    size();
-    gl.uniform1f(uT, (now - start) / 1000);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    raf = visible && !reduced && !document.hidden ? requestAnimationFrame(frame) : 0;
-  };
-  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); }).observe(canvas);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && visible && !raf) raf = requestAnimationFrame(frame); });
-  addEventListener('resize', () => { if (!raf) requestAnimationFrame(frame); });
-  raf = requestAnimationFrame(frame);
+const RIBBON_FS = `#extension GL_OES_standard_derivatives : enable
+precision highp float;
+varying vec2 uv;
+uniform float time, layer, density;
+float hash(float n) { return fract(sin(n) * 43758.5453); }
+float noise(vec2 x) {
+  vec2 i = floor(x), f = fract(x);
+  f = f * f * (3. - 2. * f);
+  float n = i.x + i.y * 57.;
+  return mix(mix(hash(n), hash(n + 1.), f.x), mix(hash(n + 57.), hash(n + 58.), f.x), f.y);
 }
-
-// ---------- Het lint in de hero (zoals stripe.com) ----------
-// Een gedraaid zijden lint: per pixel rekenen we uit waar we dwars op het lint
-// zitten (s, -1 tot 1). Waar cos(tw) door nul gaat kantelt het lint en wordt het
-// smal; daarna ligt de andere kant boven, dus de kleuren draaien mee om.
-const RIBBON = `precision highp float;
-uniform vec2 r; uniform float t, unit;
-vec3 pal(float k){
-  k=clamp(k,0.,1.);
-  vec3 c=mix(vec3(.82,.89,1.),vec3(.58,.5,1.),smoothstep(0.,.2,k));
-  c=mix(c,vec3(.98,.45,.8),smoothstep(.2,.4,k));
-  c=mix(c,vec3(1.,.5,.2),smoothstep(.4,.6,k));
-  c=mix(c,vec3(1.,.34,.64),smoothstep(.6,.8,k));
-  return mix(c,vec3(1.,.72,.45),smoothstep(.8,1.,k));
+vec3 c(float r, float g, float b) { return vec3(r, g, b) / 255.; }
+// Kleuren dwars over de waaier: bovenaan lichtblauw > lavendel > oranje > roze,
+// lager wordt de linkerkant roze
+vec3 fanTop(float k) {
+  vec3 col = c(196., 218., 255.);
+  col = mix(col, c(172., 184., 255.), smoothstep(.08, .28, k));
+  col = mix(col, c(198., 152., 255.), smoothstep(.28, .39, k));
+  col = mix(col, c(246., 142., 196.), smoothstep(.39, .45, k));
+  col = mix(col, c(255., 160., 56.), smoothstep(.44, .52, k));
+  col = mix(col, c(255., 196., 76.), smoothstep(.55, .61, k));
+  col = mix(col, c(255., 126., 46.), smoothstep(.61, .68, k));
+  col = mix(col, c(255., 100., 74.), smoothstep(.68, .76, k));
+  col = mix(col, c(255., 178., 148.), smoothstep(.76, .85, k));
+  return mix(col, c(255., 138., 202.), smoothstep(.88, .98, k));
 }
-void main(){
-  vec2 f=gl_FragCoord.xy;
-  float u=f.x/unit, v=(r.y-f.y)/unit, W=r.x/unit, T=t*.22;
-  float cx=W-.35+.55*v-.15*v*v+.04*sin(v*3.+T)+.015*sin(v*8.-T*1.6);  // middenlijn: boog naar rechtsonder
-  float tw=cos(v*2.86+.25*sin(T*.6));                                 // draaiing, knik rond het midden
-  float hw=.035+.52*abs(tw)*(1.-.45*v);
-  float s=(u-cx)/hw, side=clamp(tw*5.,-1.,1.);                       // vloeiend omdraaien in de knik
-  float k=(s*side+1.)*.5+.07*sin(v*3.+T*1.3);
-  vec3 col=pal(k);
-  col*=.86+.14*(sin(s*170.+sin(v*9.+T)*1.5)*.5+.5);                  // fijne draden
-  col=mix(col,vec3(1.),exp(-pow((s*side-.3)*4.5,2.))*.4*abs(tw));     // glans
-  col*=.78+.22*smoothstep(0.,.35,abs(tw));                            // schaduw in de knik
-  float e=abs(s)+(s>0.?.035:.007)*sin(v*610.+s*40.)*sin(v*190.+T);    // rechts rafelig, links strak
-  float a=(1.-smoothstep(.84,1.,e))*smoothstep(-.02,.14,k);           // lichtblauwe kant vervaagt
-  gl_FragColor=vec4(col*a,a);
+vec3 fanLow(float k) {
+  vec3 col = c(250., 120., 232.);
+  col = mix(col, c(255., 108., 196.), smoothstep(.05, .25, k));
+  col = mix(col, c(255., 88., 138.), smoothstep(.25, .45, k));
+  col = mix(col, c(255., 110., 58.), smoothstep(.45, .58, k));
+  col = mix(col, c(255., 142., 38.), smoothstep(.58, .69, k));
+  col = mix(col, c(255., 194., 78.), smoothstep(.70, .77, k));
+  col = mix(col, c(255., 178., 140.), smoothstep(.80, .88, k));
+  return mix(col, c(255., 138., 206.), smoothstep(.90, .98, k));
+}
+// De baan erachter: magenta > paarse kern > roze > perzik
+vec3 band(float k) {
+  vec3 col = c(238., 104., 228.);
+  col = mix(col, c(146., 112., 250.), smoothstep(.05, .2, k));
+  col = mix(col, c(122., 94., 255.), smoothstep(.2, .34, k));
+  col = mix(col, c(255., 124., 192.), smoothstep(.38, .55, k));
+  col = mix(col, c(255., 160., 160.), smoothstep(.55, .7, k));
+  return mix(col, c(255., 180., 128.), smoothstep(.7, .9, k));
+}
+void main() {
+  float t = uv.x, s = uv.y;
+  bool fan = layer > .5;
+  float k = s + .012 * sin(t * 4. - time * .3) + .006 * sin(t * 9. + s * 3. + time * .2);
+  float low = smoothstep(.12, .55, t);
+  vec3 col = fan ? mix(fanTop(k), fanLow(k), low) : band(k);
+
+  // Draden: fijne lijnen, per draad een eigen helderheid en lange strepen die
+  // langzaam meestromen. Worden de lijnen fijner dan een pixel, dan vervagen ze.
+  float f = s * density, w = fwidth(f);
+  float aa = clamp(1. - w * 1.3, 0., 1.);
+  float lines = .5 + .5 * cos(6.2831853 * f);
+  float rnd = hash(floor(s * 150.) + layer * 31.);
+  float streak = noise(vec2(s * 90., t * 3.2 - time * .05));
+  float soft = fan ? mix(.45, 1., smoothstep(.3, .5, k)) : 1.;                            // in het lichte deel subtieler
+  col *= 1. - .03 * soft + soft * (.07 * (mix(.5, lines, aa) - .5) + .05 * (rnd - .5) * aa + .05 * (streak - .5));
+  // Zijdeglans die langzaam over de draden schuift
+  float gloss = pow(.5 + .5 * sin(s * 8. + t * 2.4 - time * .3), 14.);
+  col = mix(col, vec3(1.), gloss * .12);
+
+  float a;
+  if (fan) {
+    float hl = exp(-pow((k - mix(.585, .74, low)) / .014, 2.));                                // gele glanslijn
+    col = mix(col, c(255., 230., 140.), hl * .55);
+    float curl = exp(-pow((s - .075) / .018, 2.)) * smoothstep(.35, .6, t) * (1. - smoothstep(.85, .98, t));
+    col = mix(col, vec3(1.), curl * .65);                                                      // witte krulrand
+    col = mix(col, vec3(1.), exp(-pow((s - .9) / .03, 2.)) * .18);                            // glans waar de stof omslaat
+    col *= mix(1., .9, smoothstep(.95, 1., s));
+    float fl = mix(.08, .025, smoothstep(.15, .6, t));                                         // links boven zacht
+    a = smoothstep(0., fl, s) * smoothstep(1., 1. - .018 * (.6 + rnd), s);
+  } else {
+    col *= mix(.86, 1., smoothstep(0., .14, s));                                               // schaduw van de waaier
+    a = smoothstep(0., .015, s) * smoothstep(1., 1. - .09 * (.35 + rnd), s) * smoothstep(0., .22, t);
+  }
+  gl_FragColor = vec4(col * a, a);
 }`;
+
+// Vorm van het lint in CSS-pixels. X telt vanaf ankerpunt R in eenheden S,
+// Y is een fractie van de hoogte H. Elk binnenpunt wiegt langzaam mee.
+function ribbonShape(W, H, T, R, S) {
+  const pt = (x, y, ph, amp = 0) => [R + (x + amp * Math.sin(T * .27 + ph)) * S, (y + amp * .7 * Math.cos(T * .21 + ph * 1.7)) * H];
+  const mid = (l, r, bx = 0) => l.map((p, i) => [(p[0] + r[i][0]) / 2 + bx * S * Math.sin(Math.PI * i / 3), (p[1] + r[i][1]) / 2]);
+  const fanL = [pt(-1.06, -.04, 0), pt(-.8, .27, 1, .03), pt(-.4, .7, 2, .035), pt(-.05, .95, 3, .006)];
+  const fanR = [pt(0, -.04, 0), pt(.035, .28, 4, .015), pt(.03, .62, 5, .015), pt(-.01, .95, 6, .006)];
+  const bandL = [pt(-.01, .4, 0), pt(-.01, .6, 7, .01), pt(-.015, .82, 8, .01), pt(-.035, 1.03, 0)];
+  const bandR = [pt(.04, .37, 0), pt(.17, .5, 9, .03), pt(.25, .72, 10, .03), pt(.37, 1.03, 11, .01)];
+  return [
+    { layer: 0, density: 110, points: [...bandL, ...mid(bandL, bandR), ...bandR] },
+    { layer: 1, density: 230, points: [...fanL, ...mid(fanL, fanR, -.04), ...fanR] },
+  ];
+}
+// Waar het lint staat: in de hero tegen de rechterrand van de inhoud, in het
+// afsluitblok tegen de rechterrand van het blok
+const RIBBON_PLACES = {
+  hero: (W, H) => { const wrap = Math.min(W - 32, 1180); return [(W + wrap) / 2, .64 * wrap]; },
+  cta: (W, H) => [W - Math.min(40, W * .06), Math.min(H * .95, W * .5)],
+};
+
 function ribbon(canvas) {
-  const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'low-power' });
-  if (!gl) return;
-  const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true, powerPreference: 'low-power' });
+  if (!gl || !gl.getExtension('OES_standard_derivatives')) return canvas.parentElement.classList.add('no-gl');
+  const compile = (type, src) => { const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; };
   const prog = gl.createProgram();
-  gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, RIBBON));
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, RIBBON_VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, RIBBON_FS));
   gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return canvas.parentElement.classList.add('no-gl');
   gl.useProgram(prog);
+
+  // Raster: NT stukjes langs het lint, NS dwars erop (de draden zelf tekent de shader)
+  const NT = 160, NS = 40, verts = [], idx = [];
+  for (let i = 0; i <= NT; i++) for (let j = 0; j <= NS; j++) verts.push(i / NT, j / NS);
+  for (let i = 0; i < NT; i++) for (let j = 0; j < NS; j++) {
+    const q = i * (NS + 1) + j;
+    idx.push(q, q + 1, q + NS + 1, q + 1, q + NS + 2, q + NS + 1);
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(0);
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  const uR = gl.getUniformLocation(prog, 'r'), uT = gl.getUniformLocation(prog, 't'), uU = gl.getUniformLocation(prog, 'unit');
-  // De draden zijn fijn, dus op volle resolutie (tot 1,5× voor retina)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  gl.clearColor(0, 0, 0, 0);
+  const u = n => gl.getUniformLocation(prog, n);
+  const uRes = u('res'), uP = u('P'), uTime = u('time'), uLayer = u('layer'), uDensity = u('density');
+  const place = RIBBON_PLACES[canvas.dataset.ribbon] || RIBBON_PLACES.hero;
+
+  let dpr = 1;
   const size = () => {
-    const d = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(canvas.clientWidth * d), h = Math.round(canvas.clientHeight * d);
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
-      gl.uniform2f(uR, w, h);
-      gl.uniform1f(uU, Math.min(h, 860 * d));   // het lint houdt dezelfde maat, ook in een hoge hero
-    }
+    dpr = Math.min(devicePixelRatio || 1, canvas.clientWidth > 1400 ? 1.5 : 2);   // op brede schermen is 1,5× scherp genoeg
+    const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); gl.uniform2f(uRes, w, h); }
   };
-  const start = performance.now();
+  const start = performance.now() - 4000;
   let visible = true, raf = 0;
   const frame = now => {
     size();
-    gl.uniform1f(uT, (now - start) / 1000);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    const T = (now - start) / 1000, W = canvas.clientWidth, H = canvas.clientHeight;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(uTime, T);
+    for (const L of ribbonShape(W, H, T, ...place(W, H))) {
+      gl.uniform2fv(uP, L.points.flat().map(v => v * dpr));
+      gl.uniform1f(uLayer, L.layer);
+      gl.uniform1f(uDensity, L.density);
+      gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
+    }
     raf = visible && !reduced && !document.hidden ? requestAnimationFrame(frame) : 0;
   };
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); }).observe(canvas);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && visible && !raf) raf = requestAnimationFrame(frame); });
-  addEventListener('resize', () => { if (!raf) requestAnimationFrame(frame); });
+  addEventListener('resize', () => { if (!raf) raf = requestAnimationFrame(frame); });
   raf = requestAnimationFrame(frame);
 }
 
@@ -1022,7 +1077,6 @@ function initReveal() {
 }
 
 $('#year').textContent = new Date().getFullYear();
-document.querySelectorAll('[data-grad]').forEach(gradient);
 document.querySelectorAll('[data-ribbon]').forEach(ribbon);
 initNav();
 initCall();
