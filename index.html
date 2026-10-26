@@ -82,7 +82,16 @@
      kleuren, tekst eronder kleurt mee (zoals op stripe.com) */
   .hero-bg { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; mix-blend-mode: multiply; }
   .ribbon { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .no-gl { background: radial-gradient(28% 45% at 70% 10%, rgba(170,184,255,.7), transparent 70%), radial-gradient(30% 50% at 84% 32%, rgba(255,160,60,.6), transparent 70%), radial-gradient(26% 45% at 92% 78%, rgba(255,110,196,.55), transparent 70%); }
+  /* Zachte gloed in dezelfde kleuren als het lint, die langzaam verschuift */
+  .hero-glow { position: absolute; inset: 0; z-index: -3; overflow: hidden; pointer-events: none; }
+  .hero-glow::before { content: ""; position: absolute; inset: -20%;
+    background: radial-gradient(38% 42% at 18% 12%, rgba(182,220,219,.55), transparent 70%),
+                radial-gradient(34% 40% at 86% 14%, rgba(95,134,214,.22), transparent 70%),
+                radial-gradient(40% 44% at 82% 86%, rgba(195,189,230,.5), transparent 70%),
+                radial-gradient(36% 40% at 34% 92%, rgba(221,211,235,.55), transparent 70%);
+    animation: glow 22s ease-in-out infinite alternate; }
+  @keyframes glow { to { transform: translate3d(4%, -3%, 0) rotate(6deg) scale(1.06); } }
+  .no-gl { background: radial-gradient(28% 45% at 66% 10%, rgba(178,220,216,.8), transparent 70%), radial-gradient(30% 50% at 84% 30%, rgba(95,134,214,.55), transparent 70%), radial-gradient(26% 45% at 92% 78%, rgba(184,176,236,.7), transparent 70%); }
   /* Dunne hulplijnen langs de rand van de inhoud, zoals op stripe.com */
   .hero::after { content: ""; position: absolute; z-index: -2; inset: 0; pointer-events: none;
     background: linear-gradient(var(--line), var(--line)) left max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
@@ -401,6 +410,7 @@
 <main>
   <!-- ========== Hero ========== -->
   <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-bg" aria-hidden="true"><canvas class="ribbon" data-ribbon="hero"></canvas></div>
     <div class="hero-main">
       <div class="wrap">
@@ -733,23 +743,30 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // ---------- Het lint (in de stijl van stripe.com) ----------
 // Twee banen van fijne draden, als zijde: een brede waaier die van boven
 // binnenkomt en rechtsonder samenkomt, en daarachter een smallere baan met een
-// paarse kern. Elke baan is een raster van driehoekjes tussen drie bézierkrommen
+// blauwe kern. Elke baan is een raster van driehoekjes tussen drie bézierkrommen
 // (linkerrand, midden, rechterrand); kleuren, draden en glans komen uit de
-// fragment-shader. De krommen bewegen langzaam, zodat het lint blijft golven.
+// fragment-shader. Golven lopen over het lint naar beneden en de randen wapperen.
 const RIBBON_VS = `attribute vec2 a;
 uniform vec2 res;
 uniform vec2 P[12];
+uniform float time, wave, layer;
 varying vec2 uv;
 vec2 bez(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
   float u = 1. - t;
   return u * u * u * p0 + 3. * u * u * t * p1 + 3. * u * t * t * p2 + t * t * t * p3;
 }
 void main() {
-  vec2 l = bez(P[0], P[1], P[2], P[3], a.x);
-  vec2 m = bez(P[4], P[5], P[6], P[7], a.x);
-  vec2 r = bez(P[8], P[9], P[10], P[11], a.x);
-  float s = a.y, u = 1. - s;
-  vec2 p = u * u * l + 2. * u * s * m + s * s * r;
+  float t = a.x, s = a.y, u = 1. - s;
+  vec2 p = u * u * bez(P[0], P[1], P[2], P[3], t) + 2. * u * s * bez(P[4], P[5], P[6], P[7], t) + s * s * bez(P[8], P[9], P[10], P[11], t);
+  // Golfveld over het hele canvas: beide banen bewegen mee als één doek, zonder naad.
+  // Bij de hals onderaan wat rustiger.
+  vec2 q = p / res;
+  float w = sin(6.2831853 * (q.y * 1.1 - time * .14) + q.x * 3.)
+          + .5 * sin(6.2831853 * (q.y * 2.3 - time * .26) + q.x * 5. + 1.3);
+  float edge = (s - .5) * (s - .5) * 4.;
+  float flutter = sin(6.2831853 * (t * 3. - time * .35) + s * 5. + layer * 2.) * edge * (layer > .5 ? 1. : smoothstep(0., .3, s));
+  float damp = 1. - .6 * smoothstep(.8, 1., q.y);
+  p += vec2(w + .6 * flutter, .25 * w) * wave * damp;
   uv = a;
   gl_Position = vec4(p.x / res.x * 2. - 1., 1. - p.y / res.y * 2., 0., 1.);
 }`;
@@ -765,85 +782,83 @@ float noise(vec2 x) {
   return mix(mix(hash(n), hash(n + 1.), f.x), mix(hash(n + 57.), hash(n + 58.), f.x), f.y);
 }
 vec3 c(float r, float g, float b) { return vec3(r, g, b) / 255.; }
-// Kleuren dwars over de waaier: bovenaan lichtblauw > lavendel > oranje > roze,
-// lager wordt de linkerkant roze
+// Kleuren dwars over de waaier: mint > hemelsblauw > korenbloemblauw > periwinkle >
+// lavendel > lila. Lager schuift de linkerkant naar lila.
 vec3 fanTop(float k) {
-  vec3 col = c(196., 218., 255.);
-  col = mix(col, c(172., 184., 255.), smoothstep(.08, .28, k));
-  col = mix(col, c(198., 152., 255.), smoothstep(.28, .39, k));
-  col = mix(col, c(246., 142., 196.), smoothstep(.39, .45, k));
-  col = mix(col, c(255., 160., 56.), smoothstep(.44, .52, k));
-  col = mix(col, c(255., 196., 76.), smoothstep(.55, .61, k));
-  col = mix(col, c(255., 126., 46.), smoothstep(.61, .68, k));
-  col = mix(col, c(255., 100., 74.), smoothstep(.68, .76, k));
-  col = mix(col, c(255., 178., 148.), smoothstep(.76, .85, k));
-  return mix(col, c(255., 138., 202.), smoothstep(.88, .98, k));
+  vec3 col = c(207., 233., 230.);
+  col = mix(col, c(178., 220., 216.), smoothstep(.04, .18, k));
+  col = mix(col, c(169., 203., 230.), smoothstep(.18, .32, k));
+  col = mix(col, c(143., 176., 230.), smoothstep(.32, .45, k));
+  col = mix(col, c(95., 134., 214.), smoothstep(.45, .58, k));
+  col = mix(col, c(125., 143., 224.), smoothstep(.6, .68, k));
+  col = mix(col, c(169., 167., 232.), smoothstep(.68, .8, k));
+  col = mix(col, c(203., 191., 238.), smoothstep(.8, .9, k));
+  return mix(col, c(227., 211., 241.), smoothstep(.9, 1., k));
 }
 vec3 fanLow(float k) {
-  vec3 col = c(250., 120., 232.);
-  col = mix(col, c(255., 108., 196.), smoothstep(.05, .25, k));
-  col = mix(col, c(255., 88., 138.), smoothstep(.25, .45, k));
-  col = mix(col, c(255., 110., 58.), smoothstep(.45, .58, k));
-  col = mix(col, c(255., 142., 38.), smoothstep(.58, .69, k));
-  col = mix(col, c(255., 194., 78.), smoothstep(.70, .77, k));
-  col = mix(col, c(255., 178., 140.), smoothstep(.80, .88, k));
-  return mix(col, c(255., 138., 206.), smoothstep(.90, .98, k));
+  vec3 col = c(201., 195., 239.);
+  col = mix(col, c(167., 179., 234.), smoothstep(.05, .25, k));
+  col = mix(col, c(127., 152., 226.), smoothstep(.25, .42, k));
+  col = mix(col, c(91., 127., 212.), smoothstep(.42, .56, k));
+  col = mix(col, c(142., 197., 226.), smoothstep(.62, .72, k));
+  col = mix(col, c(180., 219., 215.), smoothstep(.72, .84, k));
+  return mix(col, c(217., 205., 239.), smoothstep(.88, 1., k));
 }
-// De baan erachter: magenta > paarse kern > roze > perzik
+// De baan erachter: lavendel > blauwe kern > periwinkle > aqua > mint
 vec3 band(float k) {
-  vec3 col = c(238., 104., 228.);
-  col = mix(col, c(146., 112., 250.), smoothstep(.05, .2, k));
-  col = mix(col, c(122., 94., 255.), smoothstep(.2, .34, k));
-  col = mix(col, c(255., 124., 192.), smoothstep(.38, .55, k));
-  col = mix(col, c(255., 160., 160.), smoothstep(.55, .7, k));
-  return mix(col, c(255., 180., 128.), smoothstep(.7, .9, k));
+  vec3 col = c(184., 176., 236.);
+  col = mix(col, c(111., 127., 220.), smoothstep(.05, .18, k));
+  col = mix(col, c(86., 113., 208.), smoothstep(.18, .32, k));
+  col = mix(col, c(148., 168., 230.), smoothstep(.36, .52, k));
+  col = mix(col, c(183., 217., 224.), smoothstep(.55, .72, k));
+  return mix(col, c(214., 232., 230.), smoothstep(.75, .92, k));
 }
 void main() {
   float t = uv.x, s = uv.y;
   bool fan = layer > .5;
-  float k = s + .012 * sin(t * 4. - time * .3) + .006 * sin(t * 9. + s * 3. + time * .2);
+  float k = s + .03 * sin(t * 4. - time * .55) + .012 * sin(t * 9. + s * 3. + time * .4);
   float low = smoothstep(.12, .55, t);
   vec3 col = fan ? mix(fanTop(k), fanLow(k), low) : band(k);
 
-  // Draden: fijne lijnen, per draad een eigen helderheid en lange strepen die
-  // langzaam meestromen. Worden de lijnen fijner dan een pixel, dan vervagen ze.
+  // Draden: fijne lijnen, per draad een eigen helderheid en strepen die meestromen.
+  // Worden de lijnen fijner dan een pixel, dan vervagen ze; in lichte delen subtieler.
   float f = s * density, w = fwidth(f);
   float aa = clamp(1. - w * 1.3, 0., 1.);
   float lines = .5 + .5 * cos(6.2831853 * f);
   float rnd = hash(floor(s * 150.) + layer * 31.);
-  float streak = noise(vec2(s * 90., t * 3.2 - time * .05));
-  float soft = fan ? mix(.45, 1., smoothstep(.3, .5, k)) : 1.;                            // in het lichte deel subtieler
+  float streak = noise(vec2(s * 90., t * 3.2 - time * .22));
+  float soft = mix(.45, 1., smoothstep(.85, .6, dot(col, vec3(.3, .59, .11))));
   col *= 1. - .03 * soft + soft * (.07 * (mix(.5, lines, aa) - .5) + .05 * (rnd - .5) * aa + .05 * (streak - .5));
-  // Zijdeglans die langzaam over de draden schuift
-  float gloss = pow(.5 + .5 * sin(s * 8. + t * 2.4 - time * .3), 14.);
-  col = mix(col, vec3(1.), gloss * .12);
+  // Zijdeglans die over de draden schuift
+  float gloss = pow(.5 + .5 * sin(s * 7. + t * 3. - time * .9), 12.);
+  col = mix(col, vec3(1.), gloss * .16);
 
   float a;
   if (fan) {
-    float hl = exp(-pow((k - mix(.585, .74, low)) / .014, 2.));                                // gele glanslijn
-    col = mix(col, c(255., 230., 140.), hl * .55);
+    float hl = exp(-pow((k - mix(.6, .68, low) - .02 * sin(time * .5)) / .014, 2.));        // ijsblauwe glanslijn
+    col = mix(col, c(240., 247., 255.), hl * .6);
     float curl = exp(-pow((s - .075) / .018, 2.)) * smoothstep(.35, .6, t) * (1. - smoothstep(.85, .98, t));
     col = mix(col, vec3(1.), curl * .65);                                                      // witte krulrand
     col = mix(col, vec3(1.), exp(-pow((s - .9) / .03, 2.)) * .18);                            // glans waar de stof omslaat
-    col *= mix(1., .9, smoothstep(.95, 1., s));
+    col *= mix(1., .92, smoothstep(.95, 1., s));
     float fl = mix(.08, .025, smoothstep(.15, .6, t));                                         // links boven zacht
     a = smoothstep(0., fl, s) * smoothstep(1., 1. - .018 * (.6 + rnd), s);
   } else {
-    col *= mix(.86, 1., smoothstep(0., .14, s));                                               // schaduw van de waaier
+    col *= mix(.88, 1., smoothstep(0., .14, s));                                               // schaduw van de waaier
     a = smoothstep(0., .015, s) * smoothstep(1., 1. - .09 * (.35 + rnd), s) * smoothstep(0., .22, t);
   }
   gl_FragColor = vec4(col * a, a);
 }`;
 
 // Vorm van het lint in CSS-pixels. X telt vanaf ankerpunt R in eenheden S,
-// Y is een fractie van de hoogte H. Elk binnenpunt wiegt langzaam mee.
+// Y is een fractie van de hoogte H. Elk binnenpunt wiegt mee.
 function ribbonShape(W, H, T, R, S) {
-  const pt = (x, y, ph, amp = 0) => [R + (x + amp * Math.sin(T * .27 + ph)) * S, (y + amp * .7 * Math.cos(T * .21 + ph * 1.7)) * H];
+  const pt = (x, y, ph, amp = 0) => [R + (x + amp * Math.sin(T * .45 + ph)) * S, (y + amp * .7 * Math.cos(T * .37 + ph * 1.7)) * H];
   const mid = (l, r, bx = 0) => l.map((p, i) => [(p[0] + r[i][0]) / 2 + bx * S * Math.sin(Math.PI * i / 3), (p[1] + r[i][1]) / 2]);
-  const fanL = [pt(-1.06, -.04, 0), pt(-.8, .27, 1, .03), pt(-.4, .7, 2, .035), pt(-.05, .95, 3, .006)];
-  const fanR = [pt(0, -.04, 0), pt(.035, .28, 4, .015), pt(.03, .62, 5, .015), pt(-.01, .95, 6, .006)];
-  const bandL = [pt(-.01, .4, 0), pt(-.01, .6, 7, .01), pt(-.015, .82, 8, .01), pt(-.035, 1.03, 0)];
-  const bandR = [pt(.04, .37, 0), pt(.17, .5, 9, .03), pt(.25, .72, 10, .03), pt(.37, 1.03, 11, .01)];
+  const fanL = [pt(-1.06, -.04, 0, .03), pt(-.8, .27, 1, .07), pt(-.4, .7, 2, .08), pt(-.05, .95, 3, .012)];
+  const fanR = [pt(0, -.04, 0, .015), pt(.035, .28, 4, .035), pt(.03, .62, 5, .035), pt(-.01, .95, 6, .012)];
+  const bandL = [pt(-.01, .4, 0), pt(-.01, .6, 7, .02), pt(-.015, .82, 8, .02), pt(-.035, 1.03, 0)];
+  const bandR = [pt(.04, .37, 0), pt(.17, .5, 9, .06), pt(.25, .72, 10, .06), pt(.37, 1.03, 11, .02)];
   return [
     { layer: 0, density: 110, points: [...bandL, ...mid(bandL, bandR), ...bandR] },
     { layer: 1, density: 230, points: [...fanL, ...mid(fanL, fanR, -.04), ...fanR] },
@@ -885,7 +900,7 @@ function ribbon(canvas) {
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   gl.clearColor(0, 0, 0, 0);
   const u = n => gl.getUniformLocation(prog, n);
-  const uRes = u('res'), uP = u('P'), uTime = u('time'), uLayer = u('layer'), uDensity = u('density');
+  const uRes = u('res'), uP = u('P'), uTime = u('time'), uLayer = u('layer'), uDensity = u('density'), uWave = u('wave');
   const place = RIBBON_PLACES[canvas.dataset.ribbon] || RIBBON_PLACES.hero;
 
   let dpr = 1;
@@ -900,8 +915,10 @@ function ribbon(canvas) {
     size();
     const T = (now - start) / 1000, W = canvas.clientWidth, H = canvas.clientHeight;
     gl.clear(gl.COLOR_BUFFER_BIT);
+    const [R, S] = place(W, H);
     gl.uniform1f(uTime, T);
-    for (const L of ribbonShape(W, H, T, ...place(W, H))) {
+    gl.uniform1f(uWave, S * .03 * dpr);
+    for (const L of ribbonShape(W, H, T, R, S)) {
       gl.uniform2fv(uP, L.points.flat().map(v => v * dpr));
       gl.uniform1f(uLayer, L.layer);
       gl.uniform1f(uDensity, L.density);
