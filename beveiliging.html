@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beveiliging · Botlu.ai</title>
+<meta name="description" content="Hoe Botlu gegevens beveiligt en wat we doen bij een incident.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #fff; --soft: #f4f4f6; --line: #ebebef; --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --brand: #5b4ff5; --wrap: 760px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.65 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--brand); }
+  .wrap { width: min(100% - 32px, var(--wrap)); margin: 0 auto; }
+  header { border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; }
+  .wordmark { font: 500 20px/1 "Poppins", "Inter", sans-serif; letter-spacing: -.02em; }
+  header nav a { color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500; }
+  main { padding: 56px 0 80px; }
+  h1 { font-size: clamp(32px, 5vw, 44px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 10px; }
+  .updated { color: var(--ink-3); margin: 0 0 36px; }
+  h2 { font-size: 21px; letter-spacing: -.02em; margin: 44px 0 10px; }
+  h3 { font-size: 16.5px; margin: 26px 0 6px; }
+  p, li { color: var(--ink-2); }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  .lead { font-size: 18px; color: var(--ink-2); }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--ink-3); font-weight: 600; font-size: 13.5px; }
+  .box { background: var(--soft); border-radius: 14px; padding: 18px 20px; margin: 18px 0; }
+  .box p { margin: 0; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--ink-3); }
+  @media (max-width: 600px) { table, thead, tbody, tr, th, td { display: block; } thead { display: none; } td { border: 0; padding: 2px 0; } tr { border-bottom: 1px solid var(--line); padding: 10px 0; } td:first-child { font-weight: 600; color: var(--ink); } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark">Botlu.ai</span></a>
+    <nav><a href="/">Terug naar Botlu</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Beveiliging</h1>
+  <p class="updated">Laatst bijgewerkt: 26 oktober 2026</p>
+  <p class="lead">Zo beschermen we de gegevens van bedrijven die Botlu gebruiken en van hun bellers, en zo handelen we als er toch iets misgaat.</p>
+
+  <h2>Versleuteling</h2>
+  <ul>
+    <li>Alle verbindingen met Botlu en tussen Botlu en onze subverwerkers lopen via https/TLS.</li>
+    <li>De database (Neon) en de opslag van opnames (Vercel) zijn versleuteld opgeslagen, ook hun back-ups.</li>
+    <li>Wachtwoorden bewaren we alleen als scrypt-hash, API-sleutels en sessies alleen als hash.</li>
+  </ul>
+
+  <h2>Toegang</h2>
+  <ul>
+    <li>Alleen medewerkers die het voor hun werk nodig hebben, kunnen bij gegevens van klanten. Elke keer dat een Botlu-medewerker in het account van een bedrijf meekijkt, legt Botlu vast wie dat was, wanneer en wat er werd bekeken.</li>
+    <li>Medewerkers gebruiken voor alle systemen een uniek, sterk wachtwoord van minstens 12 tekens uit een wachtwoordmanager, en tweestapsverificatie waar dat kan.</li>
+    <li>Toegang wordt ingetrokken zodra iemand die niet meer nodig heeft.</li>
+  </ul>
+
+  <h2>Gegevensverlies voorkomen</h2>
+  <ul>
+    <li>De database maakt doorlopend back-ups en kan tot een eerder moment worden teruggezet.</li>
+    <li>Testgegevens staan in een aparte database, los van de echte gegevens. We testen niet met gegevens van klanten.</li>
+    <li>Gegevens worden niet langer bewaard dan nodig: gesprekken, opnames, afspraken en terugbelverzoeken gaan na 12 maanden automatisch weg.</li>
+    <li>Koppelingen met andere apps krijgen alleen de rechten die nodig zijn; bij Shopify alleen leesrechten.</li>
+  </ul>
+
+  <h2>Als er iets misgaat: ons incidentplan</h2>
+  <ol>
+    <li><b>Melden.</b> Iedereen die een mogelijk beveiligingsincident ziet, meldt het direct aan <a href="mailto:privacy@botlu.ai">privacy@botlu.ai</a>.</li>
+    <li><b>Indammen.</b> We stoppen het lek zo snel mogelijk: sleutels en wachtwoorden vernieuwen, toegang intrekken, getroffen onderdelen afsluiten.</li>
+    <li><b>Beoordelen.</b> We zoeken uit welke gegevens en welke bedrijven geraakt zijn en wat de gevolgen kunnen zijn.</li>
+    <li><b>Informeren.</b> Getroffen bedrijven horen het uiterlijk binnen 48 uur. Waar wij zelf verantwoordelijk zijn, melden we het binnen 72 uur bij de Autoriteit Persoonsgegevens en waar nodig aan de betrokkenen. Gaat het om gegevens uit Shopify, dan informeren we ook de betreffende winkels.</li>
+    <li><b>Herstellen en leren.</b> We herstellen de dienst, leggen elk incident vast in ons incidentenregister en passen onze maatregelen aan om herhaling te voorkomen.</li>
+  </ol>
+
+  <h2>Een kwetsbaarheid gevonden?</h2>
+  <p>Mail naar <a href="mailto:privacy@botlu.ai">privacy@botlu.ai</a>. We reageren binnen 2 werkdagen.</p>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Botlu.ai</span><span><a href="/">botlu.ai</a> · <a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a></span></div>
+</footer>
+</body>
+</html>
