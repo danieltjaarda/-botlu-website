@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Botlu.ai · Je telefoon, altijd opgenomen</title>
+<meta name="description" content="Botlu neemt de telefoon op voor je bedrijf: een AI-assistent met een natuurlijke Nederlandse stem die vragen beantwoordt, afspraken inplant en na elk gesprek een samenvatting stuurt.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  // Oude links naar het dashboard (botlu.ai/#gesprek=…) doorsturen naar app.botlu.ai
+  const toApp = () => { if (/^#(gesprek=|afspraken)/.test(location.hash)) location.replace('https://app.botlu.ai/' + location.hash); };
+  toApp(); addEventListener('hashchange', toApp);
+  document.documentElement.classList.add('js');
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --soft: #f4f4f6; --soft-2: #ebebef; --line: #ebebef; --line-2: #dedee4;
+    --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --ink-4: #a0a0aa;
+    --brand: #5b4ff5; --brand-2: #6a5ff7; --brand-soft: #efeefe; --ring: rgba(91, 79, 245, .14);
+    --good: #18a058; --good-soft: #e6f6ed; --warn: #b8650a; --warn-soft: #fdf1e0; --info: #2563eb; --info-soft: #e8effd;
+    --night: #0b0b14;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+    --spring: cubic-bezier(.34, 1.45, .64, 1);
+    --r-sm: 9px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-2xl: 28px;
+    --shadow-pop: 0 16px 36px -10px rgba(16,16,24,.18), 0 2px 6px rgba(16,16,24,.05), 0 0 0 1px rgba(16,16,24,.06);
+    --shadow-lg: 0 30px 70px -20px rgba(16,16,24,.3), 0 0 0 1px rgba(16,16,24,.05);
+    --wrap: 1180px;
+  }
+  /* Echte squircles waar de browser het kent (Chrome 139+); elders gewoon afgerond */
+  @supports (corner-shape: squircle) {
+    :root { --r-sm: 16px; --r-md: 22px; --r-lg: 28px; --r-xl: 36px; --r-2xl: 52px; }
+    .btn, .card, .chip, .phone, .bubble, .mini, .voice, .play, .tab, .tabs, .code, .faq details, .step-num, .slot, .kpi, .win, .notif, .tool, .cta-box, .lang { corner-shape: squircle; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.55 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+  .wrap { width: min(100% - 32px, var(--wrap)); margin: 0 auto; }
+  .wordmark { font: 500 22px/1 "Poppins", "Inter", sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+
+  /* ---------- Knoppen ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 22px; border: 1px solid transparent; border-radius: var(--r-md);
+    font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; white-space: nowrap; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, box-shadow .25s, transform .2s var(--ease); }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
+  .btn:hover svg.arrow { transform: translateX(3px); }
+  .btn.dark { background: var(--ink); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 20px -8px rgba(16,16,24,.6); }
+  .btn.dark:hover { background: #26262d; }
+  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
+  .btn.brand:hover { background: var(--brand-2); }
+  .btn.glass { background: rgba(255,255,255,.55); border-color: rgba(255,255,255,.6); color: var(--ink); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
+  .btn.glass:hover { background: rgba(255,255,255,.8); }
+  .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
+  .btn.line:hover { border-color: var(--ink-4); }
+  .btn.sm { height: 38px; padding: 0 16px; font-size: 14.5px; }
+  .btn.white { background: #fff; color: var(--ink); }
+  .btn.white:hover { background: #f1f1f4; }
+
+  /* ---------- Navigatie ---------- */
+  .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s, color .3s; color: #fff; }
+  .nav .wrap { display: flex; align-items: center; gap: 28px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-links { display: flex; gap: 4px; margin-right: auto; }
+  .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
+  .nav-links a:hover { opacity: 1; background: rgba(255,255,255,.14); }
+  .nav-cta { display: flex; align-items: center; gap: 8px; }
+  .nav .login { padding: 8px 12px; font-size: 15px; font-weight: 500; text-decoration: none; }
+  .nav .btn.sm { background: rgba(255,255,255,.95); color: var(--ink); }
+  .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
+  .nav.solid .nav-links a:hover { background: var(--soft); }
+  .nav.solid .btn.sm { background: var(--ink); color: #fff; }
+
+  /* ---------- Hero met bewegend kleurverloop ---------- */
+  .hero { position: relative; padding: 150px 0 120px; isolation: isolate; }
+  .hero-bg { position: absolute; z-index: -1; inset: 0 0 0 0; height: 100%; overflow: hidden; transform: skewY(-9deg); transform-origin: 0 0; }
+  .grad { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    background: radial-gradient(60% 80% at 20% 30%, #ff5fa2 0, transparent 60%), radial-gradient(60% 80% at 75% 20%, #38bdf8 0, transparent 60%), radial-gradient(50% 70% at 60% 80%, #ffb547 0, transparent 60%), #6d5cff; }
+  .hero-bg .grad { top: -30%; height: 130%; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: 48px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px 0 6px; margin-bottom: 26px; border-radius: 99px;
+    background: rgba(255,255,255,.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .eyebrow b { padding: 2px 9px; border-radius: 99px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; }
+  h1 { margin: 0; font-size: clamp(46px, 7.2vw, 92px); line-height: .98; font-weight: 700; letter-spacing: -.055em; }
+  .hero h1 { color: #110e22; }
+  .hero .lead { max-width: 520px; margin: 26px 0 34px; color: #1f1b33; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; font-weight: 450; }
+  .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero .fine { margin-top: 18px; color: rgba(24,20,46,.7); font-size: 14px; }
+
+  /* Telefoon met een live gesprek */
+  .phone { position: relative; justify-self: center; width: 340px; padding: 12px; border-radius: 54px; background: #111117;
+    box-shadow: 0 60px 120px -30px rgba(24,16,80,.55), 0 30px 60px -30px rgba(0,0,0,.5), inset 0 0 0 1.5px #2a2a33; }
+  @supports (corner-shape: squircle) { .phone { border-radius: 90px; } }
+  .screen { position: relative; height: 640px; overflow: hidden; border-radius: 42px; background: #f6f6f9; display: flex; flex-direction: column; }
+  @supports (corner-shape: squircle) { .screen { border-radius: 72px; corner-shape: squircle; } }
+  .island { position: absolute; top: 11px; left: 50%; width: 104px; height: 30px; margin-left: -52px; border-radius: 20px; background: #000; z-index: 3; }
+  .call-head { padding: 56px 22px 16px; text-align: center; background: linear-gradient(#fff, #f6f6f9); }
+  .call-head .ava { width: 58px; height: 58px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; }
+  .call-head b { display: block; font-size: 17px; letter-spacing: -.02em; }
+  .call-head small { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .call-head small i { width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
+  .wave { display: flex; align-items: center; justify-content: center; gap: 3px; height: 28px; margin-top: 10px; }
+  .wave span { width: 3px; height: 4px; border-radius: 3px; background: var(--brand); transition: height .12s; }
+  .chat { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 0 14px 16px; overflow: hidden; }
+  .bubble { max-width: 84%; padding: 10px 14px; border-radius: 20px; font-size: 14px; line-height: 1.42; animation: pop .45s var(--spring) both; }
+  .bubble.ai { align-self: flex-start; background: #fff; box-shadow: 0 1px 2px rgba(16,16,24,.06), 0 0 0 1px rgba(16,16,24,.04); border-bottom-left-radius: 6px; }
+  .bubble.me { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 6px; }
+  .bubble small { display: block; margin-bottom: 2px; color: var(--ink-4); font-size: 11px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+  .bubble.me small { color: rgba(255,255,255,.7); }
+  .tool { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 14px; background: var(--brand-soft); color: var(--brand); font-size: 12.5px; font-weight: 600; animation: pop .4s var(--spring) both; }
+  .tool .spin { width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
+  .tool.done .spin { animation: none; border-color: transparent; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center/contain no-repeat; }
+  .summary { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 16px; border-radius: 24px; background: #fff; box-shadow: var(--shadow-pop);
+    transform: translateY(120%); transition: transform .7s var(--spring); z-index: 2; }
+  @supports (corner-shape: squircle) { .summary { border-radius: 40px; corner-shape: squircle; } }
+  .summary.show { transform: none; }
+  .summary .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .summary .top b { font-size: 14px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.brand { background: var(--brand-soft); color: var(--brand); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.info { background: var(--info-soft); color: var(--info); }
+  .summary p { margin: 0; color: var(--ink-2); font-size: 13.5px; line-height: 1.45; }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Secties ---------- */
+  section { position: relative; }
+  .sec { padding: 120px 0; }
+  .sec-head { max-width: 760px; margin-bottom: 56px; }
+  .sec-head.center { margin-inline: auto; text-align: center; }
+  .kicker { display: inline-block; margin-bottom: 14px; color: var(--brand); font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  h2 { margin: 0; font-size: clamp(36px, 5vw, 60px); line-height: 1.04; font-weight: 700; letter-spacing: -.045em; }
+  h2 .mute { color: var(--ink-4); }
+  .sec-head p { margin: 20px 0 0; color: var(--ink-3); font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; }
+  h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.2; font-weight: 650; letter-spacing: -.025em; }
+
+  /* Werkt met */
+  .works { padding: 34px 0 10px; }
+  .works .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 26px; color: var(--ink-3); font-size: 15px; }
+  .works .label { color: var(--ink-4); font-weight: 500; }
+  .works .name { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); font-weight: 600; letter-spacing: -.01em; }
+  .works .name svg { width: 18px; height: 18px; }
+
+  /* Bento met functies */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+  .card { position: relative; overflow: hidden; padding: 30px; border-radius: var(--r-2xl); background: var(--soft); border: 1px solid transparent; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+  .card p { margin: 0; color: var(--ink-3); font-size: 16px; }
+  .card .vis { margin-top: 26px; }
+  .c-4 { grid-column: span 4; } .c-3 { grid-column: span 3; } .c-2 { grid-column: span 2; }
+  .card.dark { background: var(--night); color: #fff; }
+  .card.dark p { color: rgba(255,255,255,.62); }
+
+  .mini { background: #fff; border-radius: var(--r-xl); box-shadow: 0 1px 2px rgba(16,16,24,.04), 0 0 0 1px rgba(16,16,24,.05); }
+  /* agenda */
+  .cal { display: grid; grid-template-columns: 150px 1fr; overflow: hidden; }
+  .cal .days { padding: 14px; border-right: 1px solid var(--line); }
+  .cal .days div { display: flex; justify-content: space-between; padding: 8px 10px; border-radius: 10px; font-size: 14px; color: var(--ink-3); }
+  .cal .days div.on { background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+  .cal .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 14px; align-content: start; }
+  .slot { height: 40px; display: grid; place-items: center; border-radius: var(--r-sm); border: 1px solid var(--line-2); font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink-2); transition: all .4s var(--ease); }
+  .slot.busy { border-style: dashed; color: var(--ink-4); text-decoration: line-through; }
+  .slot.pick { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: 0 6px 14px -6px rgba(91,79,245,.8); transform: scale(1.04); }
+  /* samenvatting */
+  .sum-card { padding: 18px; }
+  .sum-card .row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sum-card .row .av { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #18181b; color: #fff; font-size: 12px; font-weight: 600; }
+  .sum-card .row b { display: block; font-size: 14.5px; }
+  .sum-card .row small { color: var(--ink-3); font-size: 13px; }
+  .sum-card .row .pill { margin-left: auto; }
+  .sum-card p { color: var(--ink-2); font-size: 14px; }
+  .meter { display: flex; align-items: center; gap: 10px; margin-top: 14px; color: var(--ink-3); font-size: 12.5px; }
+  .meter i { flex: 1; height: 6px; border-radius: 6px; background: var(--soft-2); overflow: hidden; }
+  .meter i::after { content: ""; display: block; width: var(--v, 80%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f59e0b, var(--good)); }
+  /* kennisbank */
+  .kb { padding: 16px; }
+  .kb .url { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: var(--r-sm); border: 1px solid var(--line-2); font-size: 14px; color: var(--ink-2); }
+  .kb .url svg { width: 15px; height: 15px; color: var(--ink-4); }
+  .kb ul { margin: 12px 0 0; padding: 0; list-style: none; }
+  .kb li { display: flex; align-items: center; gap: 10px; padding: 7px 4px; font-size: 13.5px; color: var(--ink-2); }
+  .kb li::before { content: ""; width: 16px; height: 16px; flex: none; border-radius: 50%; background: var(--good-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318a058' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/10px no-repeat; }
+  .kb li small { margin-left: auto; color: var(--ink-4); }
+  /* geluid */
+  .sound { display: flex; flex-direction: column; gap: 10px; }
+  .sound .bars { display: flex; align-items: center; gap: 4px; height: 70px; }
+  .sound .bars span { flex: 1; border-radius: 4px; background: linear-gradient(#8b7fff, var(--brand)); animation: bar 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.09s); height: 30%; }
+  @keyframes bar { 50% { height: var(--h, 90%); } }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border-radius: var(--r-sm); background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); font-size: 13.5px; font-weight: 500; }
+  .chip i { width: 7px; height: 7px; border-radius: 50%; background: #8b7fff; }
+  /* meldingen */
+  .notifs { display: grid; gap: 10px; }
+  .notif { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--r-lg); background: #fff; box-shadow: 0 1px 2px rgba(16,16,24,.04), 0 0 0 1px rgba(16,16,24,.05); }
+  .notif .ic { width: 30px; height: 30px; flex: none; display: grid; place-items: center; border-radius: 9px; color: #fff; font-size: 13px; font-weight: 700; }
+  .notif b { display: block; font-size: 13.5px; }
+  .notif span { color: var(--ink-3); font-size: 13px; line-height: 1.4; }
+  /* talen */
+  .langs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lang { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: var(--r-md); background: #fff; box-shadow: 0 0 0 1px rgba(16,16,24,.06); font-size: 14.5px; font-weight: 500; }
+  .lang em { font-style: normal; font-size: 18px; }
+
+  /* ---------- Stemmen ---------- */
+  .voices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .voice { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 14px; border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); text-align: left; cursor: pointer;
+    transition: border-color .25s, box-shadow .3s var(--ease), transform .3s var(--ease); }
+  .voice:hover { border-color: var(--line-2); box-shadow: 0 10px 26px -14px rgba(16,16,24,.25); transform: translateY(-2px); }
+  .voice.playing { border-color: transparent; box-shadow: 0 0 0 2px var(--brand), 0 14px 30px -16px rgba(91,79,245,.6); }
+  .orb { --lvl: 0; position: relative; width: 52px; height: 52px; flex: none; border-radius: 50%; overflow: hidden;
+    background: conic-gradient(from 0deg, hsl(var(--h) 85% 62%), hsl(calc(var(--h) + 50) 90% 70%), hsl(calc(var(--h) - 40) 80% 58%), hsl(var(--h) 85% 62%));
+    box-shadow: inset 0 -6px 14px rgba(0,0,0,.18), inset 0 6px 12px rgba(255,255,255,.45); transform: scale(calc(1 + var(--lvl) * .14)); transition: transform .08s; }
+  .orb::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.85), rgba(255,255,255,0) 55%); filter: blur(2px); }
+  .orb::after { content: ""; position: absolute; inset: -20%; background: conic-gradient(from 90deg, transparent, hsl(calc(var(--h) + 80) 95% 75% / .7), transparent 40%); animation: spin 6s linear infinite; mix-blend-mode: overlay; }
+  .voice.playing .orb::after { animation-duration: 1.6s; }
+  .voice .meta { flex: 1; min-width: 0; }
+  .voice b { display: block; font-size: 16px; letter-spacing: -.015em; }
+  .voice small { display: block; color: var(--ink-3); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .play { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: var(--r-sm); background: var(--soft); color: var(--ink); transition: background .2s, color .2s; }
+  .voice:hover .play { background: var(--ink); color: #fff; }
+  .voice.playing .play { background: var(--brand); color: #fff; }
+  .play svg { width: 14px; height: 14px; }
+  .play .ps { display: none; }
+  .voice.playing .play .pl { display: none; }
+  .voice.playing .play .ps { display: block; }
+  .voices-note { margin-top: 22px; color: var(--ink-4); font-size: 14px; text-align: center; }
+
+  /* ---------- Hoe het werkt ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: s; }
+  .step { padding: 30px; border-top: 1px solid var(--line-2); }
+  .step-num { width: 44px; height: 44px; display: grid; place-items: center; margin-bottom: 22px; border-radius: var(--r-md); background: var(--ink); color: #fff; font-weight: 600; }
+  .step p { margin: 0; color: var(--ink-3); }
+
+  /* ---------- Dashboard-venster ---------- */
+  .showcase { padding: 0 0 120px; }
+  .win { overflow: hidden; border-radius: var(--r-2xl); background: #fff; box-shadow: var(--shadow-lg); }
+  .win-bar { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-bottom: 1px solid var(--line); background: #fbfbfc; }
+  .win-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line-2); }
+  .win-bar span { margin-left: 12px; color: var(--ink-4); font-size: 13px; }
+  .win-body { display: grid; grid-template-columns: 220px 1fr; min-height: 420px; }
+  .win-side { padding: 18px 12px; border-right: 1px solid var(--line); background: #fcfcfd; }
+  .win-side .brand { margin: 2px 8px 22px; }
+  .win-side .ni { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: 12px; color: var(--ink-2); font-size: 14px; font-weight: 500; }
+  .win-side .ni.on { background: var(--soft); color: var(--ink); }
+  .win-side .ni i { width: 18px; height: 18px; border-radius: 6px; background: var(--c); opacity: .9; }
+  .win-main { padding: 24px; }
+  .win-main h4 { margin: 0 0 18px; font-size: 22px; letter-spacing: -.03em; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+  .kpi { padding: 14px 16px; border-radius: var(--r-lg); border: 1px solid var(--line); }
+  .kpi small { color: var(--ink-3); font-size: 13px; }
+  .kpi b { display: block; margin-top: 2px; font-size: 24px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .calls { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  @supports (corner-shape: squircle) { .calls { corner-shape: squircle; } }
+  .calls .r { display: grid; grid-template-columns: 1.3fr 2fr 110px 70px; align-items: center; gap: 14px; padding: 12px 16px; font-size: 14px; }
+  .calls .r + .r { border-top: 1px solid var(--line); }
+  .calls .r b { font-weight: 600; }
+  .calls .r span { color: var(--ink-3); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .calls .r time { color: var(--ink-4); font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; }
+  .calls .r.head { background: #fbfbfc; color: var(--ink-4); font-size: 12.5px; font-weight: 600; }
+  .demo-note { margin-top: 14px; color: var(--ink-4); font-size: 13px; text-align: center; }
+
+  /* ---------- Ontwikkelaars ---------- */
+  .devs { background: var(--night); color: #fff; overflow: hidden; }
+  .devs .kicker { color: #a49bff; }
+  .devs h2 .mute { color: rgba(255,255,255,.4); }
+  .devs h2 { font-size: clamp(34px, 4vw, 50px); }
+  .devs .sec-head p { color: rgba(255,255,255,.6); }
+  .devs-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 56px; align-items: start; }
+  .dev-list { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
+  .dev-list li { padding-left: 18px; border-left: 2px solid rgba(255,255,255,.12); }
+  .dev-list b { display: block; margin-bottom: 4px; font-size: 17px; letter-spacing: -.015em; }
+  .dev-list span { color: rgba(255,255,255,.58); font-size: 15px; }
+  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #d6d2ff; }
+  .code { overflow: hidden; border-radius: var(--r-xl); background: #13131f; box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 40px 80px -30px rgba(0,0,0,.6); }
+  .code-top { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .tabs { position: relative; display: inline-flex; padding: 3px; border-radius: var(--r-md); background: rgba(255,255,255,.06); }
+  .tab { position: relative; z-index: 1; height: 32px; padding: 0 14px; border: 0; border-radius: calc(var(--r-md) - 3px); background: none; color: rgba(255,255,255,.55); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: color .25s; }
+  .tab.on { color: #fff; }
+  .tabs .thumb { position: absolute; top: 3px; bottom: 3px; left: 0; border-radius: calc(var(--r-md) - 3px); background: rgba(255,255,255,.12); transition: transform .45s var(--ease), width .45s var(--ease); }
+  @supports (corner-shape: squircle) { .tabs .thumb { corner-shape: squircle; } }
+  .code-top .file { margin-left: auto; color: rgba(255,255,255,.35); font: 12.5px ui-monospace, "SF Mono", Menlo, monospace; }
+  pre { margin: 0; padding: 22px 22px 26px; overflow-x: auto; font: 13.5px/1.7 ui-monospace, "SF Mono", Menlo, monospace; color: #e4e4f0; tab-size: 2; }
+  pre[hidden] { display: none; }
+  .k { color: #a49bff; } .s { color: #7ee2b8; } .n { color: #ffb86b; } .c { color: rgba(255,255,255,.35); } .p { color: #7cc4ff; }
+
+  /* ---------- Vragen ---------- */
+  .faq { max-width: 820px; margin: 0 auto; }
+  .faq details { border-radius: var(--r-xl); background: var(--soft); margin-bottom: 10px; transition: background .25s; }
+  .faq details[open] { background: #fff; box-shadow: 0 0 0 1px var(--line-2); }
+  .faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; font-size: 17.5px; font-weight: 600; letter-spacing: -.015em; cursor: pointer; list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: ""; width: 24px; height: 24px; flex: none; border-radius: 50%; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f0f12' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M12 6v12M6 12h12'/%3E%3C/svg%3E") center/14px no-repeat; transition: transform .35s var(--ease), background-color .25s; }
+  .faq details[open] summary::after { transform: rotate(45deg); background-color: var(--soft); }
+  .faq .ans { padding: 0 26px 22px; color: var(--ink-3); font-size: 16px; }
+  .faq .ans p { margin: 0; }
+
+  /* ---------- Afsluiter ---------- */
+  .cta-sec { padding: 0 0 100px; }
+  .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 90px 40px; border-radius: var(--r-2xl); text-align: center; color: #fff; background: var(--night); }
+  .cta-box .grad { z-index: -1; opacity: .95; }
+  .cta-box::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(70% 90% at 50% 50%, rgba(11,11,20,.15), rgba(11,11,20,.55)); }
+  .cta-box h2 { max-width: 760px; margin: 0 auto; }
+  .cta-box p { max-width: 520px; margin: 18px auto 32px; color: rgba(255,255,255,.85); font-size: 19px; }
+  .cta-box .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  /* Verschijnen bij scrollen */
+  .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; }
+
+  /* ---------- Kleinere schermen ---------- */
+  @media (max-width: 1060px) {
+    .voices { grid-template-columns: repeat(3, 1fr); }
+    .c-4, .c-3, .c-2 { grid-column: span 3; }
+    .devs-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 900px) {
+    .hero { padding: 120px 0 90px; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 56px; }
+    .hero-bg { transform: skewY(-7deg); }
+    .nav-links { display: none; }
+    .nav .wrap { gap: 12px; }
+    .nav .login { padding: 8px 6px; }
+    .nav .btn.sm { padding: 0 13px; }
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    .win-body { grid-template-columns: 1fr; }
+    .win-side { display: none; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .calls .r { grid-template-columns: 1fr 100px; }
+    .calls .r span:not(.pill), .calls .r time { display: none; }
+  }
+  @media (max-width: 700px) {
+    .sec { padding: 84px 0; }
+    .bento { grid-template-columns: 1fr; }
+    .c-4, .c-3, .c-2 { grid-column: auto; }
+    .card { padding: 24px; }
+    .cal { grid-template-columns: 1fr; }
+    .cal .days { display: flex; gap: 6px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+    .cal .days div { flex: none; gap: 8px; }
+    .voices { grid-template-columns: 1fr; }
+    .phone { width: min(100%, 330px); }
+    .screen { height: 600px; }
+    .cta-box { padding: 64px 22px; }
+    footer nav { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Botlu.ai"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark">Botlu.ai</span></a>
+    <nav class="nav-links" aria-label="Hoofdmenu">
+      <a href="#functies">Functies</a>
+      <a href="#stemmen">Stemmen</a>
+      <a href="#hoe">Hoe het werkt</a>
+      <a href="#ontwikkelaars">Ontwikkelaars</a>
+      <a href="#vragen">Vragen</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="login" href="https://app.botlu.ai/login">Inloggen</a>
+      <a class="btn sm" href="https://app.botlu.ai/login#aanmaken">Account aanmaken</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ========== Hero ========== -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"><canvas class="grad" data-grad></canvas></div>
+    <div class="wrap">
+      <div>
+        <a class="eyebrow rv" href="#stemmen"><b>Nieuw</b> 12 Nederlandse stemmen</a>
+        <h1 class="rv" style="--d:.05s">Je telefoon, altijd opgenomen.</h1>
+        <p class="lead rv" style="--d:.12s">Botlu is de AI-assistent die de telefoon opneemt voor je bedrijf. Hij beantwoordt vragen, plant afspraken in je agenda en stuurt je na elk gesprek een samenvatting. Dag en nacht, in een stem die klinkt als een collega.</p>
+        <div class="cta rv" style="--d:.18s">
+          <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn glass" href="#stemmen"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg> Luister naar de stemmen</a>
+        </div>
+        <p class="fine rv" style="--d:.24s">Je eerste assistent staat direct klaar. Je houdt gewoon je eigen nummer.</p>
+      </div>
+
+      <div class="phone rv" style="--d:.15s" aria-label="Voorbeeld van een gesprek met Botlu">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="call-head">
+            <div class="ava"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg></div>
+            <b>Fietsenwinkel Van Dijk</b>
+            <small><i></i> Emma neemt op · <span id="clock">0:00</span></small>
+            <div class="wave" id="wave" aria-hidden="true"></div>
+          </div>
+          <div class="chat" id="chat" aria-live="off"></div>
+          <div class="summary" id="summary">
+            <div class="top"><b>Gesprek afgerond</b><span class="pill brand">Afspraak</span></div>
+            <p>Sanne komt morgen om 10:30 langs met een lekke achterband. Staat in je agenda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Werkt met ========== -->
+  <section class="works" aria-label="Koppelingen">
+    <div class="wrap">
+      <span class="label">Werkt met</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Outlook</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Apple Agenda</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Slack</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Microsoft Teams</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Discord</span>
+      <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>Webhooks &amp; API</span>
+    </div>
+  </section>
+
+  <!-- ========== Functies ========== -->
+  <section class="sec" id="functies">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kicker">Functies</span>
+        <h2>Een collega die nooit een gesprek mist. <span class="mute">En alles voor je bijhoudt.</span></h2>
+      </div>
+
+      <div class="bento">
+        <article class="card c-4 rv">
+          <h3>Plant afspraken in je agenda</h3>
+          <p>Botlu kijkt welke tijden vrij zijn, stelt er een paar voor en zet de afspraak meteen vast. Bezet in je eigen agenda? Dan biedt hij die tijd niet aan.</p>
+          <div class="vis mini cal" aria-hidden="true">
+            <div class="days"><div>Ma <span>27</span></div><div class="on">Di <span>28</span></div><div>Wo <span>29</span></div><div>Do <span>30</span></div></div>
+            <div class="slots" id="slots">
+              <div class="slot busy">09:00</div><div class="slot">09:30</div><div class="slot busy">10:00</div>
+              <div class="slot" data-pick>10:30</div><div class="slot">11:00</div><div class="slot busy">11:30</div>
+              <div class="slot">13:30</div><div class="slot">14:15</div><div class="slot busy">15:00</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card c-2 rv" style="--d:.08s">
+          <h3>Samenvatting na elk gesprek</h3>
+          <p>Wie belde, waarover, en wat er is afgesproken.</p>
+          <div class="vis mini sum-card" aria-hidden="true">
+            <div class="row"><span class="av">SV</span><div><b>Sanne de Vries</b><small>1 min 14 s</small></div><span class="pill brand">Afspraak</span></div>
+            <p>Lekke achterband. Komt morgen om 10:30 langs.</p>
+            <div class="meter" style="--v: 86%">Stemming <i></i> 86</div>
+          </div>
+        </article>
+
+        <article class="card c-3 rv">
+          <h3>Leert je bedrijf kennen van je website</h3>
+          <p>Vul je websiteadres in en Botlu leest je pagina's. Openingstijden, prijzen en diensten weet hij daarna gewoon. Wat hij niet weet, verzint hij niet: dan belt een collega terug.</p>
+          <div class="vis mini kb" aria-hidden="true">
+            <div class="url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>fietsenwinkelvandijk.nl</div>
+            <ul><li>Openingstijden <small>/contact</small></li><li>Reparaties en prijzen <small>/werkplaats</small></li><li>E-bikes huren <small>/verhuur</small></li></ul>
+          </div>
+        </article>
+
+        <article class="card c-3 dark rv" style="--d:.08s">
+          <h3>Klinkt als een mens, niet als een menu</h3>
+          <p>Geen „toets 1". Bellers praten gewoon, mogen onderbreken en krijgen binnen een seconde antwoord. Met zacht kantoorgeluid en het tikken van een toetsenbord als hij iets opzoekt.</p>
+          <div class="vis sound" aria-hidden="true">
+            <div class="bars" id="bars"></div>
+            <div class="chips"><span class="chip"><i></i>Kantoorgeluid</span><span class="chip"><i></i>Typgeluid</span><span class="chip"><i></i>Mag onderbreken</span></div>
+          </div>
+        </article>
+
+        <article class="card c-2 rv">
+          <h3>Meteen op de hoogte</h3>
+          <p>Een melding in Slack, Teams of Discord, of een e-mail na het gesprek.</p>
+          <div class="vis notifs" aria-hidden="true">
+            <div class="notif"><span class="ic" style="background:#4a154b">#</span><div><b>Terugbelverzoek</b><span>Mark wil graag een offerte voor 3 fietsen.</span></div></div>
+            <div class="notif"><span class="ic" style="background:var(--brand)">@</span><div><b>Nieuwe afspraak</b><span>Di 28 okt · 10:30 · Sanne de Vries</span></div></div>
+          </div>
+        </article>
+
+        <article class="card c-2 rv" style="--d:.06s">
+          <h3>Opnames en transcript</h3>
+          <p>Lees elk gesprek terug, of luister het na. Opnemen zet je per assistent aan of uit.</p>
+          <div class="vis mini" style="padding:14px 16px" aria-hidden="true">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="play" style="background:var(--ink);color:#fff"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg></span>
+              <div style="flex:1;height:30px;display:flex;align-items:center;gap:2px" id="rec"></div>
+              <small style="color:var(--ink-4);font-variant-numeric:tabular-nums">1:14</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="card c-2 rv" style="--d:.12s">
+          <h3>Spreekt je klant zijn taal</h3>
+          <p>Nederlands zonder accent, en ook Engels, Duits, Frans en Spaans.</p>
+          <div class="vis langs" aria-hidden="true">
+            <span class="lang"><em>🇳🇱</em>Nederlands</span><span class="lang"><em>🇬🇧</em>English</span><span class="lang"><em>🇩🇪</em>Deutsch</span><span class="lang"><em>🇫🇷</em>Français</span><span class="lang"><em>🇪🇸</em>Español</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Stemmen ========== -->
+  <section class="sec" id="stemmen" style="padding-top:20px">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kicker">Stemmen</span>
+        <h2>Kies de stem van je bedrijf.</h2>
+        <p>Twaalf Nederlandse stemmen van ElevenLabs, van kalm en zakelijk tot warm en levendig. Klik er een aan en luister.</p>
+      </div>
+      <div class="voices" id="voices"></div>
+      <p class="voices-note rv">Liever een stem van OpenAI? Die kun je ook kiezen, in het dashboard.</p>
+    </div>
+  </section>
+
+  <!-- ========== Hoe het werkt ========== -->
+  <section class="sec" id="hoe" style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="kicker">Hoe het werkt</span>
+        <h2>In een kwartier aan de telefoon.</h2>
+      </div>
+      <div class="steps">
+        <div class="step rv"><div class="step-num">1</div><h3>Maak een account</h3><p>Je eerste assistent staat direct klaar, met een begroeting in de naam van je bedrijf.</p></div>
+        <div class="step rv" style="--d:.08s"><div class="step-num">2</div><h3>Vertel wat hij moet weten</h3><p>Laat hem je website lezen, kies een stem en zet aan wat hij mag doen: afspraken, terugbelverzoeken, gegevens noteren.</p></div>
+        <div class="step rv" style="--d:.16s"><div class="step-num">3</div><h3>Schakel je nummer door</h3><p>Stuur gemiste of alle gesprekken door naar je Botlu-nummer. De codes daarvoor staan in het dashboard.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Dashboard ========== -->
+  <section class="showcase">
+    <div class="wrap">
+      <div class="sec-head center rv">
+        <span class="kicker">Dashboard</span>
+        <h2>Elk gesprek, overzichtelijk.</h2>
+        <p>Zie wie er belde, hoe het ging en wat het kostte. Zoek terug, luister na en pas je assistent aan wanneer je wilt.</p>
+      </div>
+      <div class="win rv" aria-hidden="true">
+        <div class="win-bar"><i></i><i></i><i></i><span>app.botlu.ai</span></div>
+        <div class="win-body">
+          <div class="win-side">
+            <div class="brand"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px">Botlu.ai</span></div>
+            <div class="ni on"><i style="--c:#5b4ff5"></i>Gesprekken</div>
+            <div class="ni"><i style="--c:#18a058"></i>Afspraken</div>
+            <div class="ni"><i style="--c:#f59e0b"></i>Assistenten</div>
+            <div class="ni"><i style="--c:#e11d48"></i>Kennisbank</div>
+            <div class="ni"><i style="--c:#2563eb"></i>Telefoonnummers</div>
+          </div>
+          <div class="win-main">
+            <h4>Gesprekken</h4>
+            <div class="kpis">
+              <div class="kpi"><small>Gesprekken</small><b>248</b></div>
+              <div class="kpi"><small>Afspraken</small><b>61</b></div>
+              <div class="kpi"><small>Gem. duur</small><b>1:52</b></div>
+              <div class="kpi"><small>Opgelost</small><b>84%</b></div>
+            </div>
+            <div class="calls">
+              <div class="r head"><span>Beller</span><span>Onderwerp</span><span>Uitkomst</span><time>Tijd</time></div>
+              <div class="r"><b>Sanne de Vries</b><span>Lekke achterband, morgen langs</span><span class="pill brand">Afspraak</span><time>14:02</time></div>
+              <div class="r"><b>Mark Jansen</b><span>Offerte voor drie bedrijfsfietsen</span><span class="pill warn">Terugbellen</span><time>13:47</time></div>
+              <div class="r"><b>Fatima El Amrani</b><span>Openingstijden op zaterdag</span><span class="pill good">Opgelost</span><time>12:15</time></div>
+              <div class="r"><b>Onbekend</b><span>Vraag over e-bike huren</span><span class="pill good">Opgelost</span><time>11:30</time></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">Voorbeeldgegevens</p>
+    </div>
+  </section>
+
+  <!-- ========== Ontwikkelaars ========== -->
+  <section class="sec devs" id="ontwikkelaars">
+    <div class="wrap">
+      <div class="devs-grid">
+        <div>
+          <div class="sec-head rv" style="margin-bottom:40px">
+            <span class="kicker">Ontwikkelaars</span>
+            <h2>Koppel Botlu aan je eigen systemen. <span class="mute">Met een API en webhooks.</span></h2>
+          </div>
+          <ul class="dev-list">
+            <li class="rv"><b>Webhooks bij elke gebeurtenis</b><span><code>call.completed</code>, <code>appointment.created</code>, <code>callback.created</code> en meer, ondertekend volgens Standard Webhooks.</span></li>
+            <li class="rv" style="--d:.06s"><b>REST-API met sleutels</b><span>Haal gesprekken, transcripten, opnames, assistenten en nummers op met een <code>btl_</code>-sleutel.</span></li>
+            <li class="rv" style="--d:.12s"><b>Agenda als iCal-link</b><span>Abonneer je op alle afspraken in je eigen agenda-app.</span></li>
+          </ul>
+        </div>
+        <div class="code rv" style="--d:.1s">
+          <div class="code-top">
+            <div class="tabs" id="tabs"><span class="thumb"></span><button class="tab on" data-t="hook">Webhook</button><button class="tab" data-t="api">API</button></div>
+            <span class="file" id="file">POST jouw-server.nl/botlu</span>
+          </div>
+<pre data-p="hook"><span class="c">// Komt binnen zodra een gesprek is samengevat</span>
+{
+  <span class="p">"id"</span>: <span class="s">"evt_6f1c0a9e2b7d4c3e8a51f0d2"</span>,
+  <span class="p">"type"</span>: <span class="s">"call.completed"</span>,
+  <span class="p">"created_at"</span>: <span class="s">"2026-10-27T14:03:18.000Z"</span>,
+  <span class="p">"data"</span>: {
+    <span class="p">"caller_name"</span>: <span class="s">"Sanne de Vries"</span>,
+    <span class="p">"from"</span>: <span class="s">"+31612345678"</span>,
+    <span class="p">"topic"</span>: <span class="s">"Lekke achterband"</span>,
+    <span class="p">"summary"</span>: <span class="s">"Sanne komt morgen om 10:30 langs."</span>,
+    <span class="p">"outcome"</span>: <span class="s">"afspraak"</span>,
+    <span class="p">"sentiment"</span>: <span class="n">86</span>,
+    <span class="p">"duration_seconds"</span>: <span class="n">74</span>,
+    <span class="p">"has_recording"</span>: <span class="k">true</span>
+  }
+}</pre>
+<pre data-p="api" hidden><span class="c"># De laatste vijf gesprekken ophalen</span>
+<span class="k">curl</span> https://app.botlu.ai/api/v1/calls?limit=5 \
+  -H <span class="s">"Authorization: Bearer btl_••••••••"</span>
+
+{
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"id"</span>: <span class="s">"call_…"</span>,
+      <span class="p">"agent"</span>: { <span class="p">"name"</span>: <span class="s">"Emma"</span> },
+      <span class="p">"topic"</span>: <span class="s">"Lekke achterband"</span>,
+      <span class="p">"outcome"</span>: <span class="s">"afspraak"</span>,
+      <span class="p">"transcript"</span>: [
+        { <span class="p">"role"</span>: <span class="s">"assistant"</span>, <span class="p">"text"</span>: <span class="s">"Goedemiddag, …"</span> }
+      ]
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Vragen ========== -->
+  <section class="sec" id="vragen">
+    <div class="wrap">
+      <div class="sec-head center rv"><span class="kicker">Vragen</span><h2>Goed om te weten.</h2></div>
+      <div class="faq rv">
+        <details><summary>Moet ik een nieuw telefoonnummer nemen?</summary><div class="ans"><p>Nee. Je houdt je eigen nummer en schakelt het door naar je Botlu-nummer: alle gesprekken, of alleen als je niet opneemt of in gesprek bent. Botlu ziet dan nog steeds het nummer van de beller.</p></div></details>
+        <details><summary>Wat doet Botlu als hij iets niet weet?</summary><div class="ans"><p>Hij verzint geen prijzen of feiten. Weet hij het antwoord niet, dan noteert hij een terugbelverzoek met de naam, het nummer en de vraag, zodat jij of een collega kan terugbellen.</p></div></details>
+        <details><summary>Kan Botlu doorverbinden naar een collega?</summary><div class="ans"><p>Daar werken we aan. Doorverbinden, e-mail en sms vanuit het gesprek komen binnenkort. Tot die tijd noteert Botlu een terugbelverzoek en krijg je meteen een melding.</p></div></details>
+        <details><summary>Welke talen spreekt Botlu?</summary><div class="ans"><p>Nederlands, Engels, Duits, Frans en Spaans. Je kiest per assistent de taal, de stem en de begroeting.</p></div></details>
+        <details><summary>Kan ik Botlu koppelen aan mijn eigen software?</summary><div class="ans"><p>Ja. Met webhooks krijg je na elk gesprek, elke afspraak en elk terugbelverzoek een bericht, en met de API haal je gesprekken, transcripten en opnames op. Meldingen in Slack, Teams of Discord stel je in zonder code.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Afsluiter ========== -->
+  <section class="cta-sec">
+    <div class="wrap">
+      <div class="cta-box rv">
+        <canvas class="grad" data-grad aria-hidden="true"></canvas>
+        <h2>Mis nooit meer een klant aan de telefoon.</h2>
+        <p>Maak een account en laat je eerste assistent vandaag nog opnemen.</p>
+        <div class="cta">
+          <a class="btn white" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn glass" href="https://app.botlu.ai/login" style="color:#fff;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)">Inloggen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px;color:var(--ink)">Botlu.ai</span></a>
+    <span>© <span id="year">2026</span> Botlu.ai</span>
+    <nav aria-label="Voettekst">
+      <a href="#functies">Functies</a><a href="#stemmen">Stemmen</a><a href="#ontwikkelaars">Ontwikkelaars</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- Bewegend kleurverloop (WebGL) ----------
+// Vier kleuren die door elkaar vloeien via vervormde simplexruis. We tekenen
+// op halve resolutie: het verloop is zacht, dus dat zie je niet en het scheelt veel.
+const FRAG = `precision highp float;
+uniform vec2 r; uniform float t; uniform vec3 c0, c1, c2, c3;
+// 3D-simplexruis van Ian McEwan en Stefan Gustavson (MIT)
+vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}
+vec4 m289(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 perm(vec4 x){return m289(((x*34.)+1.)*x);}
+float snoise(vec3 v){
+  const vec2 C=vec2(1./6.,1./3.); const vec4 D=vec4(0.,.5,1.,2.);
+  vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
+  i=m289(i);
+  vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+  vec3 ns=.142857142857*D.wyz-D.xzx;
+  vec4 j=p-49.*floor(p*ns.z*ns.z); vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.*x_);
+  vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.+1.; vec4 s1=floor(b1)*2.+1.; vec4 sh=-step(h,vec4(0.));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
+  vec4 nr=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
+  p0*=nr.x; p1*=nr.y; p2*=nr.z; p3*=nr.w;
+  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.); m=m*m;
+  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+void main(){
+  vec2 uv=gl_FragCoord.xy/r;
+  vec2 q=vec2(uv.x*r.x/r.y,uv.y)*vec2(.5,1.);
+  float T=t*.045;
+  q+=.38*vec2(snoise(vec3(q*.8,T)),snoise(vec3(q*.8+7.3,T*1.13)));
+  vec3 col=c0;
+  col=mix(col,c1,smoothstep(-.55,.45,snoise(vec3(q*vec2(1.,1.7)+vec2(T*1.6,0.),T*.8+1.))));
+  col=mix(col,c2,smoothstep(-.3,.5,snoise(vec3(q*vec2(1.25,2.)+vec2(-T,3.),T*.9+4.))));
+  col=mix(col,c3,smoothstep(-.05,.65,snoise(vec3(q*vec2(.85,1.4)+vec2(5.,-T*1.3),T+9.))));
+  col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;
+  gl_FragColor=vec4(col,1.);
+}`;
+const COLORS = ['#6d5cff', '#38bdf8', '#ff5fa2', '#ffb547'].map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255));
+
+function gradient(canvas) {
+  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' });
+  if (!gl) return;   // dan blijft de CSS-achtergrond van .grad staan
+  const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FRAG));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const u = n => gl.getUniformLocation(prog, n);
+  COLORS.forEach((c, i) => gl.uniform3fv(u('c' + i), c));
+  const uR = u('r'), uT = u('t');
+  const size = () => {
+    const w = Math.max(1, Math.round(canvas.clientWidth * .5)), h = Math.max(1, Math.round(canvas.clientHeight * .5));
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); gl.uniform2f(uR, w, h); }
+  };
+  const start = performance.now() - 40000 * Math.random();
+  let visible = true, raf = 0;
+  const frame = now => {
+    size();
+    gl.uniform1f(uT, (now - start) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    raf = visible && !reduced && !document.hidden ? requestAnimationFrame(frame) : 0;
+  };
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); }).observe(canvas);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && visible && !raf) raf = requestAnimationFrame(frame); });
+  addEventListener('resize', () => { if (!raf) requestAnimationFrame(frame); });
+  raf = requestAnimationFrame(frame);
+}
+
+// ---------- Navigatie wordt wit zodra je voorbij het verloop scrolt ----------
+function initNav() {
+  const nav = $('#nav');
+  const set = () => nav.classList.toggle('solid', scrollY > 40);
+  addEventListener('scroll', set, { passive: true });
+  set();
+}
+
+// ---------- Live gesprek in de telefoon ----------
+const SCRIPT = [
+  { who: 'ai', text: 'Goedemiddag, Fietsenwinkel Van Dijk, je spreekt met Emma. Waarmee kan ik je helpen?' },
+  { who: 'me', text: 'Hoi! Mijn achterband is lek. Kan ik vandaag nog langskomen?' },
+  { who: 'tool', text: 'Beschikbare tijden opzoeken' },
+  { who: 'ai', text: 'Vervelend! Vandaag zit helaas vol, maar morgen kan om half elf of kwart over twee. Wat past jou beter?' },
+  { who: 'me', text: 'Half elf is prima.' },
+  { who: 'tool', text: 'Afspraak inplannen' },
+  { who: 'ai', text: 'Top, je staat morgen om half elf ingepland. Tot morgen!' },
+];
+function initCall() {
+  const chat = $('#chat'), wave = $('#wave'), clock = $('#clock'), summary = $('#summary');
+  const bars = Array.from({ length: 22 }, () => wave.appendChild(document.createElement('span')));
+  let speaking = false, t0 = Date.now(), timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  setInterval(() => {
+    const s = Math.floor((Date.now() - t0) / 1000);
+    clock.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }, 500);
+  if (!reduced) setInterval(() => bars.forEach((b, i) => {
+    const env = Math.sin(Math.PI * (i + .5) / bars.length);
+    b.style.height = (speaking ? 4 + Math.random() * 22 * env : 4) + 'px';
+  }), 110);
+
+  const say = (line, el) => { el.className = 'bubble ' + line.who; el.innerHTML = `<small>${line.who === 'ai' ? 'Emma' : 'Beller'}</small>`; el.append(line.text); };
+  function run() {
+    timers.forEach(clearTimeout); timers = [];
+    chat.replaceChildren(); summary.classList.remove('show'); t0 = Date.now();
+    let at = 700;
+    for (const line of SCRIPT) {
+      const el = document.createElement('div');
+      if (line.who === 'tool') {
+        later(() => { el.className = 'tool'; el.innerHTML = '<span class="spin"></span>'; el.append(line.text); chat.append(el); }, at);
+        later(() => el.classList.add('done'), at + 1100);
+        at += 1500;
+        continue;
+      }
+      const dur = 900 + line.text.length * 38;
+      later(() => { say(line, el); chat.append(el); speaking = line.who === 'ai'; }, at);
+      later(() => { speaking = false; }, at + dur);
+      at += dur + 600;
+    }
+    later(() => summary.classList.add('show'), at + 200);
+    later(run, at + 5200);
+  }
+  if (reduced) { for (const l of SCRIPT) { const el = document.createElement('div'); if (l.who === 'tool') { el.className = 'tool done'; el.innerHTML = '<span class="spin"></span>'; el.append(l.text); } else say(l, el); chat.append(el); } summary.classList.add('show'); return; }
+  // Pas starten als de telefoon in beeld is
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); run(); } });
+  io.observe(chat);
+}
+
+// ---------- Kleine animaties in de functiekaarten ----------
+function initCards() {
+  const bars = $('#bars');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.style.setProperty('--i', i);
+    s.style.setProperty('--h', (35 + 60 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .37))).toFixed(0) + '%');
+    bars.append(s);
+  }
+  const rec = $('#rec');
+  for (let i = 0; i < 48; i++) {
+    const s = document.createElement('span');
+    s.style.cssText = `flex:1;border-radius:2px;background:${i < 17 ? 'var(--brand)' : 'var(--line-2)'};height:${(20 + 80 * Math.abs(Math.sin(i * 2.3) * Math.sin(i * .41 + 1))).toFixed(0)}%`;
+    rec.append(s);
+  }
+  // Een vrije tijd kiezen, steeds opnieuw
+  const free = [...document.querySelectorAll('#slots .slot:not(.busy)')];
+  let n = free.findIndex(s => s.hasAttribute('data-pick'));
+  const pick = () => { free.forEach(s => s.classList.remove('pick')); free[n].classList.add('pick'); };
+  pick();
+  if (!reduced) setInterval(() => { n = (n + 1 + Math.floor(Math.random() * (free.length - 1))) % free.length; pick(); }, 2400);
+}
+
+// ---------- Stemmen beluisteren ----------
+// Stemmen uit het dashboard (public/voices.js daar); de fragmenten staan in voices/
+const VOICES = [
+  { id: 'emma', label: 'Emma', sub: 'Vrouw · kalm en helder', h: 330 },
+  { id: 'roos', label: 'Roos', sub: 'Vrouw · vriendelijk', h: 350 },
+  { id: 'melanie', label: 'Melanie', sub: 'Vrouw · levendig', h: 20 },
+  { id: 'ruth', label: 'Ruth', sub: 'Vrouw · warm', h: 40 },
+  { id: 'marlies', label: 'Marlies', sub: 'Vrouw · opgewekt', h: 300 },
+  { id: 'marianne', label: 'Marianne', sub: 'Vrouw · ouder, rustig', h: 280 },
+  { id: 'eric', label: 'Eric', sub: 'Man · natuurlijk', h: 210 },
+  { id: 'robert', label: 'Robert', sub: 'Man · warm en diep', h: 190 },
+  { id: 'thomas', label: 'Thomas', sub: 'Man · zakelijk', h: 230 },
+  { id: 'koen', label: 'Koen', sub: 'Man · jong, vriendelijk', h: 160 },
+  { id: 'jerry', label: 'Jerry', sub: 'Man · ontspannen', h: 130 },
+  { id: 'peter', label: 'Peter', sub: 'Man · rustig', h: 250 },
+];
+function initVoices() {
+  const list = $('#voices');
+  const audio = new Audio();
+  audio.preload = 'none';
+  let current = null, ctx = null, analyser = null, buf = null;
+  VOICES.forEach((v, i) => {
+    const id = v.id, b = document.createElement('button');
+    b.type = 'button'; b.className = 'voice rv'; b.dataset.id = id;
+    b.style.setProperty('--d', (i % 4) * .05 + 's');
+    b.setAttribute('aria-label', `Luister naar ${v.label}, ${v.sub}`);
+    b.innerHTML = `<span class="orb" style="--h:${v.h}"></span><span class="meta"><b></b><small></small></span>
+      <span class="play"><svg class="pl" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg><svg class="ps" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3" width="3" height="10" rx="1"/><rect x="9.5" y="3" width="3" height="10" rx="1"/></svg></span>`;
+    b.querySelector('b').textContent = v.label;
+    b.querySelector('small').textContent = v.sub;
+    list.append(b);
+  });
+  const stop = () => { if (current) { current.classList.remove('playing'); current.querySelector('.orb').style.setProperty('--lvl', 0); } current = null; };
+  // Het bolletje beweegt mee met het volume van de stem
+  const meter = () => {
+    if (!current || !analyser) return;
+    analyser.getByteTimeDomainData(buf);
+    let sum = 0; for (const x of buf) sum += ((x - 128) / 128) ** 2;
+    current.querySelector('.orb').style.setProperty('--lvl', Math.min(1, Math.sqrt(sum / buf.length) * 4).toFixed(3));
+    requestAnimationFrame(meter);
+  };
+  list.addEventListener('click', e => {
+    const b = e.target.closest('.voice');
+    if (!b) return;
+    if (current === b) { audio.pause(); stop(); return; }
+    stop();
+    try {
+      if (!ctx) { ctx = new AudioContext(); analyser = ctx.createAnalyser(); analyser.fftSize = 512; buf = new Uint8Array(analyser.fftSize); ctx.createMediaElementSource(audio).connect(analyser); analyser.connect(ctx.destination); }
+      ctx.resume();
+    } catch { analyser = null; }
+    audio.src = `voices/${b.dataset.id}.mp3`;
+    audio.play().then(() => { current = b; b.classList.add('playing'); meter(); }).catch(stop);
+  });
+  audio.addEventListener('ended', stop);
+}
+
+// ---------- Codevoorbeeld: Webhook of API ----------
+function initTabs() {
+  const tabs = $('#tabs'), thumb = tabs.querySelector('.thumb');
+  const FILE = { hook: 'POST jouw-server.nl/botlu', api: 'GET /api/v1/calls' };
+  const move = b => { thumb.style.width = b.offsetWidth + 'px'; thumb.style.transform = `translateX(${b.offsetLeft}px)`; };
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('.tab');
+    if (!b) return;
+    tabs.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('pre[data-p]').forEach(p => p.hidden = p.dataset.p !== b.dataset.t);
+    $('#file').textContent = FILE[b.dataset.t];
+    move(b);
+  });
+  move(tabs.querySelector('.tab.on'));
+  document.fonts?.ready.then(() => move(tabs.querySelector('.tab.on')));
+}
+
+// ---------- Verschijnen bij scrollen ----------
+function initReveal() {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+}
+
+$('#year').textContent = new Date().getFullYear();
+document.querySelectorAll('[data-grad]').forEach(gradient);
+initNav();
+initCall();
+initCards();
+initVoices();
+initTabs();
+initReveal();
+</script>
+</body>
+</html>
