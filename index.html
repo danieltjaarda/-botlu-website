@@ -65,37 +65,43 @@
   .btn.white:hover { background: #f1f1f4; }
 
   /* ---------- Navigatie ---------- */
-  .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s, color .3s; color: #fff; }
+  .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s; color: var(--ink); }
   .nav .wrap { display: flex; align-items: center; gap: 28px; height: 68px; }
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .nav-links { display: flex; gap: 4px; margin-right: auto; }
   .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
-  .nav-links a:hover { opacity: 1; background: rgba(255,255,255,.14); }
+  .nav-links a:hover { opacity: 1; background: rgba(16,16,24,.05); }
   .nav-cta { display: flex; align-items: center; gap: 8px; }
   .nav .login { padding: 8px 12px; font-size: 15px; font-weight: 500; text-decoration: none; }
-  .nav .btn.sm { background: rgba(255,255,255,.95); color: var(--ink); }
+  .nav .btn.sm { background: var(--ink); color: #fff; }
   .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
   .nav.solid .nav-links a:hover { background: var(--soft); }
   .nav.solid .btn.sm { background: var(--ink); color: #fff; }
 
   /* ---------- Hero met bewegend kleurverloop ---------- */
-  .hero { position: relative; padding: 150px 0 120px; isolation: isolate; }
-  .hero-bg { position: absolute; z-index: -1; inset: 0 0 0 0; height: 100%; overflow: hidden; transform: skewY(-9deg); transform-origin: 0 0; }
+  .hero { position: relative; min-height: min(100vh, 900px); display: flex; align-items: center; padding: 140px 0 110px; isolation: isolate; }
+  .hero-bg { position: absolute; z-index: -1; inset: 0; overflow: hidden; }
+  .ribbon { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* Dunne hulplijnen langs de rand van de inhoud, zoals op stripe.com */
+  .hero::after { content: ""; position: absolute; z-index: -2; inset: 0; pointer-events: none;
+    background: linear-gradient(var(--line), var(--line)) left max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
+                linear-gradient(var(--line), var(--line)) right max(16px, calc(50% - var(--wrap) / 2)) top 0 / 1px 100% no-repeat,
+                linear-gradient(var(--line), var(--line)) left 0 bottom 0 / 100% 1px no-repeat; }
   .grad { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
     background: radial-gradient(60% 80% at 20% 30%, #ff5fa2 0, transparent 60%), radial-gradient(60% 80% at 75% 20%, #38bdf8 0, transparent 60%), radial-gradient(50% 70% at 60% 80%, #ffb547 0, transparent 60%), #6d5cff; }
-  .hero-bg .grad { top: -30%; height: 130%; }
-  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: center; gap: 48px; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 700px); }
   .eyebrow { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px 0 6px; margin-bottom: 26px; border-radius: 99px;
-    background: rgba(255,255,255,.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink); font-size: 14px; font-weight: 500; text-decoration: none; }
+    background: rgba(244,244,246,.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink); font-size: 14px; font-weight: 500; text-decoration: none; }
   .eyebrow b { padding: 2px 9px; border-radius: 99px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; }
   h1 { margin: 0; font-size: clamp(46px, 7.2vw, 92px); line-height: .98; font-weight: 700; letter-spacing: -.055em; }
   .hero h1 { color: #110e22; }
-  .hero .lead { max-width: 520px; margin: 26px 0 34px; color: #1f1b33; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; font-weight: 450; }
+  .hero h1 .soft { color: #5b6b8c; }
+  .hero .lead { max-width: 520px; margin: 26px 0 34px; color: var(--ink-2); font-size: clamp(18px, 1.6vw, 21px); line-height: 1.5; font-weight: 450; }
   .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
-  .hero .fine { margin-top: 18px; color: rgba(24,20,46,.7); font-size: 14px; }
+  .hero .fine { margin-top: 18px; color: var(--ink-3); font-size: 14px; }
 
   /* Telefoon met een live gesprek */
-  .phone { position: relative; justify-self: center; width: 340px; padding: 12px; border-radius: 54px; background: #111117;
+  .phone { position: relative; width: 340px; padding: 12px; border-radius: 54px; background: #111117;
     box-shadow: 0 60px 120px -30px rgba(24,16,80,.55), 0 30px 60px -30px rgba(0,0,0,.5), inset 0 0 0 1.5px #2a2a33; }
   @supports (corner-shape: squircle) { .phone { border-radius: 90px; } }
   .screen { position: relative; height: 640px; overflow: hidden; border-radius: 42px; background: #f6f6f9; display: flex; flex-direction: column; }
@@ -131,6 +137,14 @@
   .summary p { margin: 0; color: var(--ink-2); font-size: 13.5px; line-height: 1.45; }
   @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.96); } }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Gesprek onder de hero */
+  .demo { background: linear-gradient(var(--bg), #f7f7fa 30%, var(--bg)); }
+  .demo-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 96px; }
+  .demo-list { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
+  .demo-list li { padding-left: 18px; border-left: 2px solid var(--line-2); }
+  .demo-list b { display: block; margin-bottom: 2px; font-size: 17px; letter-spacing: -.015em; }
+  .demo-list span { color: var(--ink-3); }
 
   /* ---------- Secties ---------- */
   section { position: relative; }
@@ -327,8 +341,10 @@
   }
   @media (max-width: 900px) {
     .hero { padding: 120px 0 90px; }
-    .hero .wrap { grid-template-columns: 1fr; gap: 56px; }
-    .hero-bg { transform: skewY(-7deg); }
+    .hero { min-height: 0; }
+    .demo-grid { grid-template-columns: 1fr; gap: 48px; justify-items: center; }
+    .hero { padding-top: 330px; }
+    .hero-bg { bottom: auto; height: 400px; -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
     .nav-links { display: none; }
     .nav .wrap { gap: 12px; }
     .nav .login { padding: 8px 6px; }
@@ -382,35 +398,19 @@
 <main>
   <!-- ========== Hero ========== -->
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true"><canvas class="grad" data-grad></canvas></div>
+    <div class="hero-bg" aria-hidden="true"><canvas class="ribbon" data-ribbon></canvas></div>
     <div class="wrap">
       <div>
         <a class="eyebrow rv" href="#stemmen"><b>Nieuw</b> 12 Nederlandse stemmen</a>
-        <h1 class="rv" style="--d:.05s">Je telefoon, altijd opgenomen.</h1>
+        <h1 class="rv" style="--d:.05s">Je telefoon, <span class="soft">altijd opgenomen.</span></h1>
         <p class="lead rv" style="--d:.12s">Botlu is de AI-assistent die de telefoon opneemt voor je bedrijf. Hij beantwoordt vragen, plant afspraken in je agenda en stuurt je na elk gesprek een samenvatting. Dag en nacht, in een stem die klinkt als een collega.</p>
         <div class="cta rv" style="--d:.18s">
           <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          <a class="btn glass" href="#stemmen"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg> Luister naar de stemmen</a>
+          <a class="btn line" href="#stemmen"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg> Luister naar de stemmen</a>
         </div>
         <p class="fine rv" style="--d:.24s">Je eerste assistent staat direct klaar. Je houdt gewoon je eigen nummer.</p>
       </div>
 
-      <div class="phone rv" style="--d:.15s" aria-label="Voorbeeld van een gesprek met Botlu">
-        <div class="screen">
-          <div class="island"></div>
-          <div class="call-head">
-            <div class="ava"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg></div>
-            <b>Fietsenwinkel Van Dijk</b>
-            <small><i></i> Emma neemt op · <span id="clock">0:00</span></small>
-            <div class="wave" id="wave" aria-hidden="true"></div>
-          </div>
-          <div class="chat" id="chat" aria-live="off"></div>
-          <div class="summary" id="summary">
-            <div class="top"><b>Gesprek afgerond</b><span class="pill brand">Afspraak</span></div>
-            <p>Sanne komt morgen om 10:30 langs met een lekke achterband. Staat in je agenda.</p>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -425,6 +425,40 @@
       <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Microsoft Teams</span>
       <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>Discord</span>
       <span class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>Webhooks &amp; API</span>
+    </div>
+  </section>
+
+  <!-- ========== Zo klinkt een gesprek ========== -->
+  <section class="sec demo" id="demo">
+    <div class="wrap demo-grid">
+  <div class="phone rv" aria-label="Voorbeeld van een gesprek met Botlu">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="call-head">
+              <div class="ava"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg></div>
+              <b>Fietsenwinkel Van Dijk</b>
+              <small><i></i> Emma neemt op · <span id="clock">0:00</span></small>
+              <div class="wave" id="wave" aria-hidden="true"></div>
+            </div>
+            <div class="chat" id="chat" aria-live="off"></div>
+            <div class="summary" id="summary">
+              <div class="top"><b>Gesprek afgerond</b><span class="pill brand">Afspraak</span></div>
+              <p>Sanne komt morgen om 10:30 langs met een lekke achterband. Staat in je agenda.</p>
+            </div>
+          </div>
+        </div>
+      <div class="demo-text">
+        <div class="sec-head rv" style="margin-bottom:34px">
+          <span class="kicker">Zo gaat een gesprek</span>
+          <h2>Neemt op, denkt mee <span class="mute">en regelt het.</span></h2>
+          <p>Botlu luistert, vraagt door en zoekt tijdens het gesprek zelf in je agenda. Ophangen, en jij hebt alles op een rij.</p>
+        </div>
+        <ul class="demo-list">
+          <li class="rv"><b>Neemt direct op</b><span>Met de naam van je bedrijf en een begroeting die bij het dagdeel past.</span></li>
+          <li class="rv" style="--d:.06s"><b>Zoekt vrije tijden op</b><span>En plant de afspraak in, terwijl de beller aan de lijn is.</span></li>
+          <li class="rv" style="--d:.12s"><b>Vat het voor je samen</b><span>Wie er belde, waarover, en wat er is afgesproken.</span></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -758,7 +792,75 @@ function gradient(canvas) {
   raf = requestAnimationFrame(frame);
 }
 
-// ---------- Navigatie wordt wit zodra je voorbij het verloop scrolt ----------
+// ---------- Het lint in de hero (zoals stripe.com) ----------
+// Een gedraaid zijden lint: per pixel rekenen we uit waar we dwars op het lint
+// zitten (s, -1 tot 1). Waar cos(tw) door nul gaat kantelt het lint en wordt het
+// smal; daarna ligt de andere kant boven, dus de kleuren draaien mee om.
+const RIBBON = `precision highp float;
+uniform vec2 r; uniform float t, unit;
+vec3 pal(float k){
+  k=clamp(k,0.,1.);
+  vec3 c=mix(vec3(.82,.89,1.),vec3(.58,.5,1.),smoothstep(0.,.2,k));
+  c=mix(c,vec3(.98,.45,.8),smoothstep(.2,.4,k));
+  c=mix(c,vec3(1.,.5,.2),smoothstep(.4,.6,k));
+  c=mix(c,vec3(1.,.34,.64),smoothstep(.6,.8,k));
+  return mix(c,vec3(1.,.72,.45),smoothstep(.8,1.,k));
+}
+void main(){
+  vec2 f=gl_FragCoord.xy;
+  float u=f.x/unit, v=(r.y-f.y)/unit, W=r.x/unit, T=t*.22;
+  float cx=W-.35+.55*v-.15*v*v+.04*sin(v*3.+T)+.015*sin(v*8.-T*1.6);  // middenlijn: boog naar rechtsonder
+  float tw=cos(v*2.86+.25*sin(T*.6));                                 // draaiing, knik rond het midden
+  float hw=.035+.52*abs(tw)*(1.-.45*v);
+  float s=(u-cx)/hw, side=clamp(tw*5.,-1.,1.);                       // vloeiend omdraaien in de knik
+  float k=(s*side+1.)*.5+.07*sin(v*3.+T*1.3);
+  vec3 col=pal(k);
+  col*=.86+.14*(sin(s*170.+sin(v*9.+T)*1.5)*.5+.5);                  // fijne draden
+  col=mix(col,vec3(1.),exp(-pow((s*side-.3)*4.5,2.))*.4*abs(tw));     // glans
+  col*=.78+.22*smoothstep(0.,.35,abs(tw));                            // schaduw in de knik
+  float e=abs(s)+(s>0.?.035:.007)*sin(v*610.+s*40.)*sin(v*190.+T);    // rechts rafelig, links strak
+  float a=(1.-smoothstep(.84,1.,e))*smoothstep(-.02,.14,k);           // lichtblauwe kant vervaagt
+  gl_FragColor=vec4(col*a,a);
+}`;
+function ribbon(canvas) {
+  const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'low-power' });
+  if (!gl) return;
+  const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, RIBBON));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const uR = gl.getUniformLocation(prog, 'r'), uT = gl.getUniformLocation(prog, 't'), uU = gl.getUniformLocation(prog, 'unit');
+  // De draden zijn fijn, dus op volle resolutie (tot 1,5× voor retina)
+  const size = () => {
+    const d = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(canvas.clientWidth * d), h = Math.round(canvas.clientHeight * d);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
+      gl.uniform2f(uR, w, h);
+      gl.uniform1f(uU, Math.min(h, 860 * d));   // het lint houdt dezelfde maat, ook in een hoge hero
+    }
+  };
+  const start = performance.now();
+  let visible = true, raf = 0;
+  const frame = now => {
+    size();
+    gl.uniform1f(uT, (now - start) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    raf = visible && !reduced && !document.hidden ? requestAnimationFrame(frame) : 0;
+  };
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); }).observe(canvas);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && visible && !raf) raf = requestAnimationFrame(frame); });
+  addEventListener('resize', () => { if (!raf) requestAnimationFrame(frame); });
+  raf = requestAnimationFrame(frame);
+}
+
+// ---------- Navigatie krijgt een glazen achtergrond zodra je scrolt ----------
 function initNav() {
   const nav = $('#nav');
   const set = () => nav.classList.toggle('solid', scrollY > 40);
@@ -921,6 +1023,7 @@ function initReveal() {
 
 $('#year').textContent = new Date().getFullYear();
 document.querySelectorAll('[data-grad]').forEach(gradient);
+document.querySelectorAll('[data-ribbon]').forEach(ribbon);
 initNav();
 initCall();
 initCards();
