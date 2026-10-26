@@ -1102,6 +1102,7 @@ function slinger(canvas) {
 const RING_FS = `precision highp float;
 uniform vec2 res;
 uniform float time, level, wobT, flowT, ripT;
+uniform vec3 wph;                                                  // fase van de drie golflijnen
 // 3D-simplexruis van Ian McEwan en Stefan Gustavson (MIT)
 vec3 m289(vec3 x) { return x - floor(x * (1. / 289.)) * 289.; }
 vec4 m289(vec4 x) { return x - floor(x * (1. / 289.)) * 289.; }
@@ -1138,7 +1139,7 @@ vec3 ringCol(float k) {
   return mix(col, c(86., 186., 200.), smoothstep(.86, 1., k));
 }
 void main() {
-  float m = min(res.x, res.y), T = time, lv = level;
+  float m = min(res.x, res.y), T = time, lv = level, px = 2. / m;
   vec2 p = (gl_FragCoord.xy - .5 * res) / (.5 * m);
   p.y -= .012 * sin(T * .8);                                         // zweven
   float d = length(p), ang = atan(p.y, p.x);
@@ -1160,6 +1161,25 @@ void main() {
     float e = exp(-pow((d - r * (1. + .32 * ph)) / (.012 + .02 * ph), 2.)) * (1. - ph) * lv * .35;
     col = vec4(rc * e, e) + col * (1. - e);
   }
+  // Golflijnen: drie dunne golven die om de ring lopen en er afwisselend voor en
+  // achter langs gaan, zoals een vlecht. Hele aantallen golven rond, zodat ze
+  // naadloos sluiten; in rust kalm, als hij praat hoger.
+  vec4 front = vec4(0.);
+  for (int i = 0; i < 3; i++) {
+    float fi = float(i);
+    float ph = i == 0 ? wph.x : (i == 1 ? wph.y : wph.z);
+    float sa = (3. + fi) * ang + ph;                                 // 3, 4 en 5 golven rond
+    float A = (.06 + .014 * fi) * (.82 + .18 * sin(T * .37 + fi * 2.1)) + .055 * lv;
+    float rs = r + A * (sin(sa) + .3 * sin(2. * sa + 1.7 * fi + .5 * ph));
+    float dist = abs(d - rs), lw = .0055 + .0025 * lv;
+    float sl = smoothstep(lw + px, lw - px, dist) + exp(-pow(dist / (4. * lw), 2.)) * .3;
+    vec3 sc = mix(ringCol(ang / 6.2831853 + .375 + flowT + .22 * (fi + 1.)), vec3(1.), .12);
+    float fr = smoothstep(-.25, .25, cos(sa));                       // voor de buis langs
+    float sa1 = clamp(sl, 0., 1.) * (.72 + .2 * lv);
+    float ab = sa1 * (1. - fr) * .75, af = sa1 * fr;
+    col = vec4(sc * ab, ab) + col * (1. - ab);                       // achter de buis
+    front = vec4(sc * af, af) + front * (1. - af);                   // ervoor, straks over de buis
+  }
   // De buis: strak afgelijnd, binnenkant lichter, buitenkant voller, met een lichte kern
   float core = smoothstep(wid, wid * .55, abs(x));
   vec3 tc = rc * mix(1.12, .88, smoothstep(-wid, wid, x)) * (1. + .12 * exp(-pow(x / (.35 * wid), 2.)));
@@ -1170,6 +1190,7 @@ void main() {
   tc += c(200., 220., 255.) * exp(-pow((x - .1 * wid) / (.6 * wid), 2.)) * top * .15;
   float ca = core;
   col = vec4(tc, 1.) * ca + col * (1. - ca);
+  col = front + col * (1. - front.a);
   col.rgb += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - .5) / 255. * col.a;
   gl_FragColor = col;
 }`;
@@ -1192,7 +1213,7 @@ function ringGL(canvas) {
   gl.enableVertexAttribArray(0);
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
   const u = n => gl.getUniformLocation(prog, n);
-  return { gl, uRes: u('res'), uTime: u('time'), uLevel: u('level'), uWob: u('wobT'), uFlow: u('flowT'), uRip: u('ripT') };
+  return { gl, uRes: u('res'), uTime: u('time'), uLevel: u('level'), uWob: u('wobT'), uFlow: u('flowT'), uRip: u('ripT'), uWph: u('wph') };
 }
 
 function ring(stage) {
@@ -1234,7 +1255,7 @@ function ring(stage) {
   label();
 
   if (!G) return;
-  const { gl, uRes, uTime, uLevel, uWob, uFlow, uRip } = G;
+  const { gl, uRes, uTime, uLevel, uWob, uFlow, uRip, uWph } = G;
   const size = () => {
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
@@ -1242,6 +1263,7 @@ function ring(stage) {
   };
   const start = performance.now() - 3000 * Math.random();
   let visible = true, raf = 0, last = 0, env = 0, lvl = 0, vel = 0, wobT = 0, flowT = 0, ripT = 0;
+  const wph = [0, 2.1, 4.2];                                         // golflijnen, elk een eigen tempo
   const frame = now => {
     size();
     const dt = last ? Math.min(.05, (now - last) / 1000) : 0;
@@ -1260,11 +1282,15 @@ function ring(stage) {
     wobT += dt * (.25 + .8 * lvl);
     flowT += dt * (.02 + .1 * lvl);
     ripT += dt * .55 * lvl;
+    wph[0] += dt * (.7 + 2.2 * lvl);
+    wph[1] -= dt * (.55 + 1.8 * lvl);
+    wph[2] += dt * (.45 + 2.6 * lvl);
     gl.uniform1f(uTime, (now - start) / 1000);
     gl.uniform1f(uLevel, lvl);
     gl.uniform1f(uWob, wobT);
     gl.uniform1f(uFlow, flowT);
     gl.uniform1f(uRip, ripT);
+    gl.uniform3fv(uWph, wph);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     raf = visible && !document.hidden && (!reduced || playing || lvl > .003) ? requestAnimationFrame(frame) : 0;
     if (!raf) last = 0;
