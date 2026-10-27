@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontwikkelaars · Botlu.ai</title>
+<meta name="description" content="Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link voor je agenda.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* Inter Variable (4.1, SIL OFL, fonts/Inter-LICENSE.txt), zelf gehost en ingekort tot Latijns schrift.
+     Met de assen opsz (grote koppen krijgen vanzelf de display-vorm) en wght. Zoals op mollie.com:
+     I met schreefjes, G met spoor, compacte f en t, en de extra ligaturen. */
+  @font-face { font-family: "Inter Variable"; src: url("/fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  body { font-feature-settings: "cv08", "cv10", "cv12", "cv13", "dlig"; }
+  pre, code { font-feature-settings: normal; }
+  :root {
+    --bg: #ffffff; --soft: #f4f4f6; --soft-2: #ebebef; --line: #ebebef; --line-2: #dedee4;
+    --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --ink-4: #a0a0aa;
+    --brand: #5b4ff5; --brand-2: #6a5ff7; --brand-soft: #efeefe; --ring: rgba(91, 79, 245, .14);
+    --good: #18a058; --good-soft: #e6f6ed; --warn: #b8650a; --warn-soft: #fdf1e0; --info: #2563eb; --info-soft: #e8effd;
+    --night: #0b0b14;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+    --spring: cubic-bezier(.34, 1.45, .64, 1);
+    --r-sm: 9px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-2xl: 28px;
+    --shadow-pop: 0 16px 36px -10px rgba(16,16,24,.18), 0 2px 6px rgba(16,16,24,.05), 0 0 0 1px rgba(16,16,24,.06);
+    --shadow-lg: 0 30px 70px -20px rgba(16,16,24,.3), 0 0 0 1px rgba(16,16,24,.05);
+    --wrap: 1180px;
+  }
+  /* Echte squircles waar de browser het kent (Chrome 139+); elders gewoon afgerond */
+  @supports (corner-shape: squircle) {
+    :root { --r-sm: 16px; --r-md: 22px; --r-lg: 28px; --r-xl: 36px; --r-2xl: 52px; }
+    .btn, .ring-play, .card, .chip, .mini, .voice, .play, .faq details, .step-num, .slot, .kpi, .win, .notif, .cta-box, .lang { corner-shape: squircle; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.55 "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+  .wrap { width: min(100% - 32px, var(--wrap)); margin: 0 auto; }
+  .wordmark { font: 500 22px/1 "Poppins", "Inter", sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+
+  /* ---------- Knoppen ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 22px; border: 1px solid transparent; border-radius: var(--r-md);
+    font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; white-space: nowrap; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, box-shadow .25s, transform .2s var(--ease); }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
+  .btn:hover svg.arrow { transform: translateX(3px); }
+  .btn.dark { background: var(--ink); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 20px -8px rgba(16,16,24,.6); }
+  .btn.dark:hover { background: #26262d; }
+  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
+  .btn.brand:hover { background: var(--brand-2); }
+  .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
+  .btn.line:hover { border-color: var(--ink-4); }
+  .btn.sm { height: 38px; padding: 0 16px; font-size: 14.5px; }
+
+  /* ---------- Navigatie ---------- */
+  .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s; color: var(--ink); }
+  .nav .wrap { display: flex; align-items: center; gap: 28px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-links { display: flex; gap: 4px; margin-right: auto; }
+  .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
+  .nav-links a:hover { opacity: 1; background: rgba(16,16,24,.05); }
+  .nav-cta { display: flex; align-items: center; gap: 8px; }
+  .nav .btn.sm { background: var(--ink); color: #fff; }
+  .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
+  .nav.solid .nav-links a:hover { background: var(--soft); }
+  /* Menu 'Producten': paneel opent bij hover of focus (ook met toetsenbord of een tik) */
+  .menu { position: relative; }
+  .menu-knop { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border: 0; border-radius: 10px; background: none; color: inherit; font-size: 15px; font-weight: 500;
+    cursor: pointer; opacity: .92; transition: background .2s, opacity .2s; }
+  .menu-knop svg { width: 12px; height: 12px; transition: transform .3s var(--ease); }
+  .menu:hover .menu-knop, .menu:focus-within .menu-knop { opacity: 1; background: rgba(16,16,24,.05); }
+  .menu:hover .menu-knop svg, .menu:focus-within .menu-knop svg { transform: rotate(180deg); }
+  .menu-paneel { position: absolute; top: calc(100% + 10px); left: -6px; z-index: 60; width: 340px; padding: 8px; border-radius: var(--r-xl); background: rgba(255,255,255,.97); color: var(--ink);
+    backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: var(--shadow-pop);
+    opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); transform-origin: 30px 0; transition: opacity .2s var(--ease), transform .3s var(--ease), visibility 0s .3s; }
+  .menu-paneel::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }   /* brug: muis valt niet in het gat */
+  .menu:hover .menu-paneel, .menu:focus-within .menu-paneel { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .nav .nav-links .menu-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: var(--r-md); color: var(--ink); text-decoration: none; opacity: 1; font-size: 15px; }
+  .nav .nav-links .menu-paneel a.menu-item:hover { background: var(--soft); }
+  .menu-item svg { width: 22px; height: 22px; flex: none; margin-top: 1px; color: var(--ink); }
+  .menu-item b { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .menu-item small { display: block; margin-top: 2px; color: var(--ink-3); font-size: 13.5px; font-weight: 400; }
+  .menu-item.binnenkort { cursor: default; }
+  .menu-item.binnenkort b { color: var(--ink-2); }
+  /* Branches: breed paneel met drie kolommen, zoals een megamenu */
+  .menu-paneel.branches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px 6px; width: 660px; padding: 12px; }
+  .nav .nav-links .menu-paneel.branches a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; color: var(--ink); font-size: 14.5px; opacity: 1; white-space: nowrap; }
+  .nav .nav-links .menu-paneel.branches a:hover { background: var(--soft); }
+  .nav .nav-links .menu-paneel.branches a[aria-current] { background: var(--soft); font-weight: 600; }
+  .menu-paneel.branches svg { width: 18px; height: 18px; flex: none; color: var(--ink); }
+  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
+  .nav.solid .btn.sm { background: var(--ink); color: #fff; }
+  /* Demo boeken: wit met een dunne rand, naast de zwarte knop */
+  .nav .btn.sm.demo, .nav.solid .btn.sm.demo { background: #fff; border-color: var(--line-2); color: var(--ink); }
+  .nav .btn.sm.demo:hover { border-color: var(--ink-4); }
+  /* Op een smal scherm past "Account aanmaken" niet naast "Demo boeken": dan "Aanmelden" */
+  .nav .naam-kort { display: none; }
+  @media (max-width: 480px) { .nav .naam-lang { display: none; } .nav .naam-kort { display: inline; } }
+
+  h1 { margin: 0; font-size: clamp(42px, 5.6vw, 76px); line-height: 1.02; font-weight: 360; letter-spacing: -.042em; }
+  /* ---------- Secties ---------- */
+  section { position: relative; }
+  .sec { padding: 120px 0; }
+  .sec-head { max-width: 760px; margin-bottom: 56px; }
+  .sec-head.center { margin-inline: auto; text-align: center; }
+  h2 { margin: 0; font-size: clamp(36px, 5vw, 60px); line-height: 1.04; font-weight: 380; letter-spacing: -.04em; }
+  h2 .mute { color: var(--ink-4); }
+  .sec-head p { margin: 20px 0 0; color: var(--ink-3); font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; }
+  h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.2; font-weight: 520; letter-spacing: -.015em; }
+
+  /* ---------- Ontwikkelaars ---------- */
+  .devs { background: var(--night); color: #fff; overflow: hidden; }
+  /* Dezelfde chromen linten als in de hero, hier in de donkere studio, achter de inhoud */
+  .sec-metal { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .sec-metal canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .devs > .wrap { position: relative; z-index: 1; }
+  .devs .meer { margin-top: 30px; color: #fff; text-decoration-color: rgba(255,255,255,.4); }
+  .devs .meer:hover { text-decoration-color: #fff; }
+  .devs h2 .mute { color: rgba(255,255,255,.4); }
+  .devs h2 { font-size: clamp(34px, 4vw, 50px); }
+  .devs .sec-head p { color: rgba(255,255,255,.6); }
+  .devs-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 56px; align-items: start; }
+  .dev-list { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
+  .dev-list li { padding-left: 18px; border-left: 2px solid rgba(255,255,255,.12); }
+  .dev-list b { display: block; margin-bottom: 4px; font-size: 17px; letter-spacing: -.015em; }
+  .dev-list span { color: rgba(255,255,255,.58); font-size: 15px; }
+  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #d6d2ff; }
+  /* Het codevoorbeeld als Terminal op de Mac: licht venster, profiel Basic (zwarte SF Mono op wit) */
+  .term { overflow: hidden; border-radius: 12px; background: #fff; color: #000;
+    box-shadow: 0 0 0 .5px rgba(0,0,0,.5), inset 0 0 0 .5px rgba(255,255,255,.35), 0 24px 70px 4px rgba(0,0,0,.55); }
+  .term-bar { position: relative; display: flex; align-items: center; justify-content: center; height: 30px; background: #ececec; }
+  .lights { position: absolute; left: 13px; top: 9px; display: flex; gap: 8px; }
+  .lights i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 .5px #e0443e; }
+  .lights i:nth-child(2) { background: #febc2e; box-shadow: inset 0 0 0 .5px #dea123; }
+  .lights i:nth-child(3) { background: #28c840; box-shadow: inset 0 0 0 .5px #1aab29; }
+  .term-title { max-width: 70%; overflow: hidden; color: #4d4d4d; font: 600 13px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Variable", sans-serif; letter-spacing: -.01em; white-space: nowrap; text-overflow: ellipsis; }
+  /* Tabbalk zoals in Terminal: tabs even breed, de actieve licht, de andere wat donkerder */
+  .term-tabs { display: flex; background: #dadada; box-shadow: inset 0 1px 0 #cfcfcf, inset 0 -1px 0 #c8c8c8; }
+  .term-tab { flex: 1; height: 26px; border: 0; border-left: 1px solid #c8c8c8; background: none; color: #6b6b6b; cursor: pointer;
+    font: 500 12px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Variable", sans-serif; transition: background .15s, color .15s; }
+  .term-tab:first-child { border-left: 0; }
+  .term-tab:hover { background: #d2d2d2; }
+  .term-tab.on { background: #ececec; color: #262626; box-shadow: inset 0 -1px 0 #ececec; }
+  .term pre { height: calc(22 * 1.45em + 20px); margin: 0; padding: 8px 10px 12px; overflow: auto; background: #fff; color: #000;
+    font: 12.5px/1.45 "SF Mono", ui-monospace, Menlo, monospace; tab-size: 2; white-space: pre; }
+  .term pre[hidden] { display: none; }
+  .term .cur { display: inline-block; width: .6em; height: 1.15em; vertical-align: -.2em; background: rgba(0,0,0,.42); }
+
+  /* ---------- Afsluiter ---------- */
+  .cta-sec { padding: 0 0 100px; }
+  .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 96px 56px; border-radius: var(--r-2xl); background: var(--soft); }
+  .cta-copy { position: relative; max-width: 600px; }
+  .cta-box p { max-width: 480px; margin: 18px 0 32px; color: var(--ink-3); font-size: 19px; }
+  .cta-box .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  /* Verschijnen bij scrollen */
+  .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; }
+
+
+  /* ---------- Pagina voor ontwikkelaars ---------- */
+  /* Op de donkere hero: navigatie in wit tot je scrolt */
+  .nav:not(.solid) { color: #fff; }
+  .nav:not(.solid) .nav-links a:hover { background: rgba(255,255,255,.1); }
+  .nav:not(.solid) .btn.sm { background: #fff; color: var(--ink); }
+  .nav:not(.solid) .btn.sm.demo { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.28); color: #fff; }
+  .nav:not(.solid) .btn.sm.demo:hover { background: rgba(255,255,255,.14); }
+  .nav-links a[aria-current] { opacity: 1; font-weight: 600; }
+  .dev-hero { padding: 150px 0 110px; }
+  .dev-hero h1 { font-size: clamp(38px, 4.4vw, 58px); line-height: 1.04; letter-spacing: -.04em; }
+  .dev-hero h1 .mute { color: rgba(255,255,255,.4); }
+  .dev-hero .devs-grid { align-items: center; }
+  /* Linten vervagen achter het menu, en een donkere waas achter de tekst links houdt wit leesbaar */
+  .dev-hero .sec-metal { -webkit-mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); }
+  .dev-hero .devs-grid > div:first-child { position: relative; }
+  .dev-hero .devs-grid > div:first-child::before { content: ""; position: absolute; inset: -14% -22% -14% -40%; z-index: -1; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(11,11,20,.9) 55%, rgba(11,11,20,0)); }
+  .dev-hero .dev-list { margin-top: 40px; }
+  .dev-hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+  .btn.wit { background: #fff; color: var(--ink); }
+  .btn.wit:hover { background: #e9e9f0; }
+  .btn.glas { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); color: #fff; }
+  .btn.glas:hover { background: rgba(255,255,255,.14); }
+  /* Terminal op een witte achtergrond: lichtere schaduw dan op de donkere hero */
+  .term.op-wit { box-shadow: 0 0 0 .5px rgba(0,0,0,.28), 0 24px 56px -14px rgba(16,16,24,.38); }
+  .mono { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  /* Stappen met grote lichte cijfers */
+  .stappen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: stap; }
+  .stap, .ev, .app { padding: 30px; border-radius: var(--r-2xl); background: var(--soft); }
+  .stap::before { content: counter(stap); counter-increment: stap; display: block; margin-bottom: 26px; color: var(--ink-4); font-size: 56px; line-height: 1; font-weight: 300; letter-spacing: -.04em; }
+  .stap p, .ev p, .app p { margin: 0; color: var(--ink-3); }
+  .chip { display: inline-block; margin-top: 20px; padding: 6px 10px; border-radius: 8px; background: #fff; box-shadow: 0 0 0 1px var(--line-2); color: var(--ink); font: 500 13px/1.3 "SF Mono", ui-monospace, Menlo, monospace; }
+  /* Gebeurtenissen */
+  .events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .ev h3 { font: 600 17px/1.3 "SF Mono", ui-monospace, Menlo, monospace; letter-spacing: 0; }
+  .ev p { margin-bottom: 20px; }
+  .velden { display: flex; flex-wrap: wrap; gap: 6px; }
+  .velden span { padding: 4px 9px; border-radius: 7px; background: #fff; box-shadow: 0 0 0 1px var(--line-2); color: var(--ink-2); font: 12.5px/1.3 "SF Mono", ui-monospace, Menlo, monospace; }
+  .uitkomsten { margin: 26px 0 0; color: var(--ink-3); font-size: 15.5px; }
+  .uitkomsten code, .eplijst + p code, .headers code { padding: 2px 6px; border-radius: 6px; background: var(--soft); color: var(--ink); font: 500 13.5px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  /* API: endpoints links, Terminal rechts */
+  .duo { display: grid; grid-template-columns: .9fr 1.1fr; gap: 56px; align-items: start; }
+  .basis { display: grid; gap: 14px; margin-bottom: 30px; }
+  .basis small { display: block; margin-bottom: 3px; color: var(--ink-4); font-size: 13px; font-weight: 500; }
+  .basis code { color: var(--ink); font: 500 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  .eplijst { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .eplijst li { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 4px 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .eplijst .m { grid-row: span 2; align-self: start; padding: 3px 0; border-radius: 6px; background: var(--brand-soft); color: var(--brand); text-align: center; font: 600 12px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  .eplijst code { overflow-wrap: anywhere; color: var(--ink); font: 500 14.5px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  .eplijst span { color: var(--ink-3); font-size: 15px; }
+  .eplijst + p { margin: 22px 0 0; color: var(--ink-3); font-size: 15.5px; }
+  /* Handtekening: de drie headers */
+  .headers { display: grid; gap: 22px; margin: 0; }
+  .headers div { padding-left: 18px; border-left: 2px solid var(--line-2); }
+  .headers dt { margin-bottom: 4px; color: var(--ink); font: 600 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  .headers dd { margin: 0; color: var(--ink-3); }
+  .headers + p { margin: 28px 0 0; color: var(--ink-3); }
+  .headers + p a { color: var(--brand); font-weight: 600; text-underline-offset: 4px; }
+  /* Zonder code: echte app-iconen */
+  .apps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .app .ic { display: flex; gap: 8px; margin-bottom: 24px; }
+  .app .ic img { width: 44px; height: 44px; border-radius: 22.5%; box-shadow: 0 0 0 1px rgba(16,16,24,.06), 0 6px 14px -8px rgba(16,16,24,.35); }
+  .app .chip { display: block; width: fit-content; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Veilig: zwarte iconen zonder vlak */
+  .veilig { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 36px; }
+  .veilig svg { display: block; width: 28px; height: 28px; margin-bottom: 18px; color: var(--ink); }
+  .veilig p { margin: 0; color: var(--ink-3); font-size: 15.5px; }
+  .sec + .sec { padding-top: 0; }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+  .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 1060px) {
+    .apps, .veilig { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .nav .wrap { gap: 12px; }
+    .nav .btn.sm { padding: 0 13px; }
+    .devs-grid, .duo { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .stappen, .events { grid-template-columns: minmax(0, 1fr); }
+    .dev-hero { padding: 120px 0 84px; }
+    .sec-metal { opacity: .5; }
+  }
+  @media (max-width: 700px) {
+    .sec { padding: 84px 0; }
+    .apps, .veilig { grid-template-columns: minmax(0, 1fr); }
+    .stap, .ev, .app { padding: 24px; }
+    .cta-box { padding: 56px 24px; }
+    footer nav { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Botlu.ai"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark">Botlu.ai</span></a>
+    <nav class="nav-links" aria-label="Hoofdmenu">
+      <div class="menu">
+        <button class="menu-knop" type="button" aria-haspopup="true">Producten <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="menu-paneel">
+          <a class="menu-item" href="/#functies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h2.6l1.6 4-2 1.3a11 11 0 0 0 5.4 5.4l1.3-2 4 1.6v2.6a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><span><b>AI bel-assistent</b><small>Neemt de telefoon op, dag en nacht</small></span></a>
+          <div class="menu-item binnenkort" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4.5 19.5l1.4-4.3A7.5 7.5 0 1 1 20 11.5z"/></svg><span><b>AI WhatsApp-assistent <em>Binnenkort</em></b><small>Beantwoordt je WhatsApp-berichten</small></span></div>
+          <div class="menu-item binnenkort" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg><span><b>AI mail-assistent <em>Binnenkort</em></b><small>Handelt je inbox voor je af</small></span></div>
+        </div>
+      </div>
+      <!-- branches -->
+      <div class="menu">
+        <button class="menu-knop" type="button" aria-haspopup="true">Branches <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="menu-paneel branches"><a href="/branches/medische-praktijk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v5a4 4 0 0 0 8 0V3"/><path d="M9 12v3a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="11" r="2"/></svg>Medische praktijk</a><a href="/branches/hotels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M12 7h.01M15 7h.01M9 11h.01M12 11h.01M15 11h.01M10 21v-4h4v4"/></svg>Hotels</a><a href="/branches/vakmensen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 7 4.5 15.5a2.1 2.1 0 0 0 3 3L16 10"/><path d="m11 5 3-2 7 7-2 3z"/></svg>Vakmensen</a><a href="/branches/advocatenkantoren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7 2.5 13a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>Advocatenkantoren</a><a href="/branches/zelfstandigen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Zelfstandigen</a><a href="/branches/vastgoedbeheer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l6-4v17M11 21V10l8 3v8"/><path d="M8 10h.01M8 14h.01M15 15h.01M15 18h.01"/></svg>Vastgoedbeheer</a><a href="/branches/bedrijven"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>Bedrijven</a><a href="/branches/autodealers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15l1.5-5A2 2 0 0 1 7.4 8.5h9.2a2 2 0 0 1 1.9 1.5L20 15v3H4z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>Autodealers</a><a href="/branches/overheidsinstanties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M4 10h16M12 3l8 5H4z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg>Overheidsinstanties</a><a href="/branches/autogarages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>Autogarages</a><a href="/branches/verenigingen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>Verenigingen</a><a href="/branches/tandartsen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14a4.5 4.5 0 0 0 8 0M9 9.5h.01M15 9.5h.01"/></svg>Tandartsen</a><a href="/branches/fysiotherapeuten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 6.6a5 5 0 0 0-8.8-1.5 5 5 0 0 0-8.8 1.5C2 11 7 15.5 12 20c5-4.5 10-9 8.8-13.4z"/><path d="M3.5 12h5l1.5-3 2.5 6 1.5-3h6"/></svg>Fysiotherapeuten</a><a href="/branches/notarissen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14M6 17h12v-3a2 2 0 0 0-2-2h-1.5l-.5-3a2.5 2.5 0 1 0-4 0l-.5 3H8a2 2 0 0 0-2 2z"/></svg>Notarissen</a><a href="/branches/winkels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v10h16V10M3 6l2-3h14l2 3v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M10 20v-5h4v5"/></svg>Winkels</a><a href="/branches/retail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Retail</a><a href="/branches/belastingadviseurs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>Belastingadviseurs</a><a href="/branches/apotheken"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="m8.5 8.5 7 7"/></svg>Apotheken</a><a href="/branches/makelaars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 19 4M16 7l2 2M14 9l2 2"/></svg>Makelaars</a><a href="/branches/restaurants"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1-3 3-3 6v4h3v8"/></svg>Restaurants</a><a href="/branches/recruiters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20a7 7 0 0 1 9.5-6.5"/><circle cx="17" cy="17" r="3"/><path d="m21 21-1.8-1.8"/></svg>Recruiters</a></div>
+      </div>
+      <!-- /branches -->
+      <a href="/ontwikkelaars" aria-current="page">Ontwikkelaars</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn sm demo" href="/#demo">Demo boeken</a>
+      <a class="btn sm" href="https://app.botlu.ai/login#aanmaken"><span class="naam-lang">Account aanmaken</span><span class="naam-kort">Aanmelden</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ========== Hero: koppel Botlu aan je eigen systemen ========== -->
+  <section class="devs dev-hero">
+    <div class="sec-metal" aria-hidden="true"><canvas></canvas></div>
+    <div class="wrap">
+      <div class="devs-grid">
+        <div>
+          <h1 class="rv">Koppel Botlu aan je eigen systemen. <span class="mute">Met een API en webhooks.</span></h1>
+          <ul class="dev-list">
+            <li class="rv" style="--d:.05s"><b>Webhooks bij elke gebeurtenis</b><span><code>call.completed</code>, <code>appointment.created</code>, <code>appointment.cancelled</code> en <code>callback.created</code>, ondertekend volgens Standard Webhooks.</span></li>
+            <li class="rv" style="--d:.1s"><b>REST-API met sleutels</b><span>Haal gesprekken, transcripten, opnames, assistenten en nummers op met een <code>btl_</code>-sleutel.</span></li>
+            <li class="rv" style="--d:.15s"><b>Agenda als iCal-link</b><span>Abonneer je op alle afspraken in je eigen agenda-app.</span></li>
+          </ul>
+          <div class="cta rv" style="--d:.2s">
+            <a class="btn wit" href="https://app.botlu.ai/login#aanmaken">API-sleutel maken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            <a class="btn glas" href="#api">Bekijk de endpoints</a>
+          </div>
+        </div>
+        <div class="rv" style="--d:.1s">
+<div class="term ">
+  <div class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">jij — node server.js — 80×24</span></div>
+  <div class="term-tabs" role="tablist"><button class="term-tab on" type="button" data-t="hook" data-title="jij — node server.js — 80×24">Webhook</button><button class="term-tab" type="button" data-t="api" data-title="jij — -zsh — 80×24">API</button></div>
+<pre data-p="hook">Last login: Tue Oct 27 14:02:51 on ttys001
+<span class="pr">jij@MacBook ~ %</span> node server.js
+Botlu-webhooks: luistert op https://jouw-server.nl/botlu
+
+POST /botlu  call.completed
+{
+  "id": "evt_6f1c0a9e2b7d4c3e8a51f0d2",
+  "type": "call.completed",
+  "created_at": "2026-10-27T14:03:18.000Z",
+  "data": {
+    "caller_name": "Sanne de Vries",
+    "from": "+31612345678",
+    "topic": "Lekke achterband",
+    "summary": "Sanne komt morgen om 10:30 langs.",
+    "outcome": "afspraak",
+    "sentiment": 86,
+    "duration_seconds": 74,
+    "has_recording": true
+  }
+}
+<span class="cur"></span></pre><pre data-p="api" hidden>Last login: Tue Oct 27 14:02:51 on ttys001
+<span class="pr">jij@MacBook ~ %</span> curl "https://app.botlu.ai/api/v1/calls?limit=5" \
+&gt;   -H "Authorization: Bearer $BOTLU_KEY"
+{
+  "data": [
+    {
+      "id": "CA5d3f0e9b1c7a4e2f8d6b0a9c3e1f7d24",
+      "started_at": "2026-10-27T14:01:58.000Z",
+      "duration_seconds": 74,
+      "agent": { "id": "k3f9x2a", "name": "Emma" },
+      "caller_name": "Sanne de Vries",
+      "topic": "Lekke achterband",
+      "outcome": "afspraak",
+      "has_recording": true
+    }
+  ],
+  "has_more": true
+}
+<span class="pr">jij@MacBook ~ %</span> <span class="cur"></span></pre>
+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== In drie stappen ========== -->
+  <section class="sec" id="start">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>In drie stappen gekoppeld. <span class="mute">Meestal binnen een kwartier.</span></h2></div>
+      <div class="stappen">
+        <div class="stap rv"><h3>Maak een API-sleutel</h3><p>In het dashboard onder API &amp; webhooks. Je ziet hem één keer; wij bewaren alleen een hash.</p><code class="chip">btl_…</code></div>
+        <div class="stap rv" style="--d:.06s"><h3>Voeg je webhook toe</h3><p>Plak een https-adres en kies de gebeurtenissen. Je krijgt een geheim om elk bericht mee te controleren.</p><code class="chip">whsec_…</code></div>
+        <div class="stap rv" style="--d:.12s"><h3>Controleer en bouw</h3><p>Check de handtekening, bewaar wat je nodig hebt en haal de rest op via de API.</p><code class="chip">webhook-signature: v1,…</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Gebeurtenissen ========== -->
+  <section class="sec" id="gebeurtenissen">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Vier gebeurtenissen. <span class="mute">Op het moment dat ze gebeuren.</span></h2></div>
+      <div class="events">
+        <div class="ev rv"><h3>call.completed</h3><p>Een gesprek is afgelopen en samengevat.</p><div class="velden"><span>caller_name</span><span>from</span><span>topic</span><span>summary</span><span>outcome</span><span>sentiment</span><span>transcript</span><span>has_recording</span></div></div>
+        <div class="ev rv" style="--d:.06s"><h3>appointment.created</h3><p>De assistent heeft een afspraak ingepland.</p><div class="velden"><span>starts_at</span><span>ends_at</span><span>name</span><span>phone</span><span>email</span><span>reason</span><span>call_id</span></div></div>
+        <div class="ev rv"><h3>appointment.cancelled</h3><p>Een afspraak is geannuleerd, door de beller of in het dashboard.</p><div class="velden"><span>id</span><span>starts_at</span><span>name</span><span>status</span><span>call_id</span></div></div>
+        <div class="ev rv" style="--d:.06s"><h3>callback.created</h3><p>Een beller wil teruggebeld worden.</p><div class="velden"><span>name</span><span>phone</span><span>reason</span><span>call_id</span></div></div>
+      </div>
+      <p class="uitkomsten rv"><code>outcome</code> is altijd een van: <code>opgelost</code>, <code>afspraak</code>, <code>terugbellen</code>, <code>doorverbonden</code> of <code>opgehangen</code>.</p>
+    </div>
+  </section>
+
+  <!-- ========== API ========== -->
+  <section class="sec" id="api">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Eén API voor al je gesprekken. <span class="mute">Gewoon REST en JSON.</span></h2></div>
+      <div class="duo">
+        <div class="rv">
+          <div class="basis">
+            <div><small>Basis-URL</small><code>https://app.botlu.ai/api/v1</code></div>
+            <div><small>Inloggen</small><code>Authorization: Bearer btl_…</code></div>
+          </div>
+          <ul class="eplijst">
+            <li><span class="m">GET</span><code>/calls</code><span>Gesprekken, nieuwste eerst. Met <span class="mono">limit</span> (tot 100), <span class="mono">before</span> en <span class="mono">outcome</span>.</span></li>
+            <li><span class="m">GET</span><code>/calls/{id}</code><span>Eén gesprek, met het hele transcript.</span></li>
+            <li><span class="m">GET</span><code>/calls/{id}/recording</code><span>De opname als WAV-bestand.</span></li>
+            <li><span class="m">GET</span><code>/agents</code><span>Je assistenten: naam, stem, taal en begroeting.</span></li>
+            <li><span class="m">GET</span><code>/numbers</code><span>Je telefoonnummers en welke assistent opneemt.</span></li>
+          </ul>
+          <p>Gaat er iets mis, dan krijg je een gewone HTTP-status met <code>{ "error": "…" }</code> in gewone taal.</p>
+        </div>
+        <div class="rv" style="--d:.1s">
+<div class="term op-wit">
+  <div class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">jij — -zsh — 80×24</span></div>
+  <div class="term-tabs" role="tablist"><button class="term-tab on" type="button" data-t="gesprek" data-title="jij — -zsh — 80×24">Gesprek</button><button class="term-tab" type="button" data-t="opname" data-title="jij — -zsh — 80×24">Opname</button><button class="term-tab" type="button" data-t="agents" data-title="jij — -zsh — 80×24">Assistenten</button></div>
+<pre data-p="gesprek"><span class="pr">jij@MacBook ~ %</span> curl https://app.botlu.ai/api/v1/calls/CA5d3f0e9b1c7a4e2f8d6b0a9c3e1f7d24 \
+&gt;   -H "Authorization: Bearer $BOTLU_KEY"
+{
+  "id": "CA5d3f0e9b1c7a4e2f8d6b0a9c3e1f7d24",
+  "started_at": "2026-10-27T14:01:58.000Z",
+  "duration_seconds": 74,
+  "agent": { "id": "k3f9x2a", "name": "Emma" },
+  "from": "+31612345678",
+  "caller_name": "Sanne de Vries",
+  "topic": "Lekke achterband",
+  "summary": "Sanne komt morgen om 10:30 langs.",
+  "outcome": "afspraak",
+  "sentiment": 86,
+  "has_recording": true,
+  "transcript": [
+    { "role": "assistant", "text": "Goedemiddag, je spreekt met Emma." },
+    { "role": "caller", "text": "Hoi! Mijn achterband is lek." }
+  ]
+}
+<span class="pr">jij@MacBook ~ %</span> <span class="cur"></span></pre><pre data-p="opname" hidden><span class="pr">jij@MacBook ~ %</span> curl -o gesprek.wav \
+&gt;   https://app.botlu.ai/api/v1/calls/CA5d3f0e9b1c7a4e2f8d6b0a9c3e1f7d24/recording \
+&gt;   -H "Authorization: Bearer $BOTLU_KEY"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1156k  100 1156k    0     0  2903k      0 --:--:-- --:--:-- --:--:-- 2905k
+<span class="pr">jij@MacBook ~ %</span> afplay gesprek.wav
+<span class="pr">jij@MacBook ~ %</span> <span class="cur"></span></pre><pre data-p="agents" hidden><span class="pr">jij@MacBook ~ %</span> curl https://app.botlu.ai/api/v1/agents \
+&gt;   -H "Authorization: Bearer $BOTLU_KEY"
+{
+  "data": [
+    {
+      "id": "k3f9x2a",
+      "name": "Emma",
+      "live": true,
+      "voice": "emma",
+      "language": "nl",
+      "greeting": "Goedemiddag, je spreekt met Emma."
+    }
+  ]
+}
+<span class="pr">jij@MacBook ~ %</span> <span class="cur"></span></pre>
+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Handtekening ========== -->
+  <section class="sec" id="handtekening">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Controleer elke webhook. <span class="mute">Dan weet je zeker dat hij van ons komt.</span></h2></div>
+      <div class="duo">
+        <div class="rv">
+          <dl class="headers">
+            <div><dt>webhook-id</dt><dd>Uniek per bericht. Heb je hem al gezien, sla hem dan over.</dd></div>
+            <div><dt>webhook-timestamp</dt><dd>Wanneer we hem verstuurden, in Unix-tijd. Weiger berichten ouder dan vijf minuten.</dd></div>
+            <div><dt>webhook-signature</dt><dd><code>v1,</code> met een HMAC-SHA256 over id, tijd en body, gemaakt met je <code>whsec_</code>-geheim.</dd></div>
+          </dl>
+          <p>Liever niets zelf schrijven? De bibliotheken van <a href="https://www.standardwebhooks.com" rel="noopener">Standard Webhooks</a> voor onder meer Node, Python, PHP en Go werken direct.</p>
+        </div>
+        <div class="rv" style="--d:.1s">
+<div class="term op-wit">
+  <div class="term-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">jij — -zsh — 80×24</span></div>
+  
+<pre data-p="code">Last login: Tue Oct 27 14:02:51 on ttys001
+<span class="pr">jij@MacBook ~ %</span> cat webhook.js
+import crypto from 'node:crypto';
+
+// Het geheim uit je dashboard (whsec_…), zonder het voorvoegsel
+const key = Buffer.from(process.env.BOTLU_SECRET.slice(6), 'base64');
+
+// body = de ruwe tekst van het verzoek, niet de geparste JSON
+export function echtVanBotlu(headers, body) {
+  const id = headers['webhook-id'], ts = headers['webhook-timestamp'];
+  if (Math.abs(Date.now() / 1000 - ts) &gt; 300) return false;
+  const mac = crypto.createHmac('sha256', key)
+    .update(`${id}.${ts}.${body}`).digest('base64');
+  const verwacht = Buffer.from(`v1,${mac}`);
+  return headers['webhook-signature'].split(' ').some(s =&gt; {
+    const b = Buffer.from(s);
+    return b.length === verwacht.length &amp;&amp; crypto.timingSafeEqual(b, verwacht);
+  });
+}
+<span class="pr">jij@MacBook ~ %</span> <span class="cur"></span></pre>
+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Zonder code ========== -->
+  <section class="sec" id="zonder-code">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Liever zonder code? <span class="mute">Ook goed.</span></h2></div>
+      <div class="apps">
+        <div class="app rv"><div class="ic"><img src="/apps/make.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/n8n.png" alt="" width="44" height="44" loading="lazy"></div><h3>Make en n8n</h3><p>Plak de webhook-URL van je scenario in Botlu. Elk gesprek start dan je automatisering.</p></div>
+        <div class="app rv" style="--d:.05s"><div class="ic"><img src="/apps/sheets.png" alt="" width="44" height="44" loading="lazy"></div><h3>Google Sheets</h3><p>Elk gesprek als nieuwe rij, met een klein script dat we voor je klaarzetten.</p></div>
+        <div class="app rv" style="--d:.1s"><div class="ic"><img src="/apps/slack.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/teams.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/discord.png" alt="" width="44" height="44" loading="lazy"></div><h3>Slack, Teams en Discord</h3><p>Een bericht in je kanaal na elk gesprek, elke afspraak en elk terugbelverzoek.</p></div>
+        <div class="app rv" style="--d:.15s"><div class="ic"><img src="/apps/google-agenda.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/outlook.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/apple-agenda.png" alt="" width="44" height="44" loading="lazy"></div><h3>Je eigen agenda</h3><p>Abonneer je op de geheime iCal-link; nieuwe afspraken verschijnen vanzelf.</p><code class="chip">…/api/agenda/••••.ics</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Veilig ========== -->
+  <section class="sec" id="veilig">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Veilig gebouwd. <span class="mute">Zonder dat jij er werk aan hebt.</span></h2></div>
+      <div class="veilig">
+        <div class="rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7a4 4 0 1 1-3.9 4.9L4 19v-3h3v-3h3l.9-.9A4 4 0 0 1 15 7z"/><circle cx="15.5" cy="10.5" r="1"/></svg><h3>Sleutels als hash</h3><p>We bewaren je API-sleutel niet zelf. Kwijt? Maak een nieuwe en trek de oude in.</p></div>
+        <div class="rv" style="--d:.05s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><h3>Elk bericht ondertekend</h3><p>HMAC-SHA256 volgens Standard Webhooks, met een eigen geheim per webhook.</p></div>
+        <div class="rv" style="--d:.1s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><h3>Alleen https naar buiten</h3><p>Webhooks gaan alleen naar openbare https-adressen, nooit naar interne netwerken.</p></div>
+        <div class="rv" style="--d:.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><h3>Snel of niet</h3><p>We wachten hooguit acht seconden op je server en volgen geen doorverwijzingen.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Afsluiter ========== -->
+  <section class="cta-sec">
+    <div class="wrap">
+      <div class="cta-box rv">
+        <div class="cta-copy">
+          <h2>Klaar om te bouwen?</h2>
+          <p>Maak een account, haal je sleutel op en ontvang vandaag nog je eerste webhook.</p>
+          <div class="cta">
+            <a class="btn dark" href="https://app.botlu.ai/login#aanmaken">Account aanmaken <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            <a class="btn line" href="https://app.botlu.ai/login">Inloggen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px;color:var(--ink)">Botlu.ai</span></a>
+    <span>© <span id="year">2026</span> Botlu.ai</span>
+    <nav aria-label="Voettekst">
+      <a href="/#functies">Functies</a><a href="/#stemmen">Stemmen</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/linten.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+
+// Navigatie krijgt een glazen achtergrond zodra je scrolt
+const nav = $('#nav');
+const solid = () => nav.classList.toggle('solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
+
+// Tabs in de Terminal-vensters; de venstertitel volgt de tab
+document.querySelectorAll('.term').forEach(term => {
+  const tabs = term.querySelector('.term-tabs');
+  if (!tabs) return;
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('.term-tab');
+    if (!b) return;
+    tabs.querySelectorAll('.term-tab').forEach(x => x.classList.toggle('on', x === b));
+    term.querySelectorAll('pre[data-p]').forEach(p => p.hidden = p.dataset.p !== b.dataset.t);
+    term.querySelector('.term-title').textContent = b.dataset.title;
+  });
+});
+
+// Verschijnen bij scrollen
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+$('#year').textContent = new Date().getFullYear();
+// De chromen linten uit de hero van de homepage, in de donkere studio
+metal($('.sec-metal canvas'), { dark: true });
+</script>
+</body>
+</html>

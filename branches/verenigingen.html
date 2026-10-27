@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Botlu voor verenigingen · Je telefoon, altijd opgenomen</title>
+<meta name="description" content="Botlu beantwoordt vragen over lidmaatschap, trainingen en contributie, zodat je vrijwilligers niet de hele dag hoeven op te nemen.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* Inter Variable (4.1, SIL OFL, fonts/Inter-LICENSE.txt), zelf gehost en ingekort tot Latijns schrift.
+     Met de assen opsz (grote koppen krijgen vanzelf de display-vorm) en wght. Zoals op mollie.com:
+     I met schreefjes, G met spoor, compacte f en t, en de extra ligaturen. */
+  @font-face { font-family: "Inter Variable"; src: url("/fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  body { font-feature-settings: "cv08", "cv10", "cv12", "cv13", "dlig"; }
+  pre, code { font-feature-settings: normal; }
+  :root {
+    --bg: #ffffff; --soft: #f4f4f6; --soft-2: #ebebef; --line: #ebebef; --line-2: #dedee4;
+    --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --ink-4: #a0a0aa;
+    --brand: #5b4ff5; --brand-2: #6a5ff7; --brand-soft: #efeefe; --ring: rgba(91, 79, 245, .14);
+    --good: #18a058; --good-soft: #e6f6ed; --warn: #b8650a; --warn-soft: #fdf1e0; --info: #2563eb; --info-soft: #e8effd;
+    --night: #0b0b14;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+    --spring: cubic-bezier(.34, 1.45, .64, 1);
+    --r-sm: 9px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-2xl: 28px;
+    --shadow-pop: 0 16px 36px -10px rgba(16,16,24,.18), 0 2px 6px rgba(16,16,24,.05), 0 0 0 1px rgba(16,16,24,.06);
+    --shadow-lg: 0 30px 70px -20px rgba(16,16,24,.3), 0 0 0 1px rgba(16,16,24,.05);
+    --wrap: 1180px;
+  }
+  /* Echte squircles waar de browser het kent (Chrome 139+); elders gewoon afgerond */
+  @supports (corner-shape: squircle) {
+    :root { --r-sm: 16px; --r-md: 22px; --r-lg: 28px; --r-xl: 36px; --r-2xl: 52px; }
+    .btn, .ring-play, .card, .chip, .mini, .voice, .play, .faq details, .step-num, .slot, .kpi, .win, .notif, .cta-box, .lang { corner-shape: squircle; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.55 "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+  .wrap { width: min(100% - 32px, var(--wrap)); margin: 0 auto; }
+  .wordmark { font: 500 22px/1 "Poppins", "Inter", sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+
+  /* ---------- Knoppen ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 22px; border: 1px solid transparent; border-radius: var(--r-md);
+    font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; text-decoration: none; white-space: nowrap; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, box-shadow .25s, transform .2s var(--ease); }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
+  .btn:hover svg.arrow { transform: translateX(3px); }
+  .btn.dark { background: var(--ink); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 20px -8px rgba(16,16,24,.6); }
+  .btn.dark:hover { background: #26262d; }
+  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
+  .btn.brand:hover { background: var(--brand-2); }
+  .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
+  .btn.line:hover { border-color: var(--ink-4); }
+  .btn.sm { height: 38px; padding: 0 16px; font-size: 14.5px; }
+
+  /* ---------- Navigatie ---------- */
+  .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background .3s, box-shadow .3s; color: var(--ink); }
+  .nav .wrap { display: flex; align-items: center; gap: 28px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-links { display: flex; gap: 4px; margin-right: auto; }
+  .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
+  .nav-links a:hover { opacity: 1; background: rgba(16,16,24,.05); }
+  .nav-cta { display: flex; align-items: center; gap: 8px; }
+  .nav .btn.sm { background: var(--ink); color: #fff; }
+  .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
+  .nav.solid .nav-links a:hover { background: var(--soft); }
+  /* Menu 'Producten': paneel opent bij hover of focus (ook met toetsenbord of een tik) */
+  .menu { position: relative; }
+  .menu-knop { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border: 0; border-radius: 10px; background: none; color: inherit; font-size: 15px; font-weight: 500;
+    cursor: pointer; opacity: .92; transition: background .2s, opacity .2s; }
+  .menu-knop svg { width: 12px; height: 12px; transition: transform .3s var(--ease); }
+  .menu:hover .menu-knop, .menu:focus-within .menu-knop { opacity: 1; background: rgba(16,16,24,.05); }
+  .menu:hover .menu-knop svg, .menu:focus-within .menu-knop svg { transform: rotate(180deg); }
+  .menu-paneel { position: absolute; top: calc(100% + 10px); left: -6px; z-index: 60; width: 340px; padding: 8px; border-radius: var(--r-xl); background: rgba(255,255,255,.97); color: var(--ink);
+    backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: var(--shadow-pop);
+    opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); transform-origin: 30px 0; transition: opacity .2s var(--ease), transform .3s var(--ease), visibility 0s .3s; }
+  .menu-paneel::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }   /* brug: muis valt niet in het gat */
+  .menu:hover .menu-paneel, .menu:focus-within .menu-paneel { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .nav .nav-links .menu-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: var(--r-md); color: var(--ink); text-decoration: none; opacity: 1; font-size: 15px; }
+  .nav .nav-links .menu-paneel a.menu-item:hover { background: var(--soft); }
+  .menu-item svg { width: 22px; height: 22px; flex: none; margin-top: 1px; color: var(--ink); }
+  .menu-item b { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .menu-item small { display: block; margin-top: 2px; color: var(--ink-3); font-size: 13.5px; font-weight: 400; }
+  .menu-item.binnenkort { cursor: default; }
+  .menu-item.binnenkort b { color: var(--ink-2); }
+  /* Branches: breed paneel met drie kolommen, zoals een megamenu */
+  .menu-paneel.branches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px 6px; width: 660px; padding: 12px; }
+  .nav .nav-links .menu-paneel.branches a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; color: var(--ink); font-size: 14.5px; opacity: 1; white-space: nowrap; }
+  .nav .nav-links .menu-paneel.branches a:hover { background: var(--soft); }
+  .nav .nav-links .menu-paneel.branches a[aria-current] { background: var(--soft); font-weight: 600; }
+  .menu-paneel.branches svg { width: 18px; height: 18px; flex: none; color: var(--ink); }
+  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
+  .nav.solid .btn.sm { background: var(--ink); color: #fff; }
+  /* Demo boeken: wit met een dunne rand, naast de zwarte knop */
+  .nav .btn.sm.demo, .nav.solid .btn.sm.demo { background: #fff; border-color: var(--line-2); color: var(--ink); }
+  .nav .btn.sm.demo:hover { border-color: var(--ink-4); }
+  /* Op een smal scherm past "Account aanmaken" niet naast "Demo boeken": dan "Aanmelden" */
+  .nav .naam-kort { display: none; }
+  @media (max-width: 480px) { .nav .naam-lang { display: none; } .nav .naam-kort { display: inline; } }
+
+  h1 { margin: 0; font-size: clamp(42px, 5.6vw, 76px); line-height: 1.02; font-weight: 360; letter-spacing: -.042em; }
+  /* ---------- Secties ---------- */
+  section { position: relative; }
+  .sec { padding: 120px 0; }
+  .sec-head { max-width: 760px; margin-bottom: 56px; }
+  .sec-head.center { margin-inline: auto; text-align: center; }
+  h2 { margin: 0; font-size: clamp(36px, 5vw, 60px); line-height: 1.04; font-weight: 380; letter-spacing: -.04em; }
+  h2 .mute { color: var(--ink-4); }
+  .sec-head p { margin: 20px 0 0; color: var(--ink-3); font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; }
+  h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.2; font-weight: 520; letter-spacing: -.015em; }
+
+  /* ---------- Afsluiter ---------- */
+  .cta-sec { padding: 0 0 100px; }
+  .cta-box { position: relative; overflow: hidden; isolation: isolate; padding: 96px 56px; border-radius: var(--r-2xl); background: var(--soft); }
+  .cta-copy { position: relative; max-width: 600px; }
+  .cta-box p { max-width: 480px; margin: 18px 0 32px; color: var(--ink-3); font-size: 19px; }
+  .cta-box .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  /* Verschijnen bij scrollen */
+  .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; }
+
+
+  /* ---------- Pagina per branche ---------- */
+  .b-hero { position: relative; isolation: isolate; overflow: hidden; padding: 150px 0 110px;
+    background: radial-gradient(38% 50% at 12% 10%, rgba(182,220,219,.5), transparent 70%), radial-gradient(40% 50% at 86% 90%, rgba(195,189,230,.5), transparent 70%), var(--bg); }
+  .b-hero .metaal { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    -webkit-mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); }
+  .b-hero .metaal canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .b-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 64px; align-items: center; }
+  .b-copy { position: relative; }
+  /* Witte waas achter de tekst, zodat hij leesbaar blijft boven de linten */
+  .b-copy::before { content: ""; position: absolute; inset: -18% -20% -18% -40%; z-index: -1; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(255,255,255,.93) 55%, rgba(255,255,255,0)); }
+  .oog { display: inline-flex; align-items: center; gap: 8px; height: 34px; margin-bottom: 22px; padding: 0 14px 0 12px; border-radius: 99px;
+    background: rgba(255,255,255,.85); box-shadow: 0 0 0 1px var(--line-2); font-size: 14px; font-weight: 500; }
+  .oog svg { width: 17px; height: 17px; color: var(--ink); }
+  .b-hero h1 { font-size: clamp(40px, 4.8vw, 64px); }
+  .b-hero h1 .soft { display: block; color: #5b6b8c; }
+  .b-hero .lead { max-width: 520px; margin: 22px 0 30px; color: var(--ink-2); font-size: clamp(17px, 1.4vw, 19px); line-height: 1.55; }
+  .b-hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  /* Voorbeeldgesprek */
+  .gesprek { padding: 22px; border-radius: var(--r-2xl); background: #fff; box-shadow: 0 40px 80px -30px rgba(40,30,110,.35), 0 0 0 1px rgba(16,16,24,.06); }
+  .gesprek-kop { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; color: var(--ink-3); font-size: 13px; }
+  .gesprek-kop i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
+  .gesprek-kop b { color: var(--ink); font-weight: 600; }
+  .bel { display: grid; gap: 8px; }
+  .bel p { max-width: 86%; margin: 0; padding: 10px 14px; border-radius: 18px; font-size: 14.5px; line-height: 1.45; }
+  .bel small { display: block; margin-bottom: 2px; color: var(--ink-4); font-size: 11px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+  .bel .ai { justify-self: start; background: var(--soft); border-bottom-left-radius: 6px; }
+  .bel .me { justify-self: end; background: var(--brand); color: #fff; border-bottom-right-radius: 6px; }
+  .bel .me small { color: rgba(255,255,255,.7); }
+  .gesprek-voet { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13.5px; }
+  .pill { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.brand { background: var(--brand-soft); color: var(--brand); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  /* Wat hij regelt */
+  .taken { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .taak { padding: 30px; border-radius: var(--r-2xl); background: var(--soft); }
+  .taak svg { display: block; width: 28px; height: 28px; margin-bottom: 22px; color: var(--ink); }
+  .taak p { margin: 0; color: var(--ink-3); }
+  /* Vragen van bellers */
+  .vragen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .vragen li { padding: 16px 18px; border-radius: 18px 18px 18px 6px; background: #fff; box-shadow: 0 0 0 1px var(--line-2); color: var(--ink); font-size: 16px; }
+  .sec + .sec { padding-top: 0; }
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+  .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; }
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .nav .wrap { gap: 12px; }
+    .nav .btn.sm { padding: 0 13px; }
+    .b-hero { padding: 120px 0 80px; }
+    .b-grid, .taken { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .taken { gap: 14px; }
+    .vragen { grid-template-columns: minmax(0, 1fr); }
+    .b-hero .metaal { opacity: .5; }
+  }
+  @media (max-width: 700px) {
+    .sec { padding: 84px 0; }
+    .taak { padding: 24px; }
+    .cta-box { padding: 56px 24px; }
+    footer nav { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Botlu.ai"><svg viewBox="0 0 257 324" width="20" height="25" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark">Botlu.ai</span></a>
+    <nav class="nav-links" aria-label="Hoofdmenu">
+      <div class="menu">
+        <button class="menu-knop" type="button" aria-haspopup="true">Producten <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="menu-paneel">
+          <a class="menu-item" href="/#functies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h2.6l1.6 4-2 1.3a11 11 0 0 0 5.4 5.4l1.3-2 4 1.6v2.6a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><span><b>AI bel-assistent</b><small>Neemt de telefoon op, dag en nacht</small></span></a>
+          <div class="menu-item binnenkort" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4.5 19.5l1.4-4.3A7.5 7.5 0 1 1 20 11.5z"/></svg><span><b>AI WhatsApp-assistent <em>Binnenkort</em></b><small>Beantwoordt je WhatsApp-berichten</small></span></div>
+          <div class="menu-item binnenkort" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg><span><b>AI mail-assistent <em>Binnenkort</em></b><small>Handelt je inbox voor je af</small></span></div>
+        </div>
+      </div>
+      <!-- branches -->
+      <div class="menu">
+        <button class="menu-knop" type="button" aria-haspopup="true">Branches <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="menu-paneel branches"><a href="/branches/medische-praktijk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v5a4 4 0 0 0 8 0V3"/><path d="M9 12v3a5 5 0 0 0 10 0v-2"/><circle cx="19" cy="11" r="2"/></svg>Medische praktijk</a><a href="/branches/hotels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h.01M12 7h.01M15 7h.01M9 11h.01M12 11h.01M15 11h.01M10 21v-4h4v4"/></svg>Hotels</a><a href="/branches/vakmensen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 7 4.5 15.5a2.1 2.1 0 0 0 3 3L16 10"/><path d="m11 5 3-2 7 7-2 3z"/></svg>Vakmensen</a><a href="/branches/advocatenkantoren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7 2.5 13a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>Advocatenkantoren</a><a href="/branches/zelfstandigen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Zelfstandigen</a><a href="/branches/vastgoedbeheer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l6-4v17M11 21V10l8 3v8"/><path d="M8 10h.01M8 14h.01M15 15h.01M15 18h.01"/></svg>Vastgoedbeheer</a><a href="/branches/bedrijven"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>Bedrijven</a><a href="/branches/autodealers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15l1.5-5A2 2 0 0 1 7.4 8.5h9.2a2 2 0 0 1 1.9 1.5L20 15v3H4z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>Autodealers</a><a href="/branches/overheidsinstanties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M4 10h16M12 3l8 5H4z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg>Overheidsinstanties</a><a href="/branches/autogarages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>Autogarages</a><a href="/branches/verenigingen" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>Verenigingen</a><a href="/branches/tandartsen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14a4.5 4.5 0 0 0 8 0M9 9.5h.01M15 9.5h.01"/></svg>Tandartsen</a><a href="/branches/fysiotherapeuten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 6.6a5 5 0 0 0-8.8-1.5 5 5 0 0 0-8.8 1.5C2 11 7 15.5 12 20c5-4.5 10-9 8.8-13.4z"/><path d="M3.5 12h5l1.5-3 2.5 6 1.5-3h6"/></svg>Fysiotherapeuten</a><a href="/branches/notarissen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14M6 17h12v-3a2 2 0 0 0-2-2h-1.5l-.5-3a2.5 2.5 0 1 0-4 0l-.5 3H8a2 2 0 0 0-2 2z"/></svg>Notarissen</a><a href="/branches/winkels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v10h16V10M3 6l2-3h14l2 3v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M10 20v-5h4v5"/></svg>Winkels</a><a href="/branches/retail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Retail</a><a href="/branches/belastingadviseurs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>Belastingadviseurs</a><a href="/branches/apotheken"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="m8.5 8.5 7 7"/></svg>Apotheken</a><a href="/branches/makelaars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 19 4M16 7l2 2M14 9l2 2"/></svg>Makelaars</a><a href="/branches/restaurants"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1-3 3-3 6v4h3v8"/></svg>Restaurants</a><a href="/branches/recruiters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20a7 7 0 0 1 9.5-6.5"/><circle cx="17" cy="17" r="3"/><path d="m21 21-1.8-1.8"/></svg>Recruiters</a></div>
+      </div>
+      <!-- /branches -->
+      <a href="/ontwikkelaars">Ontwikkelaars</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn sm demo" href="/#demo">Demo boeken</a>
+      <a class="btn sm" href="https://app.botlu.ai/login#aanmaken"><span class="naam-lang">Account aanmaken</span><span class="naam-kort">Aanmelden</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="b-hero">
+    <div class="metaal" aria-hidden="true"><canvas></canvas></div>
+    <div class="wrap b-grid">
+      <div class="b-copy">
+        <span class="oog rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>Voor verenigingen</span>
+        <h1 class="rv" style="--d:.05s">Vrijwilligers ontlast, <span class="soft">leden altijd geholpen.</span></h1>
+        <p class="lead rv" style="--d:.1s">Botlu beantwoordt vragen over lidmaatschap, trainingen en contributie, zodat je vrijwilligers niet de hele dag hoeven op te nemen.</p>
+        <div class="cta rv" style="--d:.15s">
+          <a class="btn dark" href="/#demo">Plan een gratis demo <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn line" href="https://app.botlu.ai/login#aanmaken">Account aanmaken</a>
+        </div>
+      </div>
+      <div class="gesprek rv" style="--d:.1s" aria-label="Voorbeeld van een gesprek">
+        <div class="gesprek-kop"><i></i><span>Botlu neemt op voor <b>Tennisvereniging De Kaats</b></span></div>
+        <div class="bel">
+          <p class="ai"><small>Botlu</small>Goedemiddag, Tennisvereniging De Kaats. Waarmee kan ik je helpen?</p>
+          <p class="me"><small>Beller</small>Kan mijn dochter een proefles komen doen?</p>
+          <p class="ai"><small>Botlu</small>Zeker! Woensdag om 16:00 is er een jeugdtraining. Zal ik haar aanmelden?</p>
+        </div>
+        <div class="gesprek-voet"><span>Samenvatting staat klaar</span><span class="pill brand">Afspraak</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Wat Botlu voor je regelt.</h2></div>
+      <div class="taken"><div class="taak rv" style="--d:0.00s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h10a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h10"/></svg><h3>Lid worden en contributie</h3><p>Uit je eigen website, altijd actueel.</p></div><div class="taak rv" style="--d:0.06s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h3>Proeflessen en kennismaking</h3><p>Direct ingepland.</p></div><div class="taak rv" style="--d:0.12s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><h3>Berichten voor het bestuur</h3><p>Per e-mail of in je eigen Slack- of Discord-kanaal.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><h2>Vragen die hij elke dag beantwoordt.</h2></div>
+      <ul class="vragen"><li class="rv" style="--d:0.00s">“Hoe word ik lid?”</li><li class="rv" style="--d:0.05s">“Wat kost het lidmaatschap?”</li><li class="rv" style="--d:0.10s">“Wanneer zijn de trainingen?”</li><li class="rv" style="--d:0.00s">“Kan ik een proefles doen?”</li><li class="rv" style="--d:0.05s">“Hoe zeg ik mijn lidmaatschap op?”</li><li class="rv" style="--d:0.10s">“Met wie praat ik over sponsoring?”</li></ul>
+    </div>
+  </section>
+
+  <section class="cta-sec">
+    <div class="wrap">
+      <div class="cta-box rv">
+        <div class="cta-copy">
+          <h2>Probeer Botlu voor je vereniging.</h2>
+          <p>Plan een gratis demo, of maak meteen een account en laat je eerste assistent vandaag nog opnemen.</p>
+          <div class="cta">
+            <a class="btn dark" href="/#demo">Plan een gratis demo <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+            <a class="btn line" href="https://app.botlu.ai/login#aanmaken">Account aanmaken</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px;color:var(--ink)">Botlu.ai</span></a>
+    <span>© <span id="year">2026</span> Botlu.ai</span>
+    <nav aria-label="Voettekst">
+      <a href="/#functies">Functies</a><a href="/#stemmen">Stemmen</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/linten.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const nav = $('#nav');
+const solid = () => nav.classList.toggle('solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+$('#year').textContent = new Date().getFullYear();
+// Dezelfde chromen linten als op de homepage
+metal($('.metaal canvas'));
+</script>
+</body>
+</html>

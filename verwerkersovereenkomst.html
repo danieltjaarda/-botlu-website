@@ -7,12 +7,19 @@
 <meta name="description" content="De verwerkersovereenkomst tussen Botlu en bedrijven die Botlu gebruiken.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Inter Variable (4.1, SIL OFL, fonts/Inter-LICENSE.txt), zelf gehost en ingekort tot Latijns schrift.
+     Met de assen opsz (grote koppen krijgen vanzelf de display-vorm) en wght. Zoals op mollie.com:
+     I met schreefjes, G met spoor, compacte f en t, en de extra ligaturen. */
+  @font-face { font-family: "Inter Variable"; src: url("/fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  body { font-feature-settings: "cv08", "cv10", "cv12", "cv13", "dlig"; }
+  pre, code { font-feature-settings: normal; }
   :root { --bg: #fff; --soft: #f4f4f6; --line: #ebebef; --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --brand: #5b4ff5; --wrap: 760px; }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { background: var(--bg); color: var(--ink); font: 16px/1.65 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.65 "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: var(--brand); }
   .wrap { width: min(100% - 32px, var(--wrap)); margin: 0 auto; }
   header { border-bottom: 1px solid var(--line); }
@@ -21,9 +28,9 @@
   .wordmark { font: 500 20px/1 "Poppins", "Inter", sans-serif; letter-spacing: -.02em; }
   header nav a { color: var(--ink-2); text-decoration: none; font-size: 15px; font-weight: 500; }
   main { padding: 56px 0 80px; }
-  h1 { font-size: clamp(32px, 5vw, 44px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 10px; }
+  h1 { font-size: clamp(32px, 5vw, 44px); line-height: 1.1; font-weight: 380; letter-spacing: -.035em; margin: 0 0 10px; }
   .updated { color: var(--ink-3); margin: 0 0 36px; }
-  h2 { font-size: 21px; letter-spacing: -.02em; margin: 44px 0 10px; }
+  h2 { font-size: 21px; font-weight: 500; letter-spacing: -.02em; margin: 44px 0 10px; }
   h3 { font-size: 16.5px; margin: 26px 0 6px; }
   p, li { color: var(--ink-2); }
   ul { padding-left: 20px; }

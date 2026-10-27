@@ -7,7 +7,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 4330;
 const ROOT = __dirname;
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.mp3': 'audio/mpeg', '.json': 'application/json' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.mp3': 'audio/mpeg', '.json': 'application/json', '.woff2': 'font/woff2' };
 // Gaat onderaan elke pagina mee: bij een wijziging herlaadt de browser
 const RELOAD = `<script>new EventSource('/__herlaad').onmessage = () => location.reload();</script>`;
 const clients = new Set();
