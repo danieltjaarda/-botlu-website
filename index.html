@@ -235,13 +235,8 @@
   .site-form input { flex: 1; min-width: 0; height: 44px; border: 0; background: none; font-size: 16px; outline: none; }
   .site-form input::placeholder { color: var(--ink-4); }
   .site-form .btn { height: 46px; padding: 0 18px; }
-  .checks { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; margin: 16px 0 0; padding: 0; list-style: none; color: var(--ink-2); font-size: 15px; }
-  .checks li { display: inline-flex; align-items: center; gap: 7px; }
-  /* Boven de linten: glazen labels, zodat de tekst leesbaar blijft */
-  .hero-orb .checks li { padding: 5px 13px 5px 10px; border-radius: 99px; background: rgba(255,255,255,.72); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
-  .checks svg { width: 15px; height: 15px; color: var(--ink-3); }
   /* Gezichten (gemaakt met Nano Banana 2) als rondjes over elkaar, met één regel ernaast */
-  .proof { display: flex; align-items: center; margin-top: 22px; padding: 6px 16px 6px 6px; border-radius: 99px; text-align: left;
+  .proof { display: flex; align-items: center; margin-top: 20px; padding: 6px 16px 6px 6px; border-radius: 99px; text-align: left;
     background: rgba(255,255,255,.72); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
   .proof .faces { display: flex; padding-right: 14px; margin-right: 14px; border-right: 1px solid var(--line-2); }
   .proof .faces span { width: 40px; height: 40px; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #fff;
@@ -741,10 +736,6 @@
           <input name="website" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="Voer je website in" aria-label="Je website">
           <button class="btn brand" type="submit">Maak mijn assistent <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
         </form>
-        <ul class="checks rv" style="--d:.24s">
-          <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Leert je bedrijf kennen via je website</li>
-          <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Je houdt je eigen nummer</li>
-        </ul>
         <div class="proof rv" style="--d:.28s">
           <div class="faces" aria-hidden="true"><span><img src="avatars/gezicht-1.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-2.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-3.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-4.jpg" alt="" width="40" height="40" decoding="async"></span></div>
           <p><b>Dag en nacht bereikbaar voor je klanten</b></p>
