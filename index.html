@@ -44,7 +44,7 @@
   /* Echte squircles waar de browser het kent (Chrome 139+); elders gewoon afgerond */
   @supports (corner-shape: squircle) {
     :root { --r-sm: 16px; --r-md: 22px; --r-lg: 28px; --r-xl: 36px; --r-2xl: 52px; }
-    .btn, .ring-play, .card, .chip, .mini, .voice, .play, .faq details, .step-num, .slot, .kpi, .win, .notif, .cta-box, .lang { corner-shape: squircle; }
+    .btn, .ring-play, .card, .chip, .mini, .play, .faq details, .step-num, .slot, .kpi, .win, .notif, .cta-box, .lang { corner-shape: squircle; }
   }
 
   * { box-sizing: border-box; }
@@ -236,16 +236,13 @@
   .site-form input::placeholder { color: var(--ink-4); }
   .site-form .btn { height: 46px; padding: 0 18px; }
   /* Gezichten (gemaakt met Nano Banana 2) als rondjes over elkaar, met één regel ernaast */
-  .proof { display: flex; align-items: center; margin-top: 20px; padding: 6px 16px 6px 6px; border-radius: 99px; text-align: left;
-    background: rgba(255,255,255,.72); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
-  .proof .faces { display: flex; padding-right: 14px; margin-right: 14px; border-right: 1px solid var(--line-2); }
+  .proof { display: flex; align-items: center; margin-top: 20px; }
+  .proof .faces { display: flex; }
   .proof .faces span { width: 40px; height: 40px; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #fff;
     box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(16,16,24,.07), 0 4px 10px -4px rgba(16,16,24,.25); transition: transform .25s var(--ease); }
   .proof .faces span + span { margin-left: -6px; }
   .proof .faces span:hover { transform: translateY(-4px); }
   .proof .faces img { width: 100%; height: 100%; object-fit: cover; }
-  .proof p { margin: 0; color: var(--ink-3); font-size: 13.5px; line-height: 1.35; }
-  .proof b { display: block; color: var(--ink); font-size: 14.5px; font-weight: 600; }
 
   .pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
   .pill.good { background: var(--good-soft); color: var(--good); }
@@ -488,28 +485,10 @@
   .lang em { font-style: normal; font-size: 18px; }
 
   /* ---------- Stemmen ---------- */
-  .voices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-  .voice { display: flex; align-items: center; gap: 14px; padding: 14px 16px 14px 14px; border-radius: var(--r-xl); background: #fff; border: 1px solid var(--line); text-align: left; cursor: pointer;
     transition: border-color .25s, box-shadow .3s var(--ease), transform .3s var(--ease); }
-  .voice:hover { border-color: var(--line-2); box-shadow: 0 10px 26px -14px rgba(16,16,24,.25); transform: translateY(-2px); }
-  .voice.playing { border-color: transparent; box-shadow: 0 0 0 2px var(--brand), 0 14px 30px -16px rgba(33,179,224,.6); }
-  .orb { --lvl: 0; position: relative; width: 52px; height: 52px; flex: none; border-radius: 50%; overflow: hidden;
-    background: conic-gradient(from 0deg, hsl(var(--h) 85% 62%), hsl(calc(var(--h) + 22) 90% 70%), hsl(calc(var(--h) - 18) 80% 52%), hsl(var(--h) 85% 62%));
-    box-shadow: inset 0 -6px 14px rgba(0,0,0,.18), inset 0 6px 12px rgba(255,255,255,.45); transform: scale(calc(1 + var(--lvl) * .14)); transition: transform .08s; }
-  .orb::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.85), rgba(255,255,255,0) 55%); filter: blur(2px); }
-  .orb::after { content: ""; position: absolute; inset: -20%; background: conic-gradient(from 90deg, transparent, hsl(calc(var(--h) + 80) 95% 75% / .7), transparent 40%); animation: spin 6s linear infinite; mix-blend-mode: overlay; }
-  .voice.playing .orb::after { animation-duration: 1.6s; }
-  .voice .meta { flex: 1; min-width: 0; }
-  .voice b { display: block; font-size: 16px; letter-spacing: -.015em; }
-  .voice small { display: block; color: var(--ink-3); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .play { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: var(--r-sm); background: var(--soft); color: var(--ink); transition: background .2s, color .2s; }
-  .voice:hover .play { background: var(--ink); color: #fff; }
-  .voice.playing .play { background: var(--brand); color: #fff; }
   .play svg { width: 14px; height: 14px; }
   .play .ps { display: none; }
-  .voice.playing .play .pl { display: none; }
-  .voice.playing .play .ps { display: block; }
-  .voices-note { margin-top: 22px; color: var(--ink-4); font-size: 14px; text-align: center; }
 
   /* ---------- Hoe het werkt ---------- */
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: s; }
@@ -635,7 +614,6 @@
 
   /* ---------- Kleinere schermen ---------- */
   @media (max-width: 1060px) {
-    .voices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .c-4, .c-3, .c-2 { grid-column: span 3; }
     .expert-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
   }
@@ -673,7 +651,6 @@
     .cal { grid-template-columns: 1fr; }
     .cal .days { display: flex; gap: 6px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
     .cal .days div { flex: none; gap: 8px; }
-    .voices { grid-template-columns: minmax(0, 1fr); }
     .cta-box { padding: 56px 24px 300px; }
     .hero-orb .cta-box { padding-bottom: 56px; }
     .site-form { flex-wrap: wrap; padding: 6px; }
@@ -725,7 +702,7 @@
     <div class="hero-bg" aria-hidden="true"><canvas class="visual" data-place="hero"></canvas></div>
     <div class="hero-main">
       <div class="wrap hero-center">
-        <a class="eyebrow rv" href="#stemmen"><b>Nieuw</b> 12 Nederlandse stemmen</a>
+        <span class="eyebrow rv"><b>Nieuw</b> 12 Nederlandse stemmen</span>
         <h1 class="rv" style="--d:.05s">Je telefoon, <span class="soft">altijd opgenomen.</span></h1>
         <div class="ring-stage rv" style="--d:.14s">
           <canvas class="ring-canvas" aria-hidden="true"></canvas>
@@ -738,7 +715,6 @@
         </form>
         <div class="proof rv" style="--d:.28s">
           <div class="faces" aria-hidden="true"><span><img src="avatars/gezicht-1.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-2.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-3.jpg" alt="" width="40" height="40" decoding="async"></span><span><img src="avatars/gezicht-4.jpg" alt="" width="40" height="40" decoding="async"></span></div>
-          <p><b>Dag en nacht bereikbaar voor je klanten</b></p>
         </div>
       </div>
     </div>
@@ -952,18 +928,6 @@
     </div>
   </section>
 
-  <!-- ========== Stemmen ========== -->
-  <section class="sec" id="stemmen" style="padding-top:20px">
-    <div class="wrap">
-      <div class="sec-head center rv">
-        <h2>Kies de stem van je bedrijf.</h2>
-        <p>Twaalf Nederlandse stemmen van ElevenLabs, van kalm en zakelijk tot warm en levendig. Klik er een aan en luister.</p>
-      </div>
-      <div class="voices" id="voices"></div>
-      <p class="voices-note rv">Liever een stem van OpenAI? Die kun je ook kiezen, in het dashboard.</p>
-    </div>
-  </section>
-
   <!-- ========== Hoe het werkt ========== -->
   <section class="sec" id="hoe" style="padding-top:40px">
     <div class="wrap">
@@ -1100,7 +1064,7 @@
     <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px;color:var(--ink)">Botlu.ai</span></a>
     <span>© <span id="year">2026</span> Botlu.ai</span>
     <nav aria-label="Voettekst">
-      <a href="#functies">Functies</a><a href="#stemmen">Stemmen</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
+      <a href="#functies">Functies</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
     </nav>
   </div>
 </footer>
@@ -1893,64 +1857,6 @@ function initCards() {
   if (!reduced) setInterval(() => { n = (n + 1 + Math.floor(Math.random() * (free.length - 1))) % free.length; pick(); }, 2400);
 }
 
-// ---------- Stemmen beluisteren ----------
-// Stemmen uit het dashboard (public/voices.js daar); de fragmenten staan in voices/
-const VOICES = [
-  { id: 'emma', label: 'Emma', sub: 'Vrouw · kalm en helder', h: 195 },
-  { id: 'roos', label: 'Roos', sub: 'Vrouw · vriendelijk', h: 185 },
-  { id: 'melanie', label: 'Melanie', sub: 'Vrouw · levendig', h: 175 },
-  { id: 'ruth', label: 'Ruth', sub: 'Vrouw · warm', h: 205 },
-  { id: 'marlies', label: 'Marlies', sub: 'Vrouw · opgewekt', h: 200 },
-  { id: 'marianne', label: 'Marianne', sub: 'Vrouw · ouder, rustig', h: 190 },
-  { id: 'eric', label: 'Eric', sub: 'Man · natuurlijk', h: 200 },
-  { id: 'robert', label: 'Robert', sub: 'Man · warm en diep', h: 180 },
-  { id: 'thomas', label: 'Thomas', sub: 'Man · zakelijk', h: 210 },
-  { id: 'koen', label: 'Koen', sub: 'Man · jong, vriendelijk', h: 170 },
-  { id: 'jerry', label: 'Jerry', sub: 'Man · ontspannen', h: 205 },
-  { id: 'peter', label: 'Peter', sub: 'Man · rustig', h: 188 },
-];
-function initVoices() {
-  const list = $('#voices');
-  const audio = new Audio();
-  audio.preload = 'none';
-  let current = null, ctx = null, analyser = null, buf = null;
-  VOICES.forEach((v, i) => {
-    const id = v.id, b = document.createElement('button');
-    b.type = 'button'; b.className = 'voice rv'; b.dataset.id = id;
-    b.style.setProperty('--d', (i % 4) * .05 + 's');
-    b.setAttribute('aria-label', `Luister naar ${v.label}, ${v.sub}`);
-    b.innerHTML = `<span class="orb" style="--h:${v.h}"></span><span class="meta"><b></b><small></small></span>
-      <span class="play"><svg class="pl" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2c-.5-.4-1.2 0-1.2.6z"/></svg><svg class="ps" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3" width="3" height="10" rx="1"/><rect x="9.5" y="3" width="3" height="10" rx="1"/></svg></span>`;
-    b.querySelector('b').textContent = v.label;
-    b.querySelector('small').textContent = v.sub;
-    list.append(b);
-  });
-  const stop = () => { if (current) { current.classList.remove('playing'); current.querySelector('.orb').style.setProperty('--lvl', 0); } current = null; };
-  // Het bolletje beweegt mee met het volume van de stem
-  const meter = () => {
-    if (!current || !analyser) return;
-    analyser.getByteTimeDomainData(buf);
-    let sum = 0; for (const x of buf) sum += ((x - 128) / 128) ** 2;
-    current.querySelector('.orb').style.setProperty('--lvl', Math.min(1, Math.sqrt(sum / buf.length) * 4).toFixed(3));
-    requestAnimationFrame(meter);
-  };
-  list.addEventListener('click', e => {
-    const b = e.target.closest('.voice');
-    if (!b) return;
-    if (current === b) { audio.pause(); stop(); return; }
-    stop();
-    try {
-      if (!ctx) { ctx = new AudioContext(); analyser = ctx.createAnalyser(); analyser.fftSize = 512; buf = new Uint8Array(analyser.fftSize); ctx.createMediaElementSource(audio).connect(analyser); analyser.connect(ctx.destination); }
-      ctx.resume();
-    } catch { analyser = null; }
-    document.dispatchEvent(new CustomEvent('botlu:play', { detail: audio }));
-    audio.src = `voices/${b.dataset.id}.mp3`;
-    audio.play().then(() => { current = b; b.classList.add('playing'); meter(); }).catch(stop);
-  });
-  audio.addEventListener('ended', stop);
-  document.addEventListener('botlu:play', e => { if (current && e.detail !== audio) { audio.pause(); stop(); } });
-}
-
 // ---------- Demo aanvragen: opent een e-mail aan hallo@botlu.ai met alles erin ----------
 // De site heeft geen eigen server; het mailprogramma van de bezoeker verstuurt de aanvraag.
 function initDemoForm() {
@@ -1992,7 +1898,6 @@ initGesprekken3d();
 initSlim();
 initNav();
 initCards();
-initVoices();
 initDemoForm();
 initReveal();
 </script>
