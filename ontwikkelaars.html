@@ -106,6 +106,7 @@
   /* Op een smal scherm past "Account aanmaken" niet naast "Demo boeken": dan "Aanmelden" */
   .nav .naam-kort { display: none; }
   @media (max-width: 480px) { .nav .naam-lang { display: none; } .nav .naam-kort { display: inline; } }
+  @media (max-width: 380px) { .nav .brand .wordmark { display: none; } .nav .btn.sm { padding: 0 12px; } }
 
   h1 { margin: 0; font-size: clamp(42px, 5.6vw, 76px); line-height: 1.02; font-weight: 360; letter-spacing: -.042em; }
   /* ---------- Secties ---------- */
@@ -264,6 +265,7 @@
     .sec-metal { opacity: .5; }
   }
   @media (max-width: 700px) {
+    .term-tab { height: 34px; }
     .sec { padding: 84px 0; }
     .apps, .veilig { grid-template-columns: minmax(0, 1fr); }
     .stap, .ev, .app { padding: 24px; }

@@ -309,6 +309,7 @@ page = f'''<!doctype html>
     .sec-metal {{ opacity: .5; }}
   }}
   @media (max-width: 700px) {{
+    .term-tab {{ height: 34px; }}
     .sec {{ padding: 84px 0; }}
     .apps, .veilig {{ grid-template-columns: minmax(0, 1fr); }}
     .stap, .ev, .app {{ padding: 24px; }}
