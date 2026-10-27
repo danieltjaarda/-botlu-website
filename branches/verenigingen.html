@@ -20,7 +20,7 @@
   :root {
     --bg: #ffffff; --soft: #f4f4f6; --soft-2: #ebebef; --line: #ebebef; --line-2: #dedee4;
     --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --ink-4: #a0a0aa;
-    --brand: #5b4ff5; --brand-2: #6a5ff7; --brand-soft: #efeefe; --ring: rgba(91, 79, 245, .14);
+    --brand: #21B3E0; --brand-2: #1aa3cf; --brand-ink: #0a83ab; --brand-soft: #e2f5fb; --ring: rgba(33, 179, 224, .18);
     --good: #18a058; --good-soft: #e6f6ed; --warn: #b8650a; --warn-soft: #fdf1e0; --info: #2563eb; --info-soft: #e8effd;
     --night: #0b0b14;
     --ease: cubic-bezier(.22, .8, .24, 1);
@@ -54,9 +54,9 @@
   .btn:active { transform: scale(.97); }
   .btn svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
   .btn:hover svg.arrow { transform: translateX(3px); }
-  .btn.dark { background: var(--ink); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 20px -8px rgba(16,16,24,.6); }
-  .btn.dark:hover { background: #26262d; }
-  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
+  .btn.dark { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 8px 20px -8px rgba(33,179,224,.75); }
+  .btn.dark:hover { background: var(--brand-2); }
+  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(33,179,224,.75); }
   .btn.brand:hover { background: var(--brand-2); }
   .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
   .btn.line:hover { border-color: var(--ink-4); }
@@ -70,7 +70,7 @@
   .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
   .nav-links a:hover { opacity: 1; background: rgba(16,16,24,.05); }
   .nav-cta { display: flex; align-items: center; gap: 8px; }
-  .nav .btn.sm { background: var(--ink); color: #fff; }
+  .nav .btn.sm { background: var(--brand); color: #fff; }
   .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
   .nav.solid .nav-links a:hover { background: var(--soft); }
   /* Menu 'Producten': paneel opent bij hover of focus (ook met toetsenbord of een tik) */
@@ -98,8 +98,8 @@
   .nav .nav-links .menu-paneel.branches a:hover { background: var(--soft); }
   .nav .nav-links .menu-paneel.branches a[aria-current] { background: var(--soft); font-weight: 600; }
   .menu-paneel.branches svg { width: 18px; height: 18px; flex: none; color: var(--ink); }
-  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
-  .nav.solid .btn.sm { background: var(--ink); color: #fff; }
+  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand-ink); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
+  .nav.solid .btn.sm { background: var(--brand); color: #fff; }
   /* Demo boeken: wit met een dunne rand, naast de zwarte knop */
   .nav .btn.sm.demo, .nav.solid .btn.sm.demo { background: #fff; border-color: var(--line-2); color: var(--ink); }
   .nav .btn.sm.demo:hover { border-color: var(--ink-4); }
@@ -138,7 +138,7 @@
 
   /* ---------- Pagina per branche ---------- */
   .b-hero { position: relative; isolation: isolate; overflow: hidden; padding: 150px 0 110px;
-    background: radial-gradient(38% 50% at 12% 10%, rgba(182,220,219,.5), transparent 70%), radial-gradient(40% 50% at 86% 90%, rgba(195,189,230,.5), transparent 70%), var(--bg); }
+    background: radial-gradient(38% 50% at 12% 10%, rgba(186,232,244,.5), transparent 70%), radial-gradient(40% 50% at 86% 90%, rgba(176,224,242,.5), transparent 70%), var(--bg); }
   .b-hero .metaal { position: absolute; inset: 0; z-index: -1; pointer-events: none;
     -webkit-mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); }
   .b-hero .metaal canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -155,7 +155,7 @@
   .b-hero .lead { max-width: 520px; margin: 22px 0 30px; color: var(--ink-2); font-size: clamp(17px, 1.4vw, 19px); line-height: 1.55; }
   .b-hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
   /* Voorbeeldgesprek */
-  .gesprek { padding: 22px; border-radius: var(--r-2xl); background: #fff; box-shadow: 0 40px 80px -30px rgba(40,30,110,.35), 0 0 0 1px rgba(16,16,24,.06); }
+  .gesprek { padding: 22px; border-radius: var(--r-2xl); background: #fff; box-shadow: 0 40px 80px -30px rgba(8,60,90,.35), 0 0 0 1px rgba(16,16,24,.06); }
   .gesprek-kop { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; color: var(--ink-3); font-size: 13px; }
   .gesprek-kop i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
   .gesprek-kop b { color: var(--ink); font-weight: 600; }
@@ -168,7 +168,7 @@
   .gesprek-voet { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13.5px; }
   .pill { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
   .pill.good { background: var(--good-soft); color: var(--good); }
-  .pill.brand { background: var(--brand-soft); color: var(--brand); }
+  .pill.brand { background: var(--brand-soft); color: var(--brand-ink); }
   .pill.warn { background: var(--warn-soft); color: var(--warn); }
   /* Wat hij regelt */
   .taken { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }

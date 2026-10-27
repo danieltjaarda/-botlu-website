@@ -260,7 +260,7 @@ e = lambda t: html.escape(t, quote=False)
 CSS = '''
   /* ---------- Pagina per branche ---------- */
   .b-hero { position: relative; isolation: isolate; overflow: hidden; padding: 150px 0 110px;
-    background: radial-gradient(38% 50% at 12% 10%, rgba(182,220,219,.5), transparent 70%), radial-gradient(40% 50% at 86% 90%, rgba(195,189,230,.5), transparent 70%), var(--bg); }
+    background: radial-gradient(38% 50% at 12% 10%, rgba(186,232,244,.5), transparent 70%), radial-gradient(40% 50% at 86% 90%, rgba(176,224,242,.5), transparent 70%), var(--bg); }
   .b-hero .metaal { position: absolute; inset: 0; z-index: -1; pointer-events: none;
     -webkit-mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); mask-image: linear-gradient(rgba(0,0,0,.15), #000 160px); }
   .b-hero .metaal canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -277,7 +277,7 @@ CSS = '''
   .b-hero .lead { max-width: 520px; margin: 22px 0 30px; color: var(--ink-2); font-size: clamp(17px, 1.4vw, 19px); line-height: 1.55; }
   .b-hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
   /* Voorbeeldgesprek */
-  .gesprek { padding: 22px; border-radius: var(--r-2xl); background: #fff; box-shadow: 0 40px 80px -30px rgba(40,30,110,.35), 0 0 0 1px rgba(16,16,24,.06); }
+  .gesprek { padding: 22px; border-radius: var(--r-2xl); background: #fff; box-shadow: 0 40px 80px -30px rgba(8,60,90,.35), 0 0 0 1px rgba(16,16,24,.06); }
   .gesprek-kop { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; color: var(--ink-3); font-size: 13px; }
   .gesprek-kop i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
   .gesprek-kop b { color: var(--ink); font-weight: 600; }
@@ -290,7 +290,7 @@ CSS = '''
   .gesprek-voet { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13.5px; }
   .pill { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
   .pill.good { background: var(--good-soft); color: var(--good); }
-  .pill.brand { background: var(--brand-soft); color: var(--brand); }
+  .pill.brand { background: var(--brand-soft); color: var(--brand-ink); }
   .pill.warn { background: var(--warn-soft); color: var(--warn); }
   /* Wat hij regelt */
   .taken { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }

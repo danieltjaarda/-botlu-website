@@ -20,7 +20,7 @@
   :root {
     --bg: #ffffff; --soft: #f4f4f6; --soft-2: #ebebef; --line: #ebebef; --line-2: #dedee4;
     --ink: #0f0f12; --ink-2: #3a3a42; --ink-3: #6e6e78; --ink-4: #a0a0aa;
-    --brand: #5b4ff5; --brand-2: #6a5ff7; --brand-soft: #efeefe; --ring: rgba(91, 79, 245, .14);
+    --brand: #21B3E0; --brand-2: #1aa3cf; --brand-ink: #0a83ab; --brand-soft: #e2f5fb; --ring: rgba(33, 179, 224, .18);
     --good: #18a058; --good-soft: #e6f6ed; --warn: #b8650a; --warn-soft: #fdf1e0; --info: #2563eb; --info-soft: #e8effd;
     --night: #0b0b14;
     --ease: cubic-bezier(.22, .8, .24, 1);
@@ -54,9 +54,9 @@
   .btn:active { transform: scale(.97); }
   .btn svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
   .btn:hover svg.arrow { transform: translateX(3px); }
-  .btn.dark { background: var(--ink); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 20px -8px rgba(16,16,24,.6); }
-  .btn.dark:hover { background: #26262d; }
-  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(91,79,245,.75); }
+  .btn.dark { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 8px 20px -8px rgba(33,179,224,.75); }
+  .btn.dark:hover { background: var(--brand-2); }
+  .btn.brand { background: var(--brand); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -8px rgba(33,179,224,.75); }
   .btn.brand:hover { background: var(--brand-2); }
   .btn.line { background: #fff; border-color: var(--line-2); color: var(--ink); }
   .btn.line:hover { border-color: var(--ink-4); }
@@ -70,7 +70,7 @@
   .nav-links a { padding: 8px 12px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .92; transition: background .2s, opacity .2s; }
   .nav-links a:hover { opacity: 1; background: rgba(16,16,24,.05); }
   .nav-cta { display: flex; align-items: center; gap: 8px; }
-  .nav .btn.sm { background: var(--ink); color: #fff; }
+  .nav .btn.sm { background: var(--brand); color: #fff; }
   .nav.solid { background: rgba(255,255,255,.78); color: var(--ink); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: 0 1px 0 rgba(16,16,24,.07); }
   .nav.solid .nav-links a:hover { background: var(--soft); }
   /* Menu 'Producten': paneel opent bij hover of focus (ook met toetsenbord of een tik) */
@@ -98,8 +98,8 @@
   .nav .nav-links .menu-paneel.branches a:hover { background: var(--soft); }
   .nav .nav-links .menu-paneel.branches a[aria-current] { background: var(--soft); font-weight: 600; }
   .menu-paneel.branches svg { width: 18px; height: 18px; flex: none; color: var(--ink); }
-  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
-  .nav.solid .btn.sm { background: var(--ink); color: #fff; }
+  .menu-item em { padding: 2px 8px; border-radius: 99px; background: var(--brand-soft); color: var(--brand-ink); font-size: 11.5px; font-style: normal; font-weight: 600; letter-spacing: 0; }
+  .nav.solid .btn.sm { background: var(--brand); color: #fff; }
   /* Demo boeken: wit met een dunne rand, naast de zwarte knop */
   .nav .btn.sm.demo, .nav.solid .btn.sm.demo { background: #fff; border-color: var(--line-2); color: var(--ink); }
   .nav .btn.sm.demo:hover { border-color: var(--ink-4); }
@@ -134,7 +134,7 @@
   .dev-list li { padding-left: 18px; border-left: 2px solid rgba(255,255,255,.12); }
   .dev-list b { display: block; margin-bottom: 4px; font-size: 17px; letter-spacing: -.015em; }
   .dev-list span { color: rgba(255,255,255,.58); font-size: 15px; }
-  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #d6d2ff; }
+  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #a6e4f5; }
   /* Het codevoorbeeld als Terminal op de Mac: licht venster, profiel Basic (zwarte SF Mono op wit) */
   .term { overflow: hidden; border-radius: 12px; background: #fff; color: #000;
     box-shadow: 0 0 0 .5px rgba(0,0,0,.5), inset 0 0 0 .5px rgba(255,255,255,.35), 0 24px 70px 4px rgba(0,0,0,.55); }
@@ -178,7 +178,7 @@
   /* Op de donkere hero: navigatie in wit tot je scrolt */
   .nav:not(.solid) { color: #fff; }
   .nav:not(.solid) .nav-links a:hover { background: rgba(255,255,255,.1); }
-  .nav:not(.solid) .btn.sm { background: #fff; color: var(--ink); }
+  .nav:not(.solid) .btn.sm { background: var(--brand); color: #fff; }
   .nav:not(.solid) .btn.sm.demo { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.28); color: #fff; }
   .nav:not(.solid) .btn.sm.demo:hover { background: rgba(255,255,255,.14); }
   .nav-links a[aria-current] { opacity: 1; font-weight: 600; }
@@ -221,7 +221,7 @@
   .basis code { color: var(--ink); font: 500 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
   .eplijst { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
   .eplijst li { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 4px 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-  .eplijst .m { grid-row: span 2; align-self: start; padding: 3px 0; border-radius: 6px; background: var(--brand-soft); color: var(--brand); text-align: center; font: 600 12px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
+  .eplijst .m { grid-row: span 2; align-self: start; padding: 3px 0; border-radius: 6px; background: var(--brand-soft); color: var(--brand-ink); text-align: center; font: 600 12px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
   .eplijst code { overflow-wrap: anywhere; color: var(--ink); font: 500 14.5px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
   .eplijst span { color: var(--ink-3); font-size: 15px; }
   .eplijst + p { margin: 22px 0 0; color: var(--ink-3); font-size: 15.5px; }
@@ -231,7 +231,7 @@
   .headers dt { margin-bottom: 4px; color: var(--ink); font: 600 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }
   .headers dd { margin: 0; color: var(--ink-3); }
   .headers + p { margin: 28px 0 0; color: var(--ink-3); }
-  .headers + p a { color: var(--brand); font-weight: 600; text-underline-offset: 4px; }
+  .headers + p a { color: var(--brand-ink); font-weight: 600; text-underline-offset: 4px; }
   /* Zonder code: echte app-iconen */
   .apps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
   .app .ic { display: flex; gap: 8px; margin-bottom: 24px; }

@@ -252,8 +252,8 @@ function metal(canvas, { dark = false } = {}) {
   const G = stageGL(canvas, METAL_FS, ['u_resolution', 'u_time', 'u_count', 'u_iridescence', 'u_pull', 'u_dark', 'u_mouse', 'u_light', 'u_f0', 'u_center', 'u_tilt', 'u_scale']);
   if (!G) return;                                                    // zonder WebGL blijft alleen de zachte gloed
   const { gl, u } = G;
-  // Metaal met een blauwe tint (#C1D6FF) als lineaire RGB, 3 linten, wat regenboogglans
-  gl.uniform3fv(u.u_f0, [0xc1, 0xd6, 0xff].map(c => ((c / 255 + .055) / 1.055) ** 2.4));
+  // Metaal met een blauwe tint (#BCE8F6) als lineaire RGB, 3 linten, wat regenboogglans
+  gl.uniform3fv(u.u_f0, [0xbc, 0xe8, 0xf6].map(c => ((c / 255 + .055) / 1.055) ** 2.4));
   gl.uniform1f(u.u_dark, dark ? 1 : 0);                            // licht of donker studiolicht
   gl.uniform1f(u.u_count, 3);
   gl.uniform1f(u.u_iridescence, .2);

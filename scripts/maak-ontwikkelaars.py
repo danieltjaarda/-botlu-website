@@ -30,7 +30,7 @@ css_devs = '''  /* ---------- Ontwikkelaars ---------- */
   .dev-list li { padding-left: 18px; border-left: 2px solid rgba(255,255,255,.12); }
   .dev-list b { display: block; margin-bottom: 4px; font-size: 17px; letter-spacing: -.015em; }
   .dev-list span { color: rgba(255,255,255,.58); font-size: 15px; }
-  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #d6d2ff; }
+  .dev-list code, .devs .sec-head code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.08); font: 500 13.5px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: #a6e4f5; }
   /* Het codevoorbeeld als Terminal op de Mac: licht venster, profiel Basic (zwarte SF Mono op wit) */
   .term { overflow: hidden; border-radius: 12px; background: #fff; color: #000;
     box-shadow: 0 0 0 .5px rgba(0,0,0,.5), inset 0 0 0 .5px rgba(255,255,255,.35), 0 24px 70px 4px rgba(0,0,0,.55); }
@@ -223,7 +223,7 @@ page = f'''<!doctype html>
   /* Op de donkere hero: navigatie in wit tot je scrolt */
   .nav:not(.solid) {{ color: #fff; }}
   .nav:not(.solid) .nav-links a:hover {{ background: rgba(255,255,255,.1); }}
-  .nav:not(.solid) .btn.sm {{ background: #fff; color: var(--ink); }}
+  .nav:not(.solid) .btn.sm {{ background: var(--brand); color: #fff; }}
   .nav:not(.solid) .btn.sm.demo {{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.28); color: #fff; }}
   .nav:not(.solid) .btn.sm.demo:hover {{ background: rgba(255,255,255,.14); }}
   .nav-links a[aria-current] {{ opacity: 1; font-weight: 600; }}
@@ -266,7 +266,7 @@ page = f'''<!doctype html>
   .basis code {{ color: var(--ink); font: 500 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }}
   .eplijst {{ margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }}
   .eplijst li {{ display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 4px 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }}
-  .eplijst .m {{ grid-row: span 2; align-self: start; padding: 3px 0; border-radius: 6px; background: var(--brand-soft); color: var(--brand); text-align: center; font: 600 12px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }}
+  .eplijst .m {{ grid-row: span 2; align-self: start; padding: 3px 0; border-radius: 6px; background: var(--brand-soft); color: var(--brand-ink); text-align: center; font: 600 12px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }}
   .eplijst code {{ overflow-wrap: anywhere; color: var(--ink); font: 500 14.5px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }}
   .eplijst span {{ color: var(--ink-3); font-size: 15px; }}
   .eplijst + p {{ margin: 22px 0 0; color: var(--ink-3); font-size: 15.5px; }}
@@ -276,7 +276,7 @@ page = f'''<!doctype html>
   .headers dt {{ margin-bottom: 4px; color: var(--ink); font: 600 15px/1.4 "SF Mono", ui-monospace, Menlo, monospace; }}
   .headers dd {{ margin: 0; color: var(--ink-3); }}
   .headers + p {{ margin: 28px 0 0; color: var(--ink-3); }}
-  .headers + p a {{ color: var(--brand); font-weight: 600; text-underline-offset: 4px; }}
+  .headers + p a {{ color: var(--brand-ink); font-weight: 600; text-underline-offset: 4px; }}
   /* Zonder code: echte app-iconen */
   .apps {{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }}
   .app .ic {{ display: flex; gap: 8px; margin-bottom: 24px; }}
