@@ -17,6 +17,9 @@ css_secties = between('  /* ---------- Secties ---------- */', '  /* Werkt met *
 css_cta = ''.join(l for l in between('  /* ---------- Afsluiter ---------- */', '  /* ---------- Kleinere schermen ---------- */').splitlines(True)
                   if '.visual' not in l and '.ring-stage' not in l)
 css_stil = between('  @media (prefers-reduced-motion: reduce) {', '</style>')
+# De sectie 'Gratis hulp bij het opzetten' van de homepage, met de demoknop naar de homepage
+css_hulp = between('  /* ---------- Gratis hulp', '  /* ---------- Praat met een expert')
+hulp = between('  <!-- hulp -->', '  <!-- /hulp -->', incl_end=True).replace('href="#demo"', 'href="/#demo"')
 nav = between('<header class="nav" id="nav">', '</header>', incl_end=True)
 footer = between('<footer>', '</footer>', incl_end=True)
 
@@ -105,7 +108,7 @@ page = f'''<!doctype html>
 {head_links}
 <script>document.documentElement.classList.add('js');</script>
 <style>
-{css_base}{css_h1}{css_secties}{css_cta}
+{css_base}{css_h1}{css_secties}{css_cta}{css_hulp}
   /* ---------- Prijzen ---------- */
   .nav-links a[aria-current] {{ opacity: 1; font-weight: 600; }}
   .prijzen {{ position: relative; isolation: isolate; padding: 150px 0 70px; overflow-x: clip; }}
@@ -254,6 +257,8 @@ page = f'''<!doctype html>
       <p class="btw rv">Alle prijzen zijn per maand en exclusief btw. Minuten op? Dan komen er automatisch 100 minuten bij voor €15.</p>
     </div>
   </section>
+
+{hulp}
 
   <!-- ========== Afsluiter ========== -->
   <section class="cta-sec">

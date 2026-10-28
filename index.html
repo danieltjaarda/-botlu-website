@@ -539,6 +539,34 @@
   .calls .r.head { background: #fbfbfc; color: var(--ink-4); font-size: 12.5px; font-weight: 600; }
   .demo-note { margin-top: 14px; color: var(--ink-4); font-size: 13px; text-align: center; }
 
+  /* ---------- Gratis hulp bij het opzetten (ook op /prijzen) ---------- */
+  .hulp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; counter-reset: hulp; }
+  .hulp-stap { display: flex; flex-direction: column; }
+  .hulp-foto { position: relative; overflow: hidden; aspect-ratio: 4 / 3.4; margin: 0 0 24px; border-radius: var(--r-2xl); background: var(--soft); }
+  .hulp-foto img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .hulp-stap:hover .hulp-foto img { transform: scale(1.03); }
+  /* Glazen labels en een klein instellingenlijstje op de foto's */
+  .hulp-label { position: absolute; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 9px; padding: 9px 14px; border-radius: 99px;
+    background: rgba(255,255,255,.84); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 10px 30px -12px rgba(16,16,24,.35), 0 0 0 1px rgba(16,16,24,.05); color: var(--ink); font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .hulp-label i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px var(--good-soft); }
+  .hulp-label small { color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .hulp-lijst { position: absolute; right: 16px; bottom: 16px; display: grid; gap: 8px; margin: 0; padding: 14px 16px; list-style: none; border-radius: var(--r-lg);
+    background: rgba(255,255,255,.86); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 10px 30px -12px rgba(16,16,24,.35), 0 0 0 1px rgba(16,16,24,.05); color: var(--ink); font-size: 13.5px; font-weight: 500; }
+  .hulp-lijst li { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .hulp-lijst svg { width: 14px; height: 14px; flex: none; color: var(--good); }
+  .hulp-stap h3::before { content: counter(hulp); counter-increment: hulp; display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 10px;
+    border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); font-size: 14px; font-weight: 600; vertical-align: 2px; }
+  .hulp-stap p { margin: 0; color: var(--ink-3); }
+  .hulp-voet { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 44px; }
+  .hulp-voet ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; color: var(--ink-2); font-size: 15px; font-weight: 500; }
+  .hulp-voet li { display: flex; align-items: center; gap: 8px; }
+  .hulp-voet li svg { width: 15px; height: 15px; color: var(--brand); }
+  @media (max-width: 900px) {
+    .hulp-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; max-width: 560px; }
+  }
+
   /* ---------- Praat met een expert ---------- */
   .expert { overflow: hidden; background: var(--night); color: #fff; }
   /* Dezelfde chromen linten als in de hero, hier in de donkere studio, achter de inhoud */
@@ -998,6 +1026,38 @@
       </div>
     </div>
   </section>
+
+  <!-- hulp -->
+  <section class="sec hulp" id="hulp">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>Wij zetten alles voor je klaar. <span class="mute">Gratis, bij elk plan.</span></h2>
+        <p>Geen zin om zelf uit te zoeken hoe het werkt? Een van onze medewerkers richt je account samen met je in, van de eerste vraag tot het eerste gesprek.</p>
+      </div>
+      <div class="hulp-grid">
+        <div class="hulp-stap rv">
+          <figure class="hulp-foto"><img src="/media/hulp-kennismaken.jpg" alt="Een medewerker van Botlu met headset maakt aantekeningen tijdens een gesprek" width="1000" height="667" loading="lazy" decoding="async" style="object-position: 62% 50%"><figcaption class="hulp-label"><i aria-hidden="true"></i>In gesprek <small>12:04</small></figcaption></figure>
+          <h3>We leren je bedrijf kennen</h3>
+          <p>Een medewerker belt je op en bespreekt met je wat je assistent moet weten, wat hij mag regelen en hoe hij moet klinken.</p>
+        </div>
+        <div class="hulp-stap rv" style="--d:.06s">
+          <figure class="hulp-foto"><img src="/media/hulp-inrichten.jpg" alt="Een medewerker van Botlu richt een account in op haar laptop" width="1000" height="667" loading="lazy" decoding="async" style="object-position: 30% 50%"><ul class="hulp-lijst" aria-hidden="true"><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Assistent aangemaakt</li><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Stem gekozen</li><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Agenda gekoppeld</li><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Doorschakelen klaar</li></ul></figure>
+          <h3>Wij richten alles in</h3>
+          <p>We maken je assistent aan, kiezen samen een stem, koppelen je agenda en apps en zetten het doorschakelen van je nummer klaar.</p>
+        </div>
+        <div class="hulp-stap rv" style="--d:.12s">
+          <figure class="hulp-foto"><img src="/media/hulp-live.jpg" alt="Een eigenaar van een fietsenwinkel belt lachend met zijn telefoon" width="1000" height="667" loading="lazy" decoding="async" style="object-position: 70% 40%"><figcaption class="hulp-label"><i aria-hidden="true"></i>Je assistent is live</figcaption></figure>
+          <h3>Samen live</h3>
+          <p>We bellen samen proef en schaven bij tot het goed voelt. Daarna neemt je assistent op, en wij blijven gewoon bereikbaar.</p>
+        </div>
+      </div>
+      <div class="hulp-voet rv">
+        <a class="btn brand" href="#demo">Plan je gratis hulp <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        <ul><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Een echte medewerker</li><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Je hoeft niets technisch te doen</li><li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5"/></svg>Gratis bij elk plan</li></ul>
+      </div>
+    </div>
+  </section>
+  <!-- /hulp -->
 
   <!-- ========== Ontwikkelaars ========== -->
   <section class="sec expert" id="demo">
