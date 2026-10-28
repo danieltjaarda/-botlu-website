@@ -584,7 +584,14 @@
   .demo-form .keuze input:checked + span { color: var(--ink); }
   .demo-form .keuze input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
   .demo-form .btn { margin-top: 6px; height: 50px; }
+  /* Klein rond fotootje van de medewerker die je spreekt, links in de knop */
+  .demo-form .btn { gap: 10px; padding-left: 8px; }
+  .btn-foto { position: relative; display: block; width: 34px; height: 34px; flex: none; margin-right: auto; }
+  .btn-foto img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px rgba(255,255,255,.9); }
+  .btn-foto::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 50%; background: #2fd06e; box-shadow: 0 0 0 2px var(--brand); }
+  .demo-form .btn .arrow { margin-left: auto; }
   .demo-klaar { margin: 0; color: var(--ink-2); font-size: 14.5px; text-align: center; }
+  .demo-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
   /* ---------- Vragen ---------- */
   .faq { max-width: 820px; margin: 0 auto; }
@@ -690,6 +697,7 @@
       </div>
       <!-- /branches -->
       <a href="/ontwikkelaars">Ontwikkelaars</a>
+      <a href="/prijzen">Prijzen</a>
     </nav>
     <div class="nav-cta">
       <a class="btn sm demo" href="#demo">Demo boeken</a>
@@ -1023,8 +1031,9 @@
               <label><input type="radio" name="moment" value="Maakt niet uit" checked><span>Maakt niet uit</span></label>
             </div>
           </fieldset>
-          <button class="btn brand" type="submit">Plan mijn gratis demo <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          <button class="btn brand" type="submit"><span class="btn-foto"><img src="avatars/medewerker.jpg" alt="" width="56" height="56" decoding="async"></span>Plan mijn gratis demo <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
           <p class="demo-klaar" role="status" hidden></p>
+          <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         </form>
       </div>
     </div>
@@ -1068,7 +1077,7 @@
     <a class="brand" href="/"><svg viewBox="0 0 257 324" width="16" height="20" fill="currentColor" aria-hidden="true"><path d="M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z"/></svg><span class="wordmark" style="font-size:18px;color:var(--ink)">Botlu.ai</span></a>
     <span>© <span id="year">2026</span> Botlu.ai</span>
     <nav aria-label="Voettekst">
-      <a href="#functies">Functies</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
+      <a href="#functies">Functies</a><a href="/ontwikkelaars">Ontwikkelaars</a><a href="/prijzen">Prijzen</a><a href="/privacy">Privacy</a><a href="/verwerkersovereenkomst">Verwerkersovereenkomst</a><a href="/beveiliging">Beveiliging</a><a href="mailto:hallo@botlu.ai">hallo@botlu.ai</a><a href="https://app.botlu.ai/login">Inloggen</a>
     </nav>
   </div>
 </footer>
@@ -1863,6 +1872,8 @@ function initCards() {
 
 // ---------- Demo aanvragen: opent een e-mail aan hallo@botlu.ai met alles erin ----------
 // De site heeft geen eigen server; het mailprogramma van de bezoeker verstuurt de aanvraag.
+// Lokaal (node dev.js) naar de lokale app, online naar app.botlu.ai
+const APP = location.hostname === 'localhost' ? 'http://localhost:4321' : 'https://app.botlu.ai';
 function initDemoForm() {
   const form = $('#demo-form');
   if (!form) return;
@@ -1874,10 +1885,23 @@ function initDemoForm() {
     leeg.forEach(i => i.classList.add('fout'));
     if (leeg.length) return leeg[0].focus();
     const d = Object.fromEntries(new FormData(form));
-    const body = [`Naam: ${d.naam}`, `Bedrijf: ${d.bedrijf}`, `E-mail: ${d.email}`, d.telefoon && `Telefoon: ${d.telefoon}`, `Voorkeur: ${d.moment}`].filter(Boolean).join('\n');
-    location.href = `mailto:hallo@botlu.ai?subject=${encodeURIComponent(`Demo voor ${d.bedrijf}`)}&body=${encodeURIComponent(body + '\n\nGraag een gratis demo van Botlu.')}`;
-    klaar.hidden = false;
-    klaar.textContent = 'Je mailprogramma opent met je aanvraag. Verstuur hem en we nemen zo snel mogelijk contact met je op.';
+    const knop = form.querySelector('button[type=submit]');
+    knop.disabled = true;
+    // Aanvraag gaat naar Beheer in de app; lukt dat niet, dan via het mailprogramma
+    fetch(`${APP}/api/leads`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+      .then(r => { if (!r.ok) throw new Error(r.status); })
+      .then(() => {
+        form.reset();
+        klaar.hidden = false;
+        klaar.textContent = 'Dank je! We nemen zo snel mogelijk contact met je op om de demo in te plannen.';
+      })
+      .catch(() => {
+        const body = [`Naam: ${d.naam}`, `Bedrijf: ${d.bedrijf}`, `E-mail: ${d.email}`, d.telefoon && `Telefoon: ${d.telefoon}`, `Voorkeur: ${d.moment}`].filter(Boolean).join('\n');
+        location.href = `mailto:hallo@botlu.ai?subject=${encodeURIComponent(`Demo voor ${d.bedrijf}`)}&body=${encodeURIComponent(body + '\n\nGraag een gratis demo van Botlu.')}`;
+        klaar.hidden = false;
+        klaar.textContent = 'Je mailprogramma opent met je aanvraag. Verstuur hem en we nemen zo snel mogelijk contact met je op.';
+      })
+      .finally(() => { knop.disabled = false; });
   });
 }
 

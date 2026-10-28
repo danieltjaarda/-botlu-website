@@ -248,15 +248,16 @@ void main() {
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), alpha);
 }`;
 
-function metal(canvas, { dark = false } = {}) {
+// tint: kleur van het metaal (hex), glans: hoeveel regenboog (0–1). Standaard het blauwe chroom.
+function metal(canvas, { dark = false, tint = 'bce8f6', glans = .2 } = {}) {
   const G = stageGL(canvas, METAL_FS, ['u_resolution', 'u_time', 'u_count', 'u_iridescence', 'u_pull', 'u_dark', 'u_mouse', 'u_light', 'u_f0', 'u_center', 'u_tilt', 'u_scale']);
   if (!G) return;                                                    // zonder WebGL blijft alleen de zachte gloed
   const { gl, u } = G;
-  // Metaal met een blauwe tint (#BCE8F6) als lineaire RGB, 3 linten, wat regenboogglans
-  gl.uniform3fv(u.u_f0, [0xbc, 0xe8, 0xf6].map(c => ((c / 255 + .055) / 1.055) ** 2.4));
+  // De tint als lineaire RGB, 3 linten, wat regenboogglans
+  gl.uniform3fv(u.u_f0, [0, 2, 4].map(i => ((parseInt(tint.slice(i, i + 2), 16) / 255 + .055) / 1.055) ** 2.4));
   gl.uniform1f(u.u_dark, dark ? 1 : 0);                            // licht of donker studiolicht
   gl.uniform1f(u.u_count, 3);
-  gl.uniform1f(u.u_iridescence, .2);
+  gl.uniform1f(u.u_iridescence, glans);
   // Scherp aan de randen, dus op schermresolutie (tot 2x), maar nooit meer dan 2,4 miljoen pixels
   const size = () => {
     const w = canvas.clientWidth, h = canvas.clientHeight;
