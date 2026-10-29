@@ -3,9 +3,10 @@
 # De basis (kleuren, knoppen, navigatie, footer) komt uit index.html, zodat alles hetzelfde oogt.
 # Alleen wat Botlu echt kan: vragen beantwoorden uit je website, afspraken inplannen en verzetten,
 # terugbelverzoeken noteren, meldingen, opnames en vijf talen. Doorverbinden en sms staan op 'binnenkort'.
-import html, pathlib, re
+import html, pathlib, re, runpy
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
+seo = runpy.run_path(str(pathlib.Path(__file__).with_name('kop.py')))['seo']
 
 # Iconen: gewoon zwart, zonder vlak (stijlregel van Daniel)
 ICON = {
@@ -328,6 +329,7 @@ CSS = '''
 
 (SITE / 'branches').mkdir(exist_ok=True)
 for slug, naam, ic, voor, zaak, kop1, kop2, intro, (bedrijf, vraag, antwoord, uitkomst), taken, vragen in B:
+    titel = f'AI-telefoonassistent voor {voor} · Botlu.ai'
     nav = nav_src.replace(f'href="/branches/{slug}"', f'href="/branches/{slug}" aria-current="page"')
     taken_html = ''.join(f'<div class="taak rv" style="--d:{i * .06:.2f}s">{icon(t)}<h3>{e(tt)}</h3><p>{e(tx)}</p></div>' for i, (t, tt, tx) in enumerate(taken))
     vragen_html = ''.join(f'<li class="rv" style="--d:{(i % 3) * .05:.2f}s">“{e(v)}”</li>' for i, v in enumerate(vragen))
@@ -336,8 +338,9 @@ for slug, naam, ic, voor, zaak, kop1, kop2, intro, (bedrijf, vraag, antwoord, ui
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Botlu voor {e(voor)} · Je telefoon, altijd opgenomen</title>
+<title>{e(titel)}</title>
 <meta name="description" content="{html.escape(intro)}">
+{seo(f'/branches/{slug}', titel, intro)}
 {head_links}
 <script>document.documentElement.classList.add('js');</script>
 <style>

@@ -3,11 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Botlu.ai · Je telefoon, altijd opgenomen</title>
-<meta name="description" content="Botlu neemt de telefoon op voor je bedrijf: een AI-assistent met een natuurlijke Nederlandse stem die vragen beantwoordt, afspraken inplant en na elk gesprek een samenvatting stuurt.">
+<title>Botlu.ai · AI-telefoonassistent die altijd opneemt</title>
+<meta name="description" content="Botlu neemt de telefoon op voor je bedrijf: een AI-assistent met een Nederlandse stem die vragen beantwoordt, afspraken inplant en elk gesprek samenvat.">
+<link rel="canonical" href="https://botlu.ai/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Botlu.ai">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:url" content="https://botlu.ai/">
+<meta property="og:title" content="Botlu.ai · AI-telefoonassistent die altijd opneemt">
+<meta property="og:description" content="Botlu neemt de telefoon op voor je bedrijf: een AI-assistent met een Nederlandse stem die vragen beantwoordt, afspraken inplant en elk gesprek samenvat.">
+<meta property="og:image" content="https://botlu.ai/media/og-botlu.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="/media/icoon-180.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://botlu.ai/#org", "name": "Botlu.ai", "url": "https://botlu.ai/", "logo": "https://botlu.ai/media/icoon-180.png", "email": "hallo@botlu.ai"}, {"@type": "WebSite", "@id": "https://botlu.ai/#website", "name": "Botlu.ai", "url": "https://botlu.ai/", "inLanguage": "nl-NL", "publisher": {"@id": "https://botlu.ai/#org"}}]}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
 <script>
   // Oude links naar het dashboard (botlu.ai/#gesprek=…) doorsturen naar app.botlu.ai
@@ -26,6 +38,8 @@
      Met de assen opsz (grote koppen krijgen vanzelf de display-vorm) en wght. Zoals op mollie.com:
      I met schreefjes, G met spoor, compacte f en t, en de extra ligaturen. */
   @font-face { font-family: "Inter Variable"; src: url("/fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  /* Poppins 500 (SIL OFL) alleen voor het woordmerk: ingekort tot de letters van "Botlu.ai" en hier ingebakken, dus geen extra verzoek */
+  @font-face { font-family: "Poppins"; src: url(data:font/woff2;base64,d09GMgABAAAAAAQMAAwAAAAABxwAAAO8AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgAGwKhRCEFQsWAAE2AiQDKAQgBYNIByAbtgXIBB7496w/N0mVrDFi27E6UoZYA794EIoHs/G/v2/6K5ASuARZqH9ZT/tuzad69KNtEQ2sLNsWWijQgBJYgaMAG8YuLsOCAFQmMHNEoatCx4oCCRuGLZfoMRgyrB7TP2VpPCMw1yOWNtWcr8ht4jdMIO2UmrG33K0RncSLMpQwo3laOLtUd1XzGAEsUcb5L9KvzJMWBcAhWJLCpfsxAkbRJaTLMDMCeV7lESjAHcMYgoxEAHbygewMZjOPJXNqkeYWHzU+NtzG48Yl47Rx0jhuHO6lrQYVCWvUh0HukZiw1XAoMO2OMGZGQpgpocjcbQYMtdmGDxmgKEMGjxhpGqgMmDWgobmpcYqstzTqnkfEhke1XQ+z/iH1Sw/r3W51gGngLk/wqyW92q43xYY3VPVtn9jgVVW0d30+bZcnVmiKKm671Z1er/jU61V3ut2s93i0XT6f+LC3SoOimrqw6fF6xYZmUvdhn68zpc2HtDZp/Q1NQ93pFbIqNKGhsaz3sqxJ6/u9VMgP/fbQb5d26Df8z0bf8N/w7/vff8O/K6inxXxi8uQTkyfZf2MSf7RW9mQnJevTnEWj7tmKpzgSauIzc6rrROye1E+cjs9S97z5X15KfEJRRvrRt08SMr1w3VJXSV53/NM1i8IX1T3Tl5BbvKSkcGP9E8n2+vLomJjyKHtdWpq9oSImOqY82q6nMWXeicHuNaUkfGE4D3362cLP+Na6xlW8vkEv3bCuqLp6XVHpBl0v37DRVR3dWxHpqM/MjK0rj4yJKYuMrstsae0u4tXn4ya/EOzqaq2sLa6Ny+vI27Fox9YOssLCF+ZdaAyLy5ualD6jvHBBQllpVW5uWVVZAgAI4CFFmN+85untGpz5u1WWv8oqv3X5xhPy0ndHJb/0/5f/P2D7Tkm63n7pAUlXemab9/8v/26wfXfZnKr4zRAXav/POKWllEtXCRVWMoUVr1tLmFjMBGkHrsc42X4GsARzH5DHSluZ+jAM5ZrmLvJYSIIJXCaJQRwlmXTaB5VyMqFSR2YmkJwaRDK+ZjqLWcx8FpGOAweL6GMhM5jPYuSys+jU2diZx0Km4aAaFxXUMI/5KDWDucw3iqWSKfQzgyXMIRE7TpwkUoqOi2oyCKjtHiBIDS0ev5dU6pjCNJYwmx4WtkNBPlbMF9NWYgYQj9OcLgCd6UwZWa9B7DxmMoW+2mweS1jM9BUKZaMj9iQzjRny8iX0YqePeczBkTamfk0W5tLPQlbAFuMg8oPj+bHGHeJ/JQAAAA==) format("woff2"); font-weight: 500; font-style: normal; font-display: swap; unicode-range: U+2E, U+42, U+61, U+69, U+6C, U+6F, U+74-75; }
   body { font-feature-settings: "cv08", "cv10", "cv12", "cv13", "dlig"; }
   pre, code { font-feature-settings: normal; }
   :root {
@@ -256,7 +270,7 @@
   .blokken { padding: 72px 0 0; }
   .blok-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .blok { position: relative; overflow: hidden; min-height: 560px; padding: 40px; border-radius: var(--r-2xl); background: var(--soft); }
-  .blok h3 { max-width: 440px; margin: 0; font-size: 32px; line-height: 1.15; font-weight: 420; letter-spacing: -.025em; }
+  .blok h2 { max-width: 440px; margin: 0; font-size: 32px; line-height: 1.15; font-weight: 420; letter-spacing: -.025em; }
   .meer { display: inline-flex; align-items: center; gap: 4px; margin-top: 16px; color: var(--brand-ink); font-size: 15px; font-weight: 600; text-decoration: underline; text-underline-offset: 5px;
     text-decoration-color: rgba(33,179,224,.4); transition: text-decoration-color .15s, gap .15s; }
   .meer { padding-block: 10px; margin-block: -10px; }
@@ -307,7 +321,7 @@
   .tbtn svg { width: 11px; height: 11px; }
   /* Breed blok met een chatvenster dat echt typt */
   .blok-breed { min-height: 0; margin-top: 20px; padding: 64px 24px 56px; text-align: center; }
-  .blok-breed h3 { max-width: 680px; margin: 0 auto; font-size: clamp(32px, 4vw, 46px); line-height: 1.1; }
+  .blok-breed h2 { max-width: 680px; margin: 0 auto; font-size: clamp(32px, 4vw, 46px); line-height: 1.1; }
   .blok-breed > p { max-width: 560px; margin: 16px auto 0; color: var(--ink-2); font-size: 16px; }
   /* Voorbeeldgesprekken in 3D: kolommen die om en om omhoog en omlaag schuiven, aan alle kanten vervagend */
   .g3d { position: relative; display: flex; align-items: center; justify-content: center; height: 440px; margin: 28px -24px -56px; overflow: hidden; perspective: 440px;   /* het voorbeeld: 300px op 800 breed; dit blok is breder */
@@ -650,6 +664,9 @@
   /* Verschijnen bij scrollen */
   .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
   .js .rv.in { opacity: 1; transform: none; }
+  /* Bovenaan niet wachten op het script: dezelfde beweging, maar meteen bij het laden (sneller zichtbaar) */
+  .js main > section:first-child .rv { animation: rv-in .9s var(--ease) var(--d, 0s) both; }
+  @keyframes rv-in { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
 
   /* ---------- Kleinere schermen ---------- */
   @media (max-width: 1060px) {
@@ -664,7 +681,7 @@
     .g3d { perspective: 300px; height: 400px; }
     .g3d-vlak { transform: translateX(-100px) translateZ(-100px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg); }
     .blok { min-height: 380px; padding: 28px; }
-    .blok h3 { font-size: 28px; }
+    .blok h2 { font-size: 28px; }
     .tegelwand { transform: rotate(-6deg) scale(.7); }
     .tphones { right: auto; left: calc(50% - 160px); bottom: -300px; transform: scale(.72); transform-origin: top left; }
     .hero-metal, .sec-metal { opacity: .5; }
@@ -762,22 +779,22 @@
       <div class="wrap">
         <div class="marquee">
           <div class="track">
-            <span class="name"><img src="logos/fatbikehulp.png" alt="Fatbikehulp" style="height:26px" decoding="async"></span>
-            <span class="name"><img src="logos/dailyride.png" alt="Dailyride" style="height:26px" decoding="async">Dailyride</span>
-            <span class="name"><img src="logos/fietsenwinkel.svg" alt="Fietsenwinkel.nl" style="height:18px" decoding="async"></span>
-            <span class="name"><img src="logos/knaap.png" alt="Knaap" style="height:18px" decoding="async"></span>
-            <span class="name"><img src="logos/dhl.svg" alt="DHL" style="height:17px" decoding="async"></span>
-            <span class="name"><img src="logos/postnl.svg" alt="PostNL" style="height:34px" decoding="async"></span>
-            <span class="name"><img src="logos/mcdonalds.svg" alt="McDonald's" style="height:26px" decoding="async"></span>
-            <span class="name"><img src="logos/coolblue.svg" alt="Coolblue" style="height:32px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/fatbikehulp.png" alt="" style="height:26px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/dailyride.png" alt="" style="height:26px" decoding="async">Dailyride</span>
-            <span class="name" aria-hidden="true"><img src="logos/fietsenwinkel.svg" alt="" style="height:18px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/knaap.png" alt="" style="height:18px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/dhl.svg" alt="" style="height:17px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/postnl.svg" alt="" style="height:34px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/mcdonalds.svg" alt="" style="height:26px" decoding="async"></span>
-            <span class="name" aria-hidden="true"><img src="logos/coolblue.svg" alt="" style="height:32px" decoding="async"></span>
+            <span class="name"><img src="logos/fatbikehulp.webp" alt="Fatbikehulp" width="119" height="26" style="height:26px" decoding="async"></span>
+            <span class="name"><img src="logos/dailyride.webp" alt="" width="26" height="26" style="height:26px" decoding="async">Dailyride</span>
+            <span class="name"><img src="logos/fietsenwinkel.svg" alt="Fietsenwinkel.nl" width="222" height="18" style="height:18px" decoding="async"></span>
+            <span class="name"><img src="logos/knaap.webp" alt="Knaap" width="127" height="18" style="height:18px" decoding="async"></span>
+            <span class="name"><img src="logos/dhl.svg" alt="DHL" width="120" height="17" style="height:17px" decoding="async"></span>
+            <span class="name"><img src="logos/postnl.svg" alt="PostNL" width="34" height="34" style="height:34px" decoding="async"></span>
+            <span class="name"><img src="logos/mcdonalds.svg" alt="McDonald's" width="26" height="26" style="height:26px" decoding="async"></span>
+            <span class="name"><img src="logos/coolblue.svg" alt="Coolblue" width="51" height="32" style="height:32px" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/fatbikehulp.webp" alt="" width="119" height="26" style="height:26px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/dailyride.webp" alt="" width="26" height="26" style="height:26px" loading="lazy" decoding="async">Dailyride</span>
+            <span class="name" aria-hidden="true"><img src="logos/fietsenwinkel.svg" alt="" width="222" height="18" style="height:18px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/knaap.webp" alt="" width="127" height="18" style="height:18px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/dhl.svg" alt="" width="120" height="17" style="height:17px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/postnl.svg" alt="" width="34" height="34" style="height:34px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/mcdonalds.svg" alt="" width="26" height="26" style="height:26px" loading="lazy" decoding="async"></span>
+            <span class="name" aria-hidden="true"><img src="logos/coolblue.svg" alt="" width="51" height="32" style="height:32px" loading="lazy" decoding="async"></span>
           </div>
         </div>
       </div>
@@ -789,16 +806,16 @@
     <div class="wrap">
       <div class="blok-duo">
         <div class="blok rv">
-          <h3>Koppel je agenda, webshop en team-apps</h3>
+          <h2>Koppel je agenda, webshop en team-apps</h2>
           <a class="meer" href="/ontwikkelaars#zonder-code">Meer over koppelingen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
           <!-- Twee rijen tegels die langzaam langs elkaar schuiven; elke rij staat er twee keer in voor een naadloze lus -->
           <div class="tegelwand" aria-hidden="true">
-            <div class="tegelrij rechts"><img src="apps/google-agenda.png" alt="" loading="lazy" decoding="async"><img src="apps/outlook.png" alt="" loading="lazy" decoding="async"><img src="apps/apple-agenda.png" alt="" loading="lazy" decoding="async"><img src="apps/slack.png" alt="" loading="lazy" decoding="async"><img src="apps/teams.png" alt="" loading="lazy" decoding="async"><img src="apps/discord.png" alt="" loading="lazy" decoding="async"><img src="apps/sheets.png" alt="" loading="lazy" decoding="async"><img src="apps/google-agenda.png" alt="" loading="lazy" decoding="async"><img src="apps/outlook.png" alt="" loading="lazy" decoding="async"><img src="apps/apple-agenda.png" alt="" loading="lazy" decoding="async"><img src="apps/slack.png" alt="" loading="lazy" decoding="async"><img src="apps/teams.png" alt="" loading="lazy" decoding="async"><img src="apps/discord.png" alt="" loading="lazy" decoding="async"><img src="apps/sheets.png" alt="" loading="lazy" decoding="async"></div>
-            <div class="tegelrij links"><img src="apps/shopify.png" alt="" loading="lazy" decoding="async"><img src="apps/woocommerce.png" alt="" loading="lazy" decoding="async"><img src="apps/notion.png" alt="" loading="lazy" decoding="async"><img src="apps/airtable.png" alt="" loading="lazy" decoding="async"><img src="apps/make.png" alt="" loading="lazy" decoding="async"><img src="apps/n8n.png" alt="" loading="lazy" decoding="async"><img src="apps/odoo.png" alt="" loading="lazy" decoding="async"><img src="apps/shopify.png" alt="" loading="lazy" decoding="async"><img src="apps/woocommerce.png" alt="" loading="lazy" decoding="async"><img src="apps/notion.png" alt="" loading="lazy" decoding="async"><img src="apps/airtable.png" alt="" loading="lazy" decoding="async"><img src="apps/make.png" alt="" loading="lazy" decoding="async"><img src="apps/n8n.png" alt="" loading="lazy" decoding="async"><img src="apps/odoo.png" alt="" loading="lazy" decoding="async"></div>
+            <div class="tegelrij rechts"><img src="apps/google-agenda.webp" alt="Google Agenda" loading="lazy" decoding="async"><img src="apps/outlook.webp" alt="Outlook" loading="lazy" decoding="async"><img src="apps/apple-agenda.webp" alt="Apple Agenda" loading="lazy" decoding="async"><img src="apps/slack.webp" alt="Slack" loading="lazy" decoding="async"><img src="apps/teams.webp" alt="Microsoft Teams" loading="lazy" decoding="async"><img src="apps/discord.webp" alt="Discord" loading="lazy" decoding="async"><img src="apps/sheets.webp" alt="Google Sheets" loading="lazy" decoding="async"><img src="apps/google-agenda.webp" alt="" loading="lazy" decoding="async"><img src="apps/outlook.webp" alt="" loading="lazy" decoding="async"><img src="apps/apple-agenda.webp" alt="" loading="lazy" decoding="async"><img src="apps/slack.webp" alt="" loading="lazy" decoding="async"><img src="apps/teams.webp" alt="" loading="lazy" decoding="async"><img src="apps/discord.webp" alt="" loading="lazy" decoding="async"><img src="apps/sheets.webp" alt="" loading="lazy" decoding="async"></div>
+            <div class="tegelrij links"><img src="apps/shopify.webp" alt="Shopify" loading="lazy" decoding="async"><img src="apps/woocommerce.webp" alt="WooCommerce" loading="lazy" decoding="async"><img src="apps/notion.webp" alt="Notion" loading="lazy" decoding="async"><img src="apps/airtable.webp" alt="Airtable" loading="lazy" decoding="async"><img src="apps/make.webp" alt="Make" loading="lazy" decoding="async"><img src="apps/n8n.webp" alt="n8n" loading="lazy" decoding="async"><img src="apps/odoo.webp" alt="Odoo" loading="lazy" decoding="async"><img src="apps/shopify.webp" alt="" loading="lazy" decoding="async"><img src="apps/woocommerce.webp" alt="" loading="lazy" decoding="async"><img src="apps/notion.webp" alt="" loading="lazy" decoding="async"><img src="apps/airtable.webp" alt="" loading="lazy" decoding="async"><img src="apps/make.webp" alt="" loading="lazy" decoding="async"><img src="apps/n8n.webp" alt="" loading="lazy" decoding="async"><img src="apps/odoo.webp" alt="" loading="lazy" decoding="async"></div>
           </div>
         </div>
         <div class="blok rv" style="--d:.08s">
-          <h3>Elk gesprek terugluisteren en nalezen, waar je ook bent</h3>
+          <h2>Elk gesprek terugluisteren en nalezen, waar je ook bent</h2>
           <a class="meer" href="#overzicht">Meer over het overzicht <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
           <div class="tphones" aria-hidden="true">
             <div class="tphone links">
@@ -834,7 +851,7 @@
         </div>
       </div>
       <div class="blok blok-breed rv">
-        <h3>Eén assistent voor elk soort bedrijf</h3>
+        <h2>Eén assistent voor elk soort bedrijf</h2>
         <p>Van fietsenwinkel tot tandarts: zo helpt Botlu je bellers verder, ook als jij er niet bent.</p>
         <!-- Kolommen met voorbeeldgesprekken, schuin in 3D, om en om omhoog en omlaag (gevuld door initGesprekken3d) -->
         <div class="g3d" id="g3d" aria-label="Voorbeeldgesprekken"><div class="g3d-vlak"></div></div>

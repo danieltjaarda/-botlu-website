@@ -1,10 +1,11 @@
 # Bouwt prijzen.html (draai: python3 -I scripts/maak-prijzen.py): de basis (kleuren, navigatie, knoppen, footer)
 # komt uit index.html, zodat alle pagina's hetzelfde ogen. Opnieuw draaien overschrijft de pagina.
 # Achter de plannen dezelfde chromen linten als in de hero, hier in parelmoer.
-import html, pathlib, re
+import html, pathlib, re, runpy
 
 SITE = pathlib.Path.home() / 'botlu-website'
 idx = (SITE / 'index.html').read_text()
+seo = runpy.run_path(str(pathlib.Path(__file__).with_name('kop.py')))['seo']
 
 def between(start, end, incl_end=False):
     a = idx.index(start); b = idx.index(end, a + len(start))
@@ -85,7 +86,7 @@ def plan(p, i):
              else f'<span class="badge alleen-jaar">Bespaar €{p["maand"] - p["jaar"]}</span>')
     return f'''        <article class="plan rv{" pop" if p.get("pop") else ""}" style="--d:{i * .06:.2f}s">
           {'<span class="pop-label">Populair</span>' if p.get('pop') else ''}
-          <h3>{p['naam']}</h3>
+          <h2>{p['naam']}</h2>
           <p class="voor">{p['voor']}</p>
           <div class="prijs">{'<span class="vanaf">Vanaf</span>' if p.get('vanaf') else ''}<b>{wissel(f"€{p['jaar']}", f"€{p['maand']}")}</b>{badge}</div>
           <p class="per">Per maand, {wissel('jaarlijks gefactureerd', 'maandelijks gefactureerd')}</p>
@@ -96,6 +97,12 @@ def plan(p, i):
           <ul>{''.join(p['functies'])}</ul>
         </article>'''
 
+TITEL = 'Prijzen AI-telefoonassistent · Botlu.ai'
+OMS = f'De prijzen van Botlu: een AI-assistent die je telefoon opneemt, vanaf €{min(p["jaar"] for p in PLANNEN)} per maand. Solo, Team of Scale, maandelijks of jaarlijks.'
+LD = {'@context': 'https://schema.org', '@type': 'SoftwareApplication', 'name': 'Botlu.ai', 'applicationCategory': 'BusinessApplication',
+      'operatingSystem': 'Web', 'url': 'https://botlu.ai/', 'description': 'AI-assistent die de telefoon opneemt voor je bedrijf.',
+      'offers': {'@type': 'AggregateOffer', 'priceCurrency': 'EUR', 'offerCount': len(PLANNEN),
+                 'lowPrice': min(p['jaar'] for p in PLANNEN), 'highPrice': max(p['maand'] for p in PLANNEN)}}
 plannen = '\n'.join(plan(p, i) for i, p in enumerate(PLANNEN))
 
 page = f'''<!doctype html>
@@ -103,8 +110,9 @@ page = f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prijzen · Botlu.ai</title>
-<meta name="description" content="De prijzen van Botlu: een AI-assistent die je telefoon opneemt, vanaf €99 per maand. Solo, Team of Scale, maandelijks of jaarlijks.">
+<title>{TITEL}</title>
+<meta name="description" content="{OMS}">
+{seo('/prijzen', TITEL, OMS, LD)}
 {head_links}
 <script>document.documentElement.classList.add('js');</script>
 <style>
@@ -151,7 +159,7 @@ page = f'''<!doctype html>
     backdrop-filter: blur(18px) saturate(1.3); -webkit-backdrop-filter: blur(18px) saturate(1.3); box-shadow: 0 0 0 1px var(--line-2), 0 20px 50px -30px rgba(16,16,24,.25); }}
   .plan.pop {{ box-shadow: 0 0 0 1.5px var(--brand), 0 28px 60px -26px rgba(33,179,224,.55); }}
   .pop-label {{ position: absolute; top: 22px; right: 22px; padding: 5px 11px; border-radius: 8px; background: var(--brand); color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }}
-  .plan h3 {{ margin: 0; font-size: 26px; font-weight: 560; letter-spacing: -.02em; }}
+  .plan h2 {{ margin: 0; font-size: 26px; line-height: 1.2; font-weight: 560; letter-spacing: -.02em; }}
   .voor {{ margin: 6px 0 0; color: var(--ink-3); font-size: 16.5px; }}
   .prijs {{ display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 44px; }}
   .prijs b {{ font-size: 46px; line-height: 1; font-weight: 560; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }}

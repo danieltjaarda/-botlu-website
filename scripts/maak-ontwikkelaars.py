@@ -1,9 +1,10 @@
 # Bouwt ontwikkelaars.html (draai: python3 -I scripts/maak-ontwikkelaars.py): de basis (kleuren, navigatie, knoppen, footer, Terminal)
 # komt uit index.html, zodat beide pagina's hetzelfde ogen. Opnieuw draaien overschrijft de pagina.
-import html, pathlib, re
+import html, pathlib, re, runpy
 
 SITE = pathlib.Path.home() / 'botlu-website'
 idx = (SITE / 'index.html').read_text()
+seo = runpy.run_path(str(pathlib.Path(__file__).with_name('kop.py')))['seo']
 
 def between(start, end, incl_end=False):
     a = idx.index(start); b = idx.index(end, a + len(start))
@@ -197,7 +198,7 @@ api_term = terminal([('gesprek', 'Gesprek', 'jij — -zsh — 80×24', GESPREK),
 code_term = terminal([('code', 'webhook.js', 'jij — -zsh — 80×24', CODE)], cls='op-wit')
 
 ARROW = '<svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>'
-def apps(*names): return ''.join(f'<img src="/apps/{n}.png" alt="" width="44" height="44" loading="lazy">' for n in names)
+def apps(*names): return ''.join(f'<img src="/apps/{n}.webp" alt="" width="44" height="44" loading="lazy">' for n in names)
 # Iconen: gewoon zwart, zonder vlak erachter (stijlregel van Daniel)
 ICON = {
   'sleutel': '<path d="M15 7a4 4 0 1 1-3.9 4.9L4 19v-3h3v-3h3l.9-.9A4 4 0 0 1 15 7z"/><circle cx="15.5" cy="10.5" r="1"/>',
@@ -208,13 +209,17 @@ ICON = {
 def icon(n): return f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICON[n]}</svg>'
 def velden(*v): return '<div class="velden">' + ''.join(f'<span>{x}</span>' for x in v) + '</div>'
 
+TITEL = 'API en webhooks voor ontwikkelaars · Botlu.ai'
+OMS = 'Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link.'
+
 page = f'''<!doctype html>
 <html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ontwikkelaars · Botlu.ai</title>
-<meta name="description" content="Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link voor je agenda.">
+<title>{TITEL}</title>
+<meta name="description" content="{OMS}">
+{seo('/ontwikkelaars', TITEL, OMS)}
 {head_links}
 <script>document.documentElement.classList.add('js');</script>
 <style>

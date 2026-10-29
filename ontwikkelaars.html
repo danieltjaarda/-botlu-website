@@ -3,11 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ontwikkelaars · Botlu.ai</title>
-<meta name="description" content="Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link voor je agenda.">
+<title>API en webhooks voor ontwikkelaars · Botlu.ai</title>
+<meta name="description" content="Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link.">
+<link rel="canonical" href="https://botlu.ai/ontwikkelaars">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Botlu.ai">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:url" content="https://botlu.ai/ontwikkelaars">
+<meta property="og:title" content="API en webhooks voor ontwikkelaars · Botlu.ai">
+<meta property="og:description" content="Koppel Botlu aan je eigen systemen: een REST-API voor gesprekken, transcripten en opnames, ondertekende webhooks bij elke gebeurtenis en een iCal-link.">
+<meta property="og:image" content="https://botlu.ai/media/og-botlu.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="/media/icoon-180.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-34 -2 326 329'%3E%3Cpath fill='%23231f20' d='M0 0H148A109 109 0 0 1 257 109V129H179V108A31 31 0 0 0 148 77H0ZM0 124H148A109 109 0 0 1 257 233V247H179V232A31 31 0 0 0 148 201H0ZM0 248H179V324H0Z'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
 <style>
@@ -15,6 +26,8 @@
      Met de assen opsz (grote koppen krijgen vanzelf de display-vorm) en wght. Zoals op mollie.com:
      I met schreefjes, G met spoor, compacte f en t, en de extra ligaturen. */
   @font-face { font-family: "Inter Variable"; src: url("/fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  /* Poppins 500 (SIL OFL) alleen voor het woordmerk: ingekort tot de letters van "Botlu.ai" en hier ingebakken, dus geen extra verzoek */
+  @font-face { font-family: "Poppins"; src: url(data:font/woff2;base64,d09GMgABAAAAAAQMAAwAAAAABxwAAAO8AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgAGwKhRCEFQsWAAE2AiQDKAQgBYNIByAbtgXIBB7496w/N0mVrDFi27E6UoZYA794EIoHs/G/v2/6K5ASuARZqH9ZT/tuzad69KNtEQ2sLNsWWijQgBJYgaMAG8YuLsOCAFQmMHNEoatCx4oCCRuGLZfoMRgyrB7TP2VpPCMw1yOWNtWcr8ht4jdMIO2UmrG33K0RncSLMpQwo3laOLtUd1XzGAEsUcb5L9KvzJMWBcAhWJLCpfsxAkbRJaTLMDMCeV7lESjAHcMYgoxEAHbygewMZjOPJXNqkeYWHzU+NtzG48Yl47Rx0jhuHO6lrQYVCWvUh0HukZiw1XAoMO2OMGZGQpgpocjcbQYMtdmGDxmgKEMGjxhpGqgMmDWgobmpcYqstzTqnkfEhke1XQ+z/iH1Sw/r3W51gGngLk/wqyW92q43xYY3VPVtn9jgVVW0d30+bZcnVmiKKm671Z1er/jU61V3ut2s93i0XT6f+LC3SoOimrqw6fF6xYZmUvdhn68zpc2HtDZp/Q1NQ93pFbIqNKGhsaz3sqxJ6/u9VMgP/fbQb5d26Df8z0bf8N/w7/vff8O/K6inxXxi8uQTkyfZf2MSf7RW9mQnJevTnEWj7tmKpzgSauIzc6rrROye1E+cjs9S97z5X15KfEJRRvrRt08SMr1w3VJXSV53/NM1i8IX1T3Tl5BbvKSkcGP9E8n2+vLomJjyKHtdWpq9oSImOqY82q6nMWXeicHuNaUkfGE4D3362cLP+Na6xlW8vkEv3bCuqLp6XVHpBl0v37DRVR3dWxHpqM/MjK0rj4yJKYuMrstsae0u4tXn4ya/EOzqaq2sLa6Ny+vI27Fox9YOssLCF+ZdaAyLy5ualD6jvHBBQllpVW5uWVVZAgAI4CFFmN+85untGpz5u1WWv8oqv3X5xhPy0ndHJb/0/5f/P2D7Tkm63n7pAUlXemab9/8v/26wfXfZnKr4zRAXav/POKWllEtXCRVWMoUVr1tLmFjMBGkHrsc42X4GsARzH5DHSluZ+jAM5ZrmLvJYSIIJXCaJQRwlmXTaB5VyMqFSR2YmkJwaRDK+ZjqLWcx8FpGOAweL6GMhM5jPYuSys+jU2diZx0Km4aAaFxXUMI/5KDWDucw3iqWSKfQzgyXMIRE7TpwkUoqOi2oyCKjtHiBIDS0ev5dU6pjCNJYwmx4WtkNBPlbMF9NWYgYQj9OcLgCd6UwZWa9B7DxmMoW+2mweS1jM9BUKZaMj9iQzjRny8iX0YqePeczBkTamfk0W5tLPQlbAFuMg8oPj+bHGHeJ/JQAAAA==) format("woff2"); font-weight: 500; font-style: normal; font-display: swap; unicode-range: U+2E, U+42, U+61, U+69, U+6C, U+6F, U+74-75; }
   body { font-feature-settings: "cv08", "cv10", "cv12", "cv13", "dlig"; }
   pre, code { font-feature-settings: normal; }
   :root {
@@ -173,6 +186,9 @@
   /* Verschijnen bij scrollen */
   .js .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
   .js .rv.in { opacity: 1; transform: none; }
+  /* Bovenaan niet wachten op het script: dezelfde beweging, maar meteen bij het laden (sneller zichtbaar) */
+  .js main > section:first-child .rv { animation: rv-in .9s var(--ease) var(--d, 0s) both; }
+  @keyframes rv-in { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
 
 
   /* ---------- Pagina voor ontwikkelaars ---------- */
@@ -519,10 +535,10 @@ export function echtVanBotlu(headers, body) {
     <div class="wrap">
       <div class="sec-head rv"><h2>Liever zonder code? <span class="mute">Ook goed.</span></h2></div>
       <div class="apps">
-        <div class="app rv"><div class="ic"><img src="/apps/make.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/n8n.png" alt="" width="44" height="44" loading="lazy"></div><h3>Make en n8n</h3><p>Plak de webhook-URL van je scenario in Botlu. Elk gesprek start dan je automatisering.</p></div>
-        <div class="app rv" style="--d:.05s"><div class="ic"><img src="/apps/sheets.png" alt="" width="44" height="44" loading="lazy"></div><h3>Google Sheets</h3><p>Elk gesprek als nieuwe rij, met een klein script dat we voor je klaarzetten.</p></div>
-        <div class="app rv" style="--d:.1s"><div class="ic"><img src="/apps/slack.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/teams.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/discord.png" alt="" width="44" height="44" loading="lazy"></div><h3>Slack, Teams en Discord</h3><p>Een bericht in je kanaal na elk gesprek, elke afspraak en elk terugbelverzoek.</p></div>
-        <div class="app rv" style="--d:.15s"><div class="ic"><img src="/apps/google-agenda.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/outlook.png" alt="" width="44" height="44" loading="lazy"><img src="/apps/apple-agenda.png" alt="" width="44" height="44" loading="lazy"></div><h3>Je eigen agenda</h3><p>Abonneer je op de geheime iCal-link; nieuwe afspraken verschijnen vanzelf.</p><code class="chip">…/api/agenda/••••.ics</code></div>
+        <div class="app rv"><div class="ic"><img src="/apps/make.webp" alt="" width="44" height="44" loading="lazy"><img src="/apps/n8n.webp" alt="" width="44" height="44" loading="lazy"></div><h3>Make en n8n</h3><p>Plak de webhook-URL van je scenario in Botlu. Elk gesprek start dan je automatisering.</p></div>
+        <div class="app rv" style="--d:.05s"><div class="ic"><img src="/apps/sheets.webp" alt="" width="44" height="44" loading="lazy"></div><h3>Google Sheets</h3><p>Elk gesprek als nieuwe rij, met een klein script dat we voor je klaarzetten.</p></div>
+        <div class="app rv" style="--d:.1s"><div class="ic"><img src="/apps/slack.webp" alt="" width="44" height="44" loading="lazy"><img src="/apps/teams.webp" alt="" width="44" height="44" loading="lazy"><img src="/apps/discord.webp" alt="" width="44" height="44" loading="lazy"></div><h3>Slack, Teams en Discord</h3><p>Een bericht in je kanaal na elk gesprek, elke afspraak en elk terugbelverzoek.</p></div>
+        <div class="app rv" style="--d:.15s"><div class="ic"><img src="/apps/google-agenda.webp" alt="" width="44" height="44" loading="lazy"><img src="/apps/outlook.webp" alt="" width="44" height="44" loading="lazy"><img src="/apps/apple-agenda.webp" alt="" width="44" height="44" loading="lazy"></div><h3>Je eigen agenda</h3><p>Abonneer je op de geheime iCal-link; nieuwe afspraken verschijnen vanzelf.</p><code class="chip">…/api/agenda/••••.ics</code></div>
       </div>
     </div>
   </section>
